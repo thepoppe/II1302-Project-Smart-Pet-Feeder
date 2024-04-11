@@ -1,0 +1,27 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "Server to connect arduino with frontend for II1302-Smart-Pet-Feeder",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thepoppe/II1302-Project-Smart-Pet-Feeder.git"
+  },
+  "keywords": [
+    "II1302",
+    "Smart-Pet-Feeder"
+  ],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/thepoppe/II1302-Project-Smart-Pet-Feeder/issues"
+  },
+  "homepage": "https://github.com/thepoppe/II1302-Project-Smart-Pet-Feeder#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.19.2"
+  }
+}
