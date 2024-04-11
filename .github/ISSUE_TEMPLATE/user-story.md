@@ -16,6 +16,10 @@ assignees: ''
 - [ ] Criteria 2: Describe the second acceptance criterion here.
 - [ ] Criteria 3: Describe additional criteria as needed.
 
+**How to Demo**
+- [ ] Test 1: Describe the first test
+- [ ] Test 2: Describe the second test
+
 **Definition of Done:**
 - [ ] All acceptance criteria are met.
 - [ ] Code is reviewed and approved.
