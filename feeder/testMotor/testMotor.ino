@@ -16,7 +16,12 @@ void setup() {
 }
 
 void loop() {
-
+  startMotor(100);
+  delay(2000);
+  speed(50);
+  delay(2000);
+  stopMotor();
+  delay(2000);
 }
 
 void startMotor(int speed) {
