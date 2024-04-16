@@ -25,7 +25,7 @@ void startMotor(int speed) {
   speed(speed);
 } 
 
-void motorOff() {
+void stopMotor() {
   digitalWrite(in1, LOW);
 	digitalWrite(in2, LOW);
 }
