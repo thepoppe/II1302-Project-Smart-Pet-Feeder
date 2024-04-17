@@ -29,6 +29,12 @@ app.post("/post-reset", (req, res) => {
   res.json({ success: true, message: "Msg was restored" });
 });
 
+app.get("/test", (req, res) => {
+  const responseMessage = `Hello, this is a repsonse. Why is it so much`;
+  console.log(`Recieving test get`);
+  res.send(responseMessage);
+});
+
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
