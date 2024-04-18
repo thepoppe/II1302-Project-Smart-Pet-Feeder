@@ -15,7 +15,7 @@ function App() {
     }, 1000);
   }, []);
 
-  function startMotor() {
+  function toggleMotor() {
     fetch(`http://localhost:3000/toggle-motor`)
       .then((response) => response.text())
       .then((data) => setContent(data))
@@ -26,7 +26,7 @@ function App() {
     <div className="centered-button">
       <p>{content}</p>
       <p>Current Time: {time}</p>
-      <button onClick={startMotor}>
+      <button onClick={toggleMotor}>
         Toggle Motor
       </button>
     </div>
