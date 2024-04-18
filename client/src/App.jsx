@@ -16,7 +16,7 @@ function App() {
 
 
   return (
-    <div>
+    <div className="centered-button">
       <p>{content}</p>
       <button onClick={() => startMotor()}>
         Start Motor
