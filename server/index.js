@@ -8,10 +8,14 @@ let motorStatus=false
 app.use(cors());
 
 // Toggle motor status ( done by our application when pressing a button) 
-// Todo change name to toggle-motor instead
-app.get('/start-motor', (req, res) => {
-  motorStatus = !motorStatus;
-  res.send(motorStatus);
+app.get('/toggle-motor', (req, res) => {
+  motorStatus = !motorStatus; //TODO make toggle motorstatus function in model
+
+  if(motorStatus)
+    res.send("Motor is running");
+  else
+    res.send("Motor is stopped");
+  
 });
 
 // respond with the current value of motorStatus 

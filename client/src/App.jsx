@@ -5,7 +5,7 @@ import "./index.css";
 
 
 function App() {
-  const [content, setContent] = useState("none");
+  const [content, setContent] = useState("Motor is stopped");
   const [time, setTime] = useState(new Date().toLocaleTimeString());
 
   useEffect(() => {
@@ -16,7 +16,7 @@ function App() {
   }, []);
 
   function startMotor() {
-    fetch(`http://localhost:3000/start-motor`)
+    fetch(`http://localhost:3000/toggle-motor`)
       .then((response) => response.text())
       .then((data) => setContent(data))
       .catch((error) => console.error("Error:", error));
@@ -27,7 +27,7 @@ function App() {
       <p>{content}</p>
       <p>Current Time: {time}</p>
       <button onClick={startMotor}>
-        Start Motor
+        Toggle Motor
       </button>
     </div>
   );
