@@ -57,7 +57,7 @@ void loop() {
   WiFiClient client;
 
   // Specify the server address and port (usually port 80 for HTTP)
-  const char* serverAddress = "172.20.10.3";
+  const char* serverAddress = "172.20.10.11";
   const int port = 3000;
  if (!client.connect(serverAddress, port)) {
     Serial.println("Initial Connection failed between client and server");
@@ -70,6 +70,7 @@ void loop() {
   client.print(request);
 
   Serial.println("Waiting for response...");
+
 
   String response = ""; // Initialize empty string to store response
 
@@ -89,8 +90,7 @@ void loop() {
     if (response.indexOf("true") != -1){
       Serial.println("Motor should run");
       startMotor(100);
-      delay(3000);
-      stopMotor();
+  
     } else {
     Serial.println("Motor should stop");
     stopMotor();
@@ -101,6 +101,6 @@ void loop() {
   }
   
 
-  delay(10000); // Adjust delay as needed
+  delay(100); // Adjust delay as needed
 
 }
