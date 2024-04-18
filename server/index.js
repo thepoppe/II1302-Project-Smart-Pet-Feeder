@@ -3,17 +3,42 @@ const cors = require("cors");
 const app = express();
 const port = 3000;
 const defaultMsg = "HelloWorld";
+let motorStatus=false
 
 app.use(cors());
+
+// Set motor status to true ( done by our application when pressing a button)
+app.get('/start-motor', (req, res) => {
+  motorStatus = true; 
+  res.send('Motor has been started ');
+});
+
+// respond with the current value of motorStatus 
+app.get('/motor-status', (req, res) => {
+  res.send(motorStatus)
+});
+
+
+app.post("/reset-motor-status", (req, res) => {
+  motorStatus = false; 
+  res.send("Motor status has been reset");
+});
+
+
 app.get("/", (req, res) => {
   res.send(message);
 });
+
+
 app.get("/a", (req, res) => {
   const { headers, query } = req;
   const msg = query.data;
   const responseMessage = `Hello, your message: ${JSON.stringify(msg)}.`;
   res.send(responseMessage);
 });
+
+
+
 
 app.use(express.json());
 let message = defaultMsg;
@@ -28,6 +53,8 @@ app.post("/post-reset", (req, res) => {
   message = defaultMsg;
   res.json({ success: true, message: "Msg was restored" });
 });
+
+
 
 app.get("/test", (req, res) => {
   const responseMessage = `Hello, this is a repsonse. Why is it so much`;
