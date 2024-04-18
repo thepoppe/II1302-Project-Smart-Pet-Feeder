@@ -33,7 +33,7 @@ function App() {
 
   function startDispensing(){
     setIsDispensing(true);
-    fetch('http://localhost:3000/start', { method: 'POST' })
+    fetch('http://localhost:3000/star-motor', { method: 'POST' })
     .then(response => response.json())
     .then(data => {
       console.log('Dispensing started:', data);
