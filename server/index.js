@@ -9,7 +9,7 @@ app.use(cors());
 app.use(express.json());
 
 // Toggle motor status ( done by our application when pressing a button) 
-app.get('/toggle-motor', (req, res) => {
+app.post('/toggle-motor', (req, res) => {
   motorStatus = !motorStatus; //TODO make toggle motorstatus function in model
 
   if(motorStatus)
