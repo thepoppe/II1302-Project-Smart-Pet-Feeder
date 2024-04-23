@@ -41,6 +41,8 @@ app.get('/getschedules', (req, res) => {
 
 // Endpoint to update the current value of the distance sensor
 app.post('/uploadDistanceSensorValue', (req, res) => {
+  console.log("connected")
+  console.log(req.body)
   const {value} = req.body;
   distanceSensorValue=value
   console.log(distanceSensorValue) 
