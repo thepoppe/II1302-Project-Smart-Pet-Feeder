@@ -1,12 +1,3 @@
----
-name: User Story
-about: A simple user story template
-title: ''
-labels: ''
-assignees: ''
-
----
-
 **As a [role],**
 **I want [an action or feature],**
 **So that [a reason or benefit].**
@@ -22,7 +13,6 @@ assignees: ''
 
 **Definition of Done:**
 - [ ] All acceptance criteria are met.
-- [ ] Code is reviewed and approved.
-- [ ] Necessary tests are written and pass.
-- [ ] Documentation is updated, if applicable.
-- [ ] Feature is deployed to the [environment name].
+- [ ] Necessary tests are written and passed.
+- [ ] Documentation is updated, if applicable
+- [ ] Code is reviewed and PRd into main.
