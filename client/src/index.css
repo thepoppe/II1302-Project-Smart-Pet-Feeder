@@ -22,8 +22,6 @@ a:hover {
   color: #535bf2;
 }
 
-
-
 h1 {
   font-size: 3.2em;
   line-height: 1.1;
@@ -31,9 +29,9 @@ h1 {
 .centered-button {
   display: flex;
   justify-content: center;
-  align-items: center;  
-  width: 100%;   
-  flex-direction: column
+  align-items: center;
+  width: 100%;
+  flex-direction: column;
 }
 button {
   border-radius: 8px;
@@ -65,4 +63,36 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
+}
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.navigation {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f0f0f0;
+}
+
+.navigation a {
+  color: #333;
+  font-size: large;
+}
+.homeUL {
+  display: flex;
+  gap: 3rem;
+  margin-top: 1rem;
+  justify-content: center;
+}
+.homeLI {
+  color: black;
+  border: solid;
+  border-radius: 25px;
+  padding: 5px;
+  background: gray;
+  width: 6rem;
+  text-align: center;
 }

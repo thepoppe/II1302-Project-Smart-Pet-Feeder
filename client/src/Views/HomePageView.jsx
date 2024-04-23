@@ -1,32 +1,36 @@
-import { useState, useEffect } from "react";
-
-function HomePageView(props){
-        const [content, setContent] = useState("Motor is stopped");
-        const [time, setTime] = useState(new Date().toLocaleTimeString());
-      
-        useEffect(() => {
-          const timer = setInterval(() => {
-            setTime(new Date().toLocaleTimeString());
-          }, 1000);
-        }, []);
-      
-        function toggleMotor() {
-            fetch('http://localhost:3000/toggle-motor', {
-    method: 'POST'
-  })
-            .then((response) => response.text())
-            .then((data) => setContent(data))
-            .catch((error) => console.error("Error:", error));
-        }
-      
-        return (
-          <div className="centered-button">
-            <p>{content}</p>
-            <p>Current Time: {time}</p>
-            <button onClick={toggleMotor}>
-              Toggle Motor
-            </button>
-          </div>
-        );
-      }
+import { Link } from "react-router-dom";
+function HomePageView(props) {
+  return (
+    <>
+      <div
+        style={{
+          textAlign: "center",
+          height: "15rem",
+          background: "gray",
+        }}
+      >
+        <p>Picture of product</p>
+      </div>
+      <div>
+        <ul className="homeUL">
+          <li className="homeLI">
+            <Link to="/schedule">
+              <p>Schedule</p>
+            </Link>
+          </li>
+          <li className="homeLI">
+            <Link to="/status">
+              <p>Status</p>
+            </Link>
+          </li>
+          <li className="homeLI">
+            <Link to="/settings">
+              <p>Settings</p>
+            </Link>
+          </li>
+        </ul>
+      </div>
+    </>
+  );
+}
 export default HomePageView;
