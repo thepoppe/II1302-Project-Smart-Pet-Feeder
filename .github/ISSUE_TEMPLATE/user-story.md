@@ -22,7 +22,6 @@ assignees: ''
 
 **Definition of Done:**
 - [ ] All acceptance criteria are met.
-- [ ] Code is reviewed and approved.
-- [ ] Necessary tests are written and pass.
-- [ ] Documentation is updated, if applicable.
-- [ ] Feature is deployed to the [environment name].
+- [ ] Necessary tests are written and passed.
+- [ ] Documentation is updated, if applicable
+- [ ] Code is reviewed and PRd into main.
