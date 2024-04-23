@@ -1,3 +1,12 @@
+---
+name: User Story
+about: A simple user story template
+title: ''
+labels: ''
+assignees: ''
+
+---
+
 **As a [role],**
 **I want [an action or feature],**
 **So that [a reason or benefit].**
