@@ -4,6 +4,7 @@ import Status from "./Views/StatusView";
 import Settings from "./Views/SettingsView";
 import ErrorPage from "./Views/ErrorPage";
 import LoginView from "./Views/LoginView";
+import TopBar from "./Components/TopBar";
 import React, { useState } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import "./index.css";
@@ -14,6 +15,7 @@ function App() {
   const [loggedIn, setLoggedIn] = useState(false);
   return (
     <>
+      <TopBar></TopBar>
       <ModelContext.Provider value={loggedIn}>
         <Routes>
           <Route
