@@ -4,9 +4,11 @@ function HomePageView(props) {
     <>
       <div
         style={{
+          marginTop: "1rem",
           textAlign: "center",
           height: "15rem",
-          background: "gray",
+          background: "var(--light-color)",
+          alignContent: "center",
         }}
       >
         <p>Picture of product</p>

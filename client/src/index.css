@@ -2,17 +2,27 @@
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
+  color: black;
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  background-color: #f0ece2;
+
+  --lighter-color: #f0ece2;
+  --light-color: #dfd3c3;
+  --medium-color: #dfd3c3;
+  --dark-color: #596e79;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-
+p {
+  text-decoration: inherit;
+  font-weight: 500;
+  color: black;
+}
 a {
   font-weight: 500;
   color: #646cff;
@@ -74,11 +84,11 @@ ul {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #f0f0f0;
+  background-color: var(--medium-color);
 }
 
 .navigation a {
-  color: #333;
+  color: black;
   font-size: large;
 }
 .homeUL {
@@ -88,11 +98,14 @@ ul {
   justify-content: center;
 }
 .homeLI {
-  color: black;
   border: solid;
   border-radius: 25px;
   padding: 5px;
-  background: gray;
+  background: var(--light-color);
   width: 6rem;
   text-align: center;
+}
+.homeLI:hover {
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  background: var(--medium-color);
 }
