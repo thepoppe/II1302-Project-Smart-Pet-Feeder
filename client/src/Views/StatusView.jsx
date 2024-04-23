@@ -1,4 +1,7 @@
-export default function ScheduleView(props){
-    return(<>
-    <div>Status content</div></>)
+export default function ScheduleView(props) {
+  return (
+    <>
+      <div>Status content</div>
+    </>
+  );
 }
