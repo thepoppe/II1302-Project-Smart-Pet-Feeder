@@ -5,7 +5,9 @@ const port = 3000;
 const defaultMsg = "HelloWorld";
 let motorStatus=false
 let schedules = [];
+let usedSchedules= []
 let distanceSensorValue=null
+
 
 app.use(cors());
 app.use(express.json());
@@ -37,6 +39,15 @@ app.post('/schedule', (req, res) => {
 // Endpoint to get all schedules in the schedules array
 app.get('/getschedules', (req, res) => {
   res.json(schedules[0]); 
+});
+
+// test endpoint to remove a completed schedule (not used currently)
+app.get('/removeSchedule', (req, res) => {
+  let first=schedules.shift()
+  console.log(usedSchedules)
+  usedSchedules.push(first)
+  console.log(usedSchedules)
+  res.json({ message: "Schedule removed" });
 });
 
 // Endpoint to update the current value of the distance sensor
