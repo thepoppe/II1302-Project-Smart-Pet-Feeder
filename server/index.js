@@ -32,6 +32,7 @@ app.post('/schedule', (req, res) => {
   const {month, day, hour, minute } = req.body;
   const completed=false
   schedules.push({month,day, hour, minute,completed});
+  schedules.sort(compareDatesCB);
   console.log(schedules) 
   res.json({ message: "Schedule added " });
 });
@@ -70,3 +71,24 @@ app.get("/", (req, res) => {
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
+
+
+
+function compareDatesCB(d1, d2){
+  if(d1.month - d2.month){
+    return d1.month - d2.month;
+  }
+  else if (d1.day-d2.day){
+    return d1.day-d2.day
+  }
+  else if(d1.hour-d2.hour){
+    d1.hour-d2.hour
+  }
+  else if(d1.minute-d2.minute){
+    d1.minute-d2.minute
+  }
+  // Same month-day-hour-minute
+  else{
+    0
+  }
+}
