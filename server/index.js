@@ -36,7 +36,7 @@ app.post('/schedule', (req, res) => {
 
 // Endpoint to get all schedules in the schedules array
 app.get('/getschedules', (req, res) => {
-  res.json(schedules); 
+  res.json(schedules[0]); 
 });
 
 // Endpoint to update the current value of the distance sensor
