@@ -82,13 +82,13 @@ function compareDatesCB(d1, d2){
     return d1.day-d2.day
   }
   else if(d1.hour-d2.hour){
-    d1.hour-d2.hour
+    return d1.hour-d2.hour
   }
   else if(d1.minute-d2.minute){
-    d1.minute-d2.minute
+    return d1.minute-d2.minute
   }
   // Same month-day-hour-minute
   else{
-    0
+    return 0
   }
 }
