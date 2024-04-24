@@ -4,7 +4,7 @@ const app = express();
 const port = 3000;
 const defaultMsg = "HelloWorld";
 let motorStatus=false
-let schedules = [];
+let schedules = []; //TODO make sure schedules are sorted
 let usedSchedules= []
 let distanceSensorValue=null
 
@@ -42,6 +42,7 @@ app.get('/getschedules', (req, res) => {
 });
 
 // test endpoint to remove a completed schedule (not used currently)
+
 app.get('/removeSchedule', (req, res) => {
   let first=schedules.shift()
   console.log(usedSchedules)
