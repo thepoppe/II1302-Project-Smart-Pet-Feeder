@@ -7,7 +7,8 @@ function Schedule() {
     function sendData(){
         
         const date = new Date(datetime);
-        const day = date.getDay();  
+        const month= date.getMonth();
+        const day=date.getDate(); 
         const hour = date.getHours();
         const minute = date.getMinutes();
 
@@ -16,7 +17,7 @@ function Schedule() {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ day, hour, minute })  
+            body: JSON.stringify({month, day, hour, minute })  
         })
         .then(response => response.json())
         .then(data => console.log(data.message))
