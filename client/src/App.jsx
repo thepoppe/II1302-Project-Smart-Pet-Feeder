@@ -1,12 +1,13 @@
 import "./index.css";
 import HomePageView from './HomePageView';
+import Schedule from './Schedule'
 
 
 function App() {
 
   return (
     <>
-    <HomePageView></HomePageView>
+    <Schedule></Schedule>
     </>);
 }
 
