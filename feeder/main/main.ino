@@ -66,6 +66,25 @@ void setup() {
       client.print(request);
   }
 
+ \ void postRequest(WiFiClient client, const char* serverAddress, char* resourceToGet, DynamicJsonDocument doc){
+ \     String data;
+ \     serializeJson(doc,data);
+ \     
+ \     String request = "POST "; 
+ \     request +=  resourceToGet;
+ \     request += " HTTP/1.1\r\nHost: ";
+ \     request += serverAddress;
+ \     request += "\r\nContent-Type: application/json";
+ \     request += "\r\nContent-Length: ";
+ \     request += String(data.length());
+ \     request += "\r\nConnection: close\r\n\r\n";
+ \     
+ \     request += data;
+ \     client.print(request);
+ \     Serial.print(data);
+ \     Serial.print(String(data.length()));
+ \ }
+
 
 void loop() {
   // Code to send and receive data packets over WiFi
@@ -157,7 +176,23 @@ void loop() {
     Motor.stopMotor();
   }
   
+  DynamicJsonDocument doc1(200);
+  doc1["value"] = 42;
 
+
+  
+ \\ String request = "POST /uploadDistanceSensorValue HTTP/1.1\r\nHost: ";
+ \\     request += serverAddress;
+ \\     request += "\r\nContent-Type: application/json";
+ \\     request += "\r\nContent-Length: ";
+ \\     request += 
+ \\     request += "\r\nConnection: close\r\n\r\n";
+ \\     
+ \\     request += data;
+ \\     client.print(request);
+
+  postRequest(client, serverAddress,  "/uploadDistanceSensorValue",  doc1);
+  
 
   client.stop();
 
