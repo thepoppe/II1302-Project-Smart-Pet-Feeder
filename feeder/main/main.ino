@@ -22,6 +22,7 @@
 
 #include <ArduinoJson.h>
 #include "time.h"
+#include <Distance.h>
 
 const char* ssid = "iPhone123";
 const char* password = "12345678";
@@ -31,7 +32,15 @@ int en = 9;   // Enable pin
 int in1 = 8;  // Input 1
 int in2 = 7;  // Input 2
 
+
+// Distance pins
+int trig = 2;
+int echo = 3;
+
+
+
 Motor Motor(en, in1, in2);
+Distance Distance(trig, echo);
 
 // Time related constants
 const char* ntpServer = "pool.ntp.org";
@@ -41,6 +50,7 @@ const int   daylightOffset_sec = 3600;
 void setup() {
   Serial.begin(115200);  // Initialize serial communication for debugging
   Motor.initMotor();
+  Distance.init();
   connectToWifi(ssid, password);
   configTime(gmtOffset_sec, daylightOffset_sec, ntpServer);
 
@@ -66,24 +76,7 @@ void setup() {
       client.print(request);
   }
 
- \\ void postRequest(WiFiClient client, const char* serverAddress, char* resourceToGet, DynamicJsonDocument doc){
- \\     String data;
- \\     serializeJson(doc,data);
- \\     
- \\     String request = "POST "; 
- \\     request +=  resourceToGet;
- \\     request += " HTTP/1.1\r\nHost: ";
- \\     request += serverAddress;
- \\     request += "\r\nContent-Type: application/json";
- \\     request += "\r\nContent-Length: ";
- \\     request += String(data.length());
- \\     request += "\r\nConnection: close\r\n\r\n";
- \\     
- \\     request += data;
- \\     client.print(request);
- \\     Serial.print(data);
- \\     Serial.print(String(data.length()));
- \\ }
+ 
 
 
 void loop() {
@@ -140,8 +133,8 @@ void loop() {
   if (error) {
     Serial.print(F("deserializeJson() failed: "));
     Serial.println(error.f_str());
-    client.stop();
-    return;
+    //client.stop();
+    //return;
   }
 
   // Extract values
@@ -165,34 +158,64 @@ void loop() {
   int currentHour =  timeinfo.tm_hour;
 
 
-  
+   if (!client.connect(serverAddress, port)) {
+    Serial.println("Initial Connection failed between client and server");
+    return;
+  }
+
   if(scheduledHour==timeinfo.tm_hour && scheduledMinut==timeinfo.tm_min){
     Serial.print("Start MOTOR");
     Motor.startMotor();
     Motor.speed(100);
+    getRequest(client, serverAddress, "/removeSchedule");
+
   }
   else{
     Serial.print("whaa...");
     Motor.stopMotor();
   }
   
-  DynamicJsonDocument doc1(200);
-  doc1["value"] = 42;
+ 
+
+ if (!client.connect(serverAddress, port)) {
+    Serial.println("Initial Connection failed between client and server");
+    return;
+  }
+
+Serial.print(Distance.getDistance());
+Serial.println("cm");
+
+// Building post request
+String data = "{\"value\": " + String(Distance.getDistance()) + "}";
+String request = "POST /uploadDistanceSensorValue HTTP/1.1\r\n";
+String host = "Host: " + String(serverAddress) + ":" + String(port) + "\r\n";
+String contentType = "Content-Type: application/json\r\n";
+String contentLength = "Content-Length: " + String(data.length()) + "\r\n";
+String connection = "Connection: close\r\n\r\n";
+
+request += host;
+request += contentType;
+request += contentLength;
+request += connection;
+request += data;
+
+    // Send the request
+    client.print(request);
+    Serial.println("POST request sent.");
 
 
-  
- \\ String request = "POST /uploadDistanceSensorValue HTTP/1.1\r\nHost: ";
- \\     request += serverAddress;
- \\     request += "\r\nContent-Type: application/json";
- \\     request += "\r\nContent-Length: ";
- \\     request += 
- \\     request += "\r\nConnection: close\r\n\r\n";
- \\     
- \\     request += data;
- \\     client.print(request);
+// handle response
+  String response = ""; // Initialize empty string to store response
 
-  postRequest(client, serverAddress,  "/uploadDistanceSensorValue",  doc1);
-  
+ while (client.connected() || client.available()) {
+   // while (client.available()) {
+        char c = client.read();
+        response += c; // Append each read character into the response string
+   // }
+
+}
+ 
+
 
   client.stop();
 

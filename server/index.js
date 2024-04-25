@@ -51,16 +51,18 @@ app.get('/getschedules', (req, res) => {
 app.get('/removeSchedule', (req, res) => {
   let first=schedules.shift()
   usedSchedules.unshift(first)
+  console.log(schedules)
+  console.log(usedSchedules)
   res.json({ message: "Schedule removed" });
 });
 
 // Endpoint to update the current value of the distance sensor
 app.post('/uploadDistanceSensorValue', (req, res) => {
-  console.log("connected")
-  console.log(req.body)
+  //console.log("connected")
+  //console.log(req.body)
   const {value} = req.body;
   distanceSensorValue=value
-  console.log(distanceSensorValue) 
+  //console.log(distanceSensorValue) 
   res.json({currentValue: distanceSensorValue });
 });
 
