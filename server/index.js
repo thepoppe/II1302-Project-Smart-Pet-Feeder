@@ -4,7 +4,7 @@ const app = express();
 const port = 3000;
 const defaultMsg = "HelloWorld";
 let motorStatus=false
-let schedules = []; //TODO make sure schedules are sorted
+let schedules = [];
 let usedSchedules= []
 let distanceSensorValue=null
 
@@ -19,7 +19,7 @@ app.post('/toggle-motor', (req, res) => {
     res.send("Motor is running");
   else
     res.send("Motor is stopped");
-  
+
 });
 
 // respond with the current value of motorStatus 
@@ -63,6 +63,14 @@ app.post('/uploadDistanceSensorValue', (req, res) => {
   console.log(distanceSensorValue) 
   res.json({currentValue: distanceSensorValue });
 });
+
+//Endpoint to get the value of distance sensor
+
+app.get('/distance-sensor', (req, res) => {
+  res.json({ currentValue: distanceSensorValue });
+});
+
+
 
 
 app.get("/", (req, res) => {
