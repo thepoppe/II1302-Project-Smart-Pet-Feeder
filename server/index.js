@@ -33,7 +33,7 @@ app.post('/schedule', (req, res) => {
   const completed=false
   schedules.push({month,day, hour, minute,completed});
   schedules.sort(compareDatesCB);
-  console.log(schedules) 
+  console.log(schedules)
   res.json({ message: "Schedule added " });
 });
 
@@ -46,9 +46,7 @@ app.get('/getschedules', (req, res) => {
 
 app.get('/removeSchedule', (req, res) => {
   let first=schedules.shift()
-  console.log(usedSchedules)
-  usedSchedules.push(first)
-  console.log(usedSchedules)
+  usedSchedules.unshift(first)
   res.json({ message: "Schedule removed" });
 });
 
