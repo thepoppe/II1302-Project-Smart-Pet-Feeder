@@ -33,6 +33,7 @@ app.post('/schedule', (req, res) => {
   const completed=false
   schedules.push({month,day, hour, minute,completed});
   schedules.sort(compareDatesCB);
+  console.log(schedules)
   res.json({ message: "Schedule added " });
 });
 
