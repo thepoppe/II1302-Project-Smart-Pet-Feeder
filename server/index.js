@@ -37,13 +37,17 @@ app.post('/schedule', (req, res) => {
   res.json({ message: "Schedule added " });
 });
 
-// Endpoint to get all schedules in the schedules array
+// Endpoint to get the first schedule in the schedules array ( arduino )
+app.get('/allSchedules', (req, res) => {
+  res.json(schedules); 
+});
+
+// Endpoint to get all the schedule in the schedules array ( arduino )
 app.get('/getschedules', (req, res) => {
   res.json(schedules[0]); 
 });
 
 // test endpoint to remove a completed schedule (not used currently)
-
 app.get('/removeSchedule', (req, res) => {
   let first=schedules.shift()
   usedSchedules.unshift(first)
