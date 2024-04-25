@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import "./HomepageView.css";
 function HomePageView(props) {
   return (
     <>

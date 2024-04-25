@@ -5,7 +5,7 @@
   color: black;
 
   color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
+  /*color: rgba(255, 255, 255, 0.87);*/
   background-color: #f0ece2;
 
   --lighter-color: #f0ece2;
@@ -55,7 +55,7 @@ button {
   transition: border-color 0.25s;
 }
 button:hover {
-  border-color: #646cff;
+  border-color: var(--dark-color);
 }
 button:focus,
 button:focus-visible {
@@ -78,34 +78,4 @@ ul {
   list-style: none;
   padding: 0;
   margin: 0;
-}
-
-.navigation {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: var(--medium-color);
-}
-
-.navigation a {
-  color: black;
-  font-size: large;
-}
-.homeUL {
-  display: flex;
-  gap: 3rem;
-  margin-top: 1rem;
-  justify-content: center;
-}
-.homeLI {
-  border: solid;
-  border-radius: 25px;
-  padding: 5px;
-  background: var(--light-color);
-  width: 6rem;
-  text-align: center;
-}
-.homeLI:hover {
-  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-  background: var(--medium-color);
 }

@@ -1,0 +1,23 @@
+.homeUL {
+  display: flex;
+  gap: 3rem;
+  margin-top: 1rem;
+  justify-content: center;
+}
+.homeLI {
+  border: solid;
+  border-width: 1px;
+  border-radius: 25px;
+  padding: 5px;
+  background: var(--light-color);
+  width: 6rem;
+  text-align: center;
+}
+.homeLI:hover {
+  border-color: var(--dark-color);
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+}
+.homeLI:focus,
+.homeLI:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
