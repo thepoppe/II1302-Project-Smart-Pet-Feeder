@@ -8,16 +8,26 @@
   border: solid;
   border-width: 1px;
   border-radius: 25px;
-  padding: 5px;
+  border-color: var(--dark-color);
+  padding: 10px;
   background: var(--light-color);
-  width: 6rem;
+  width: 8rem;
   text-align: center;
+  font-size: x-large;
+  opacity: 80%;
 }
 .homeLI:hover {
   border-color: var(--dark-color);
+  opacity: 100%;
   box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
 }
 .homeLI:focus,
 .homeLI:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
+}
+
+.background-video {
+  width: 100%;
+  object-fit: cover;
+  z-index: -1;
 }
