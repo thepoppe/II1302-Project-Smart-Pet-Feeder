@@ -9,6 +9,11 @@
   copies or substantial portions of the Software.
 */
 
+/*
+  ArduinoJson - arduinojson.org
+  Copyright Benoit Blanchon 2014-2019
+  MIT License
+*/
 
 #include <WiFi.h>  // Include WiFi library for example (or Bluetooth.h)
 #include <WiFiClient.h>
@@ -80,7 +85,6 @@ void loop() {
 
 
   // CODE BELOW WAS TAKEN FROM  https://arduinojson.org/v7/example/http-client/
-  // so understand and either remake or give sources to it
 
   // Check HTTP status
   char status[32] = { 0 };
