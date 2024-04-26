@@ -30,8 +30,7 @@ app.get('/motor-status', (req, res) => {
 // add a new schedule to the schedule array
 app.post('/schedule', (req, res) => {
   const {month, day, hour, minute } = req.body;
-  const completed=false
-  schedules.push({month,day, hour, minute,completed});
+  schedules.push({month,day, hour, minute});
   schedules.sort(compareDatesCB);
   console.log(schedules)
   res.json({ message: "Schedule added " });
