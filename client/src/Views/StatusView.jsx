@@ -3,7 +3,7 @@ import React, { useState,useEffect } from 'react';
 
 export default function StatusView() {
 
-    const [distance, setDistance] = useState('100');
+    const [distance, setDistance] = useState('');
 
     function getDistanceSensor(){
         fetch('http://localhost:3000/distance-sensor', {
