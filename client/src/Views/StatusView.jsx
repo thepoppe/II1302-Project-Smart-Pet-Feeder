@@ -24,7 +24,7 @@ export default function StatusView() {
 
     return (
         <div className="status-container">
-            <h1>Petfeeder</h1>
+            <h1></h1>
             <div className="order-section">
                 <button onClick={getDistanceSensor} className="centered-button">Update Now</button>
             </div>
