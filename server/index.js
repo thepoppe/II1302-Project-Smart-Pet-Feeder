@@ -47,7 +47,7 @@ app.get('/getschedules', (req, res) => {
   res.json(schedules[0]); 
 });
 
-// test endpoint to remove a completed schedule (not used currently)
+// test endpoint to remove a completed schedule and add it to completed schedules
 app.get('/removeSchedule', (req, res) => {
   let first=schedules.shift()
   usedSchedules.unshift(first)
@@ -62,7 +62,7 @@ app.post('/uploadDistanceSensorValue', (req, res) => {
   //console.log(req.body)
   const {value} = req.body;
   distanceSensorValue=value
-  //console.log(distanceSensorValue) 
+  console.log(distanceSensorValue) 
   res.json({currentValue: distanceSensorValue });
 });
 
