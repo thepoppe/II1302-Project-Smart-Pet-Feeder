@@ -5,18 +5,29 @@
   color: black;
 
   color-scheme: light dark;
-  /*color: rgba(255, 255, 255, 0.87);*/
-  background-color: #f0ece2;
+  color: rgba(0, 0, 0, 0.87);
+  background-color: #BEC9FF;
 
-  --lighter-color: #f0ece2;
-  --light-color: #dfd3c3;
-  --medium-color: #dfd3c3;
-  --dark-color: #596e79;
+
+  --lighter-color: #BEC9FF;
+  --light-color: #BEC9FF;
+  --medium-color: #BEC9FF;
+  --dark-color: #BEC9FF;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+threeDstyle{
+  border-radius: 15px;
+  background: linear-gradient(180deg, #BEC9FF 0%, #727899 100%);
+  width: 801px;
+  height: 386px;
+  flex-shrink: 0;
+  background: transparent;
+
 }
 p {
   text-decoration: inherit;
@@ -29,13 +40,53 @@ a {
   text-decoration: inherit;
 }
 a:hover {
-  color: #535bf2;
+  color: #000000;
+  text-decoration: underline;
 }
 
 h1 {
   font-size: 3.2em;
   line-height: 1.1;
+  position: absolute;
+  left: 400px;
+  top: 150px;
+  
 }
+
+.login{
+  width: 1000px;
+height: 351px;
+flex-shrink: 0;
+
+color: var(--Black, #100420);
+text-align: center;
+font-feature-settings: 'clig' off, 'liga' off;
+font-family: Inter;
+font-size: 90px;
+font-style: normal;
+font-weight: 600;
+line-height: 120%; /* 115.2px */
+letter-spacing: -2.88px;
+position: relative;
+left: 280px;
+top: 75px;
+}
+
+.h2{
+  color: var(--Black, #100420);
+font-feature-settings: 'clig' off, 'liga' off;
+font-family: Inter;
+font-size: 26px;
+font-style: normal;
+font-weight: 500;
+line-height: 120%;
+letter-spacing: -1.08px;
+position: relative;
+top: 150px;
+left: 310px;
+
+}
+
 .centered-button {
   display: flex;
   justify-content: center;
@@ -45,7 +96,7 @@ h1 {
 }
 button {
   border-radius: 8px;
-  border: 1px solid transparent;
+  border: 10px solid transparent;
   padding: 0.6em 1.2em;
   font-size: 1em;
   font-weight: 500;
@@ -53,9 +104,13 @@ button {
   background-color: #1a1a1a;
   cursor: pointer;
   transition: border-color 0.25s;
+  position: relative;
+  top: 160px;
+  left: 580px;
 }
 button:hover {
-  border-color: var(--dark-color);
+  border-color: #000000;
+  text-decoration: underline;
 }
 button:focus,
 button:focus-visible {
@@ -65,13 +120,13 @@ button:focus-visible {
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
-    background-color: #ffffff;
+    background-color: #000000;
   }
   a:hover {
-    color: #747bff;
+    text-decoration: underline;
   }
   button {
-    background-color: #f9f9f9;
+    background-color: #000000;
   }
 }
 ul {
@@ -80,18 +135,49 @@ ul {
   margin: 0;
 }
 
-
 .navigation {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
-  background-color: var(--medium-color);
+  padding: 1em;
+  background-color: #BEC9FF; /* Replace with your navbar color */
 }
 
-.navigation a {
-  color: black;
-  font-size: large;
+.navigation ul {
+  list-style: none;
+  display: flex;
+  padding: 0;
+  margin: 0;
 }
+
+.navigation li {
+  margin: 0 10px; /* Adjust as necessary */
+}
+
+.brand-logo {
+  font-size: 2em;
+  color: rgb(0, 0, 0); /* Replace with your logo color */
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+}
+
+.about-link {
+  font-size: 1em;
+  color: rgb(0, 0, 0); /* Replace with your link color */
+  text-decoration: none;
+  padding: 0.5em 1em;
+  border: 2px solid transparent; /* Invisible border for a consistent layout */
+  position: absolute;
+  right: 40px;
+  top: 30px;
+}
+
+.about-link:hover,
+.about-link:focus {
+  text-decoration: underline;
+}
+
 .homeUL {
   display: flex;
   gap: 3rem;
@@ -109,6 +195,7 @@ ul {
 .homeLI:hover {
   box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
   background: var(--medium-color);
+  text-decoration: underline;
 }
 
 

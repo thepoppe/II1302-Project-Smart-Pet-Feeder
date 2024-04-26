@@ -3,11 +3,16 @@ import "./TopBar.css";
 export default function TopBar(props) {
   let loggedIn = props.loggedIn;
   return (
-    <nav className="navigation">
-      <Link to="/" className="navcenter-link">
-        <h2>Smart Pet Feeder</h2>
-      </Link>
-      {loggedIn && (
+
+    <>
+      <nav className="navigation">
+      <ul>
+        <li>
+          <Link to="/" className="brand-logo">
+            🐾 Smart Feeder
+          </Link>
+        </li>
+        {loggedIn && (
         <div className="dropdown">
           <Link to="/settings">
             <h2>Profile</h2>
@@ -17,7 +22,10 @@ export default function TopBar(props) {
             <button onClick={() => props.logOut()} className="dropdownbtn">Log Out</button>
           </div>
         </div>
-      )}
+      </ul>
     </nav>
+    </>
+
   );
 }
+

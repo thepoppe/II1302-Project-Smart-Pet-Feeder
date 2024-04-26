@@ -9,12 +9,16 @@ import React, { useState } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import "./index.css";
 
+
+
 export const ModelContext = React.createContext();
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
   return (
+   
     <>
+
       <TopBar loggedIn={loggedIn} logOut={() => setLoggedIn(false)} />
       <ModelContext.Provider value={loggedIn}>
         <Routes>
