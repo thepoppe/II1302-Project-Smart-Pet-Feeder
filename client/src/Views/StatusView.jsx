@@ -1,15 +1,36 @@
-import React from 'react';
+import React, { useState,useEffect } from 'react';
+
 
 export default function StatusView() {
+
+    const [distance, setDistance] = useState('100');
+
+    function getDistanceSensor(){
+        fetch('http://localhost:3000/distance-sensor', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+    
+                setDistance(data.currentValue);
+            
+        })
+        .catch(error => console.error('Error:', error));
+    };
+    
+
     return (
         <div className="status-container">
             <h1>Petfeeder</h1>
             <div className="order-section">
-                <button className="centered-button">Update Now</button>
+                <button onClick={getDistanceSensor} className="centered-button">Update Now</button>
             </div>
             <div className="food-level-container">
                 <div className="food-level-indicator" style={{ height: '50%' }}>
-                    <span className="food-level-text">50%</span>
+                    <span className="food-level-text">{distance}</span>
                 </div>
             </div>
             <div className="history-section">
