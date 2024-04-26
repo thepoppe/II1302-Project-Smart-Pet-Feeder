@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import {Canvas} from "@react-three/fiber";
 import {useGLTF, Stage, PresentationControls} from "@react-three/drei";
 
-
 function Model(props){
   const {scene} = useGLTF("../../feeder.glb");
   return <primitive  object={scene} {...props}/>

@@ -21,6 +21,13 @@
   color: black;
   border-radius: 2px;
 }
+.brand-logo {
+  font-size: 2em;
+  color: rgb(0, 0, 0); 
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+}
 
 /* 
     OBS The code beneath is taken from w3schools for drop down button
