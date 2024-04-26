@@ -15,7 +15,7 @@ function App() {
   const [loggedIn, setLoggedIn] = useState(false);
   return (
     <>
-      <TopBar></TopBar>
+      <TopBar loggedIn={loggedIn} logOut={() => setLoggedIn(false)} />
       <ModelContext.Provider value={loggedIn}>
         <Routes>
           <Route

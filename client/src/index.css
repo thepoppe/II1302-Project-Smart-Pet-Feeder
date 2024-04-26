@@ -5,7 +5,7 @@
   color: black;
 
   color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
+  /*color: rgba(255, 255, 255, 0.87);*/
   background-color: #f0ece2;
 
   --lighter-color: #f0ece2;
@@ -55,7 +55,7 @@ button {
   transition: border-color 0.25s;
 }
 button:hover {
-  border-color: #646cff;
+  border-color: var(--dark-color);
 }
 button:focus,
 button:focus-visible {
@@ -79,6 +79,7 @@ ul {
   padding: 0;
   margin: 0;
 }
+
 
 .navigation {
   display: flex;
@@ -166,4 +167,3 @@ ul {
   border: 1px solid #ccc;
   border-radius: 8px;
 }
-

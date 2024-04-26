@@ -1,6 +1,6 @@
 export default function LoginView(props) {
   return (
-    <>
+    <div style={{ textAlign: "center" }}>
       <h1>Log in now</h1>
       <button
         onClick={() => {
@@ -10,6 +10,6 @@ export default function LoginView(props) {
       >
         Press to log in
       </button>
-    </>
+    </div>
   );
 }

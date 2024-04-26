@@ -1,35 +1,30 @@
 import { Link } from "react-router-dom";
+import "./HomepageView.css";
 function HomePageView(props) {
   return (
     <>
-      <div
-        style={{
-          marginTop: "1rem",
-          textAlign: "center",
-          height: "15rem",
-          background: "var(--light-color)",
-          alignContent: "center",
-        }}
-      >
-        <p>Picture of product</p>
-      </div>
+      <video autoPlay loop className="background-video">
+        <source src="../../assets/demo.mp4" type="video/mp4" />
+        Video cant be displayed
+      </video>
+
       <div>
         <ul className="homeUL">
-          <li className="homeLI">
-            <Link to="/schedule">
+          <Link to="/schedule">
+            <li className="homeLI">
               <p>Schedule</p>
-            </Link>
-          </li>
-          <li className="homeLI">
-            <Link to="/status">
+            </li>
+          </Link>
+          <Link to="/status">
+            <li className="homeLI">
               <p>Status</p>
-            </Link>
-          </li>
-          <li className="homeLI">
-            <Link to="/settings">
+            </li>
+          </Link>
+          <Link to="/settings">
+            <li className="homeLI">
               <p>Settings</p>
-            </Link>
-          </li>
+            </li>
+          </Link>
         </ul>
       </div>
     </>
