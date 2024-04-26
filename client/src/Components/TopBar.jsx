@@ -3,14 +3,21 @@ export default function TopBar() {
   return (
     <>
       <nav className="navigation">
-        <ul>
-          <li>
-            <Link to="/">
-              <h2>Smart Pet Feeder</h2>
-            </Link>
-          </li>
-        </ul>
-      </nav>
+      <ul>
+        <li>
+          <Link to="/" className="brand-logo">
+            🐾 Smart Feeder
+          </Link>
+        </li>
+        <li>
+          <Link to="/about" className="about-link">
+            About
+          </Link>
+        </li>
+      </ul>
+    </nav>
     </>
   );
 }
+
+
