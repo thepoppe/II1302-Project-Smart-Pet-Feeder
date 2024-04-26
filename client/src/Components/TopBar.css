@@ -2,7 +2,7 @@
   width: 100%;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  background-color: var(--medium-color);
+  background-color: #BEC9FF;
   padding: 3rem 3rem;
   box-sizing: border-box;
 }

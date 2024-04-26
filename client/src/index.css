@@ -6,7 +6,7 @@
 
   color-scheme: light dark;
   color: rgba(0, 0, 0, 0.87);
-  background-color: #BEC9FF;
+  background-color: white;
 
 
   --lighter-color: #BEC9FF;
@@ -19,6 +19,7 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
 
 threeDstyle{
   border-radius: 15px;
@@ -54,11 +55,10 @@ h1 {
 }
 
 .login{
-  width: 1000px;
+width: 1000px;
 height: 351px;
 flex-shrink: 0;
-
-color: var(--Black, #100420);
+color: white;
 text-align: center;
 font-feature-settings: 'clig' off, 'liga' off;
 font-family: Inter;
@@ -107,6 +107,7 @@ button {
   position: relative;
   top: 160px;
   left: 580px;
+  color: white;
 }
 button:hover {
   border-color: #000000;
@@ -117,30 +118,19 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #000000;
-  }
-  a:hover {
-    text-decoration: underline;
-  }
-  button {
-    background-color: #000000;
-  }
-}
+
 ul {
   list-style: none;
   padding: 0;
   margin: 0;
 }
-
+/*
 .navigation {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 1em;
-  background-color: #BEC9FF; /* Replace with your navbar color */
+  background-color: #BEC9FF;
 }
 
 .navigation ul {
@@ -151,12 +141,11 @@ ul {
 }
 
 .navigation li {
-  margin: 0 10px; /* Adjust as necessary */
-}
-
+  margin: 0 10px;
+}*/
 .brand-logo {
   font-size: 2em;
-  color: rgb(0, 0, 0); /* Replace with your logo color */
+  color: rgb(0, 0, 0); 
   text-decoration: none;
   display: flex;
   align-items: center;
