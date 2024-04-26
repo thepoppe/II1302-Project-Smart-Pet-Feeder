@@ -1,6 +1,9 @@
 import { Link } from "react-router-dom";
-export default function TopBar() {
+import "./TopBar.css";
+export default function TopBar(props) {
+  let loggedIn = props.loggedIn;
   return (
+
     <>
       <nav className="navigation">
       <ul>
@@ -9,15 +12,20 @@ export default function TopBar() {
             🐾 Smart Feeder
           </Link>
         </li>
-        <li>
-          <Link to="/about" className="about-link">
-            About
+        {loggedIn && (
+        <div className="dropdown">
+          <Link to="/settings">
+            <h2>Profile</h2>
           </Link>
-        </li>
+          <div className="dropdown-content">
+            <button className="dropdownbtn">Profile</button>
+            <button onClick={() => props.logOut()} className="dropdownbtn">Log Out</button>
+          </div>
+        </div>
       </ul>
     </nav>
     </>
+
   );
 }
-
 

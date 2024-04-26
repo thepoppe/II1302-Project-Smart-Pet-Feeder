@@ -18,35 +18,36 @@ function App() {
   return (
    
     <>
-    <TopBar></TopBar>
-    <ModelContext.Provider value={loggedIn}>
-      <Routes>
-        <Route
-          path="/"
-          element={
-            loggedIn ? (
-             <HomePage/>
-            ) : (
-              <LoginView login={() => setLoggedIn(true)} />
-            )
-          }
-        />
-        <Route
-          path="/schedule"
-          element={loggedIn ? <Schedule /> : <Navigate to={"/"} />}
-        />
-        <Route
-          path="/status"
-          element={loggedIn ? <Status /> : <Navigate to={"/"} />}
-        />
-        <Route
-          path="/settings"
-          element={loggedIn ? <Settings /> : <Navigate to={"/"} />}
-        />
-        <Route path="*" element={<ErrorPage />} />
-      </Routes>
-    </ModelContext.Provider>
-  </>
+
+      <TopBar loggedIn={loggedIn} logOut={() => setLoggedIn(false)} />
+      <ModelContext.Provider value={loggedIn}>
+        <Routes>
+          <Route
+            path="/"
+            element={
+              loggedIn ? (
+                <HomePage />
+              ) : (
+                <LoginView login={() => setLoggedIn(true)} />
+              )
+            }
+          />
+          <Route
+            path="/schedule"
+            element={loggedIn ? <Schedule /> : <Navigate to={"/"} />}
+          />
+          <Route
+            path="/status"
+            element={loggedIn ? <Status /> : <Navigate to={"/"} />}
+          />
+          <Route
+            path="/settings"
+            element={loggedIn ? <Settings /> : <Navigate to={"/"} />}
+          />
+          <Route path="*" element={<ErrorPage />} />
+        </Routes>
+      </ModelContext.Provider>
+    </>
   );
 }
 

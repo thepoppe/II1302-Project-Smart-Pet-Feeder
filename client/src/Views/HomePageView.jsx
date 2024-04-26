@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+
 import {Canvas} from "@react-three/fiber";
 import {useGLTF, Stage, PresentationControls} from "@react-three/drei";
 
@@ -55,23 +56,24 @@ function HomePageView(props) {
         
         </div>
       </div>
+
       <div>
         <ul className="homeUL">
-          <li className="homeLI">
-            <Link to="/schedule">
+          <Link to="/schedule">
+            <li className="homeLI">
               <p>Schedule</p>
-            </Link>
-          </li>
-          <li className="homeLI">
-            <Link to="/status">
+            </li>
+          </Link>
+          <Link to="/status">
+            <li className="homeLI">
               <p>Status</p>
-            </Link>
-          </li>
-          <li className="homeLI">
-            <Link to="/settings">
+            </li>
+          </Link>
+          <Link to="/settings">
+            <li className="homeLI">
               <p>Settings</p>
-            </Link>
-          </li>
+            </li>
+          </Link>
         </ul>
       </div>
     </>
