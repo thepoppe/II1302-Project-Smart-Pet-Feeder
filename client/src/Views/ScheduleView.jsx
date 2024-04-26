@@ -50,7 +50,7 @@ export default function ScheduleView(props) {
           <div>
               {schedules.map((schedule,index) => (
                   <div key={index}>
-                      {`Month: ${schedule.month } Day: ${schedule.day} Hour: ${schedule.hour} minute: ${schedule.minute}`}
+                      {`Month: ${schedule.month+1 } Day: ${schedule.day} Hour: ${schedule.hour} minute: ${schedule.minute}`}
                   </div>
               ))}
           </div> 
