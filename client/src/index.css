@@ -50,25 +50,45 @@ h1 {
   top: 150px;
 }
 
-.login {
-  width: 1000px;
-  height: 351px;
-  flex-shrink: 0;
-  color: white;
+.logincontainer {
+  width: 100%;
   text-align: center;
+  margin-top: 5rem;
+}
+.login {
+  color: black;
   font-feature-settings: "clig" off, "liga" off;
   font-family: Inter;
   font-size: 90px;
   font-style: normal;
   font-weight: 600;
-  line-height: 120%; /* 115.2px */
+  line-height: 120%;
   letter-spacing: -2.88px;
-  position: relative;
-  left: 280px;
-  top: 75px;
 }
 
-.h2 {
+button {
+  display: inline-block;
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: 700;
+  text-align: center;
+  color: black;
+  border-radius: 5px;
+  border-color: honeydew;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+  background-color: #bec9ff;
+}
+button:hover:not([disabled]) {
+  background-color: #8396f8;
+  border-color: #8396f8;
+}
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+h2 {
   color: var(--Black, #100420);
   font-feature-settings: "clig" off, "liga" off;
   font-family: Inter;
@@ -77,9 +97,6 @@ h1 {
   font-weight: 500;
   line-height: 120%;
   letter-spacing: -1.08px;
-  position: relative;
-  top: 150px;
-  left: 310px;
 }
 
 .centered-button {

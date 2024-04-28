@@ -17,7 +17,9 @@ export default function TopBar(props) {
                 <p>Profile</p>
               </Link>
               <div className="dropdown-content">
-                <button className="dropdownbtn">About</button>
+                <button className="dropdownbtn" disabled>
+                  About
+                </button>
                 <button onClick={() => props.logOut()} className="dropdownbtn">
                   Log Out
                 </button>

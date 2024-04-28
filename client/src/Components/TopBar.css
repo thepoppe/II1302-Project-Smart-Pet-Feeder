@@ -19,16 +19,8 @@
 .dropdownbtn {
   background-color: inherit;
   width: 100%;
-  text-align: center;
-  color: black;
-  border-radius: 2px;
-  cursor: pointer;
 }
-.dropdownbtn:hover {
-  border-color: var(--dark-color);
-  opacity: 100%;
-  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-}
+
 .brand-logo {
   color: rgb(0, 0, 0);
   text-decoration: none;
