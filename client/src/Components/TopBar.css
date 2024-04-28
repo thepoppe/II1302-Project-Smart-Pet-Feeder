@@ -11,8 +11,8 @@
   font-size: large;
 }
 .navcenter-link {
-  grid-column: 2;
-  justify-self: center;
+  grid-column: 1;
+  justify-self: start;
   align-self: end;
   list-style: none;
 }
@@ -26,6 +26,7 @@
   text-decoration: none;
   display: flex;
   align-items: center;
+  font-size: 2rem;
 }
 
 /* 

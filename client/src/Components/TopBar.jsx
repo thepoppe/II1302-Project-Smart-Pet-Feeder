@@ -7,8 +7,8 @@ export default function TopBar(props) {
       <nav>
         <ul className="navigation">
           <li className="navcenter-link">
-            <Link to="/" className="brand-logo">
-              <h2>🐾 Smart Feeder</h2>
+            <Link to="/">
+              <h2 className="brand-logo">🐾 Smart Feeder</h2>
             </Link>
           </li>
           {loggedIn && (
