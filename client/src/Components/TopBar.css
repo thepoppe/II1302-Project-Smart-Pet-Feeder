@@ -2,8 +2,8 @@
   width: 100%;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  background-color: #BEC9FF;
-  padding: 3rem 3rem;
+  background-color: #bec9ff;
+  padding: 2rem 3rem;
   box-sizing: border-box;
 }
 .navigation a {
@@ -13,6 +13,8 @@
 .navcenter-link {
   grid-column: 2;
   justify-self: center;
+  align-self: end;
+  list-style: none;
 }
 .dropdownbtn {
   background-color: inherit;
@@ -20,10 +22,15 @@
   text-align: center;
   color: black;
   border-radius: 2px;
+  cursor: pointer;
+}
+.dropdownbtn:hover {
+  border-color: var(--dark-color);
+  opacity: 100%;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
 }
 .brand-logo {
-  font-size: 2em;
-  color: rgb(0, 0, 0); 
+  color: rgb(0, 0, 0);
   text-decoration: none;
   display: flex;
   align-items: center;
@@ -31,7 +38,7 @@
 
 /* 
     OBS The code beneath is taken from w3schools for drop down button
-    Code slithly modified grid-column and justify self added, min-width adjusted
+    Code modified to suit application
     source: https://www.w3schools.com/howto/howto_css_dropdown.asp
 */
 .dropdown {
@@ -39,6 +46,7 @@
   justify-self: end;
   position: relative;
   display: inline-block;
+  align-self: end;
 }
 
 /* Dropdown Content (Hidden by Default) */
@@ -49,6 +57,7 @@
   min-width: 120px;
   box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
   z-index: 1;
+  left: -1.5rem;
 }
 
 /* Links inside the dropdown */
