@@ -2,10 +2,16 @@
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
+  color: black;
 
   color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  color: rgba(0, 0, 0, 0.87);
+  background-color: white;
+
+  --lighter-color: #bec9ff;
+  --light-color: #bec9ff;
+  --medium-color: #bec9ff;
+  --dark-color: #bec9ff;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -13,56 +19,195 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+threeDstyle {
+  border-radius: 15px;
+  background: linear-gradient(180deg, #bec9ff 0%, #727899 100%);
+  width: 801px;
+  height: 386px;
+  flex-shrink: 0;
+  background: transparent;
+}
+p {
+  text-decoration: inherit;
+  font-weight: 500;
+  color: black;
+}
 a {
   font-weight: 500;
   color: #646cff;
   text-decoration: inherit;
 }
 a:hover {
-  color: #535bf2;
+  color: #000000;
+  text-decoration: underline;
 }
-
-
 
 h1 {
   font-size: 3.2em;
   line-height: 1.1;
+  position: absolute;
+  left: 400px;
+  top: 150px;
 }
+
+.logincontainer {
+  width: 100%;
+  text-align: center;
+  margin-top: 5rem;
+}
+.login {
+  color: black;
+  font-feature-settings: "clig" off, "liga" off;
+  font-family: Inter;
+  font-size: 90px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 120%;
+  letter-spacing: -2.88px;
+}
+
+button {
+  display: inline-block;
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: 700;
+  text-align: center;
+  color: black;
+  border-radius: 5px;
+  border-color: honeydew;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+  background-color: #bec9ff;
+}
+button:hover:not([disabled]) {
+  background-color: #8396f8;
+  border-color: #8396f8;
+}
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+h2 {
+  color: var(--Black, #100420);
+  font-feature-settings: "clig" off, "liga" off;
+  font-family: Inter;
+  font-size: 26px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 120%;
+  letter-spacing: -1.08px;
+}
+
 .centered-button {
   display: flex;
   justify-content: center;
-  align-items: center;  
-  width: 100%;   
-  flex-direction: column
+  align-items: center;
+  width: 100%;
+  flex-direction: column;
 }
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.about-link {
   font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
+  color: rgb(0, 0, 0); /* Replace with your link color */
+  text-decoration: none;
+  padding: 0.5em 1em;
+  border: 2px solid transparent; /* Invisible border for a consistent layout */
+  position: absolute;
+  right: 40px;
+  top: 30px;
 }
-button:hover {
-  border-color: #646cff;
+
+.about-link:hover,
+.about-link:focus {
+  text-decoration: underline;
 }
-button:focus,
-button:focus-visible {
+
+.homeUL {
+  display: flex;
+  gap: 3rem;
+  margin-top: 1rem;
+  justify-content: center;
+}
+.homeLI {
+  border: solid;
+  border-width: 1px;
+  border-radius: 25px;
+  border-color: var(--dark-color);
+  padding: 10px;
+  background: var(--light-color);
+  width: 8rem;
+  text-align: center;
+  font-size: x-large;
+  opacity: 80%;
+}
+.homeLI:hover {
+  border-color: var(--dark-color);
+  opacity: 100%;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+}
+.homeLI:focus,
+.homeLI:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+.pet-item {
+  padding: 0.5rem;
+  margin-bottom: 0.5rem;
+  border-radius: 8px;
+}
+
+.pet-item button {
+  margin-left: 1rem;
+}
+
+.pet-item button.delete-button {
+  background-color: var(--dark-color);
+  color: var(--lighter-color);
+}
+
+.status-container {
+  padding: 20px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.food-level-container {
+  margin: 20px 0;
+  background-color: #e9e9e9;
+  position: relative;
+  height: 200px;
+}
+
+.food-level-indicator {
+  background-color: #76b947;
+  width: 100%;
+  border-radius: 8px 8px 0 0;
+  position: absolute;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+.food-level-text {
+  font-size: 1.5em;
+  font-weight: bold;
+}
+
+.history-graph-placeholder {
+  background-color: #f5f5f5;
+  height: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #ccc;
+  border-radius: 8px;
 }

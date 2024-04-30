@@ -4,6 +4,10 @@ const app = express();
 const port = 3000;
 const defaultMsg = "HelloWorld";
 let motorStatus=false
+let schedules = [];
+let usedSchedules= []
+let distanceSensorValue=null
+
 
 app.use(cors());
 app.use(express.json());
@@ -11,18 +15,64 @@ app.use(express.json());
 // Toggle motor status ( done by our application when pressing a button) 
 app.post('/toggle-motor', (req, res) => {
   motorStatus = !motorStatus; //TODO make toggle motorstatus function in model
-
   if(motorStatus)
     res.send("Motor is running");
   else
     res.send("Motor is stopped");
-  
+
 });
 
 // respond with the current value of motorStatus 
 app.get('/motor-status', (req, res) => {
   res.send(motorStatus)
 });
+
+// add a new schedule to the schedule array
+app.post('/schedule', (req, res) => {
+  const {month, day, hour, minute } = req.body;
+  schedules.push({month,day, hour, minute});
+  schedules.sort(compareDatesCB);
+  console.log(schedules)
+  res.json({ message: "Schedule added " });
+});
+
+// Endpoint to get the first schedule in the schedules array ( arduino )
+app.get('/allSchedules', (req, res) => {
+  res.json(schedules); 
+});
+
+// Endpoint to get all the schedule in the schedules array ( arduino )
+app.get('/getschedules', (req, res) => {
+  res.json(schedules[0]); 
+});
+
+// test endpoint to remove a completed schedule and add it to completed schedules
+app.get('/removeSchedule', (req, res) => {
+  let first=schedules.shift()
+  usedSchedules.unshift(first)
+  console.log(schedules)
+  console.log(usedSchedules)
+  res.json({ message: "Schedule removed" });
+});
+
+// Endpoint to update the current value of the distance sensor
+app.post('/uploadDistanceSensorValue', (req, res) => {
+  //console.log("connected")
+  //console.log(req.body)
+  const {value} = req.body;
+  distanceSensorValue=value
+  console.log(distanceSensorValue) 
+  res.json({currentValue: distanceSensorValue });
+});
+
+//Endpoint to get the value of distance sensor
+
+app.get('/distance-sensor', (req, res) => {
+  res.json({ currentValue: distanceSensorValue });
+});
+
+
+
 
 app.get("/", (req, res) => {
   res.send(message);
@@ -32,3 +82,24 @@ app.get("/", (req, res) => {
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
+
+
+
+function compareDatesCB(d1, d2){
+  if(d1.month - d2.month){
+    return d1.month - d2.month;
+  }
+  else if (d1.day-d2.day){
+    return d1.day-d2.day
+  }
+  else if(d1.hour-d2.hour){
+    return d1.hour-d2.hour
+  }
+  else if(d1.minute-d2.minute){
+    return d1.minute-d2.minute
+  }
+  // Same month-day-hour-minute
+  else{
+    return 0
+  }
+}
