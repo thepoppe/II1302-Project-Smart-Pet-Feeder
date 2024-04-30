@@ -205,7 +205,7 @@ Serial.print(weight);
 Serial.println("g");
 
 // Building post request
-String data = "{\"value\": " + String(dist) + "}";
+String data = "{\"dist\": " + String(dist) + ",\"weight\":" + String(weight)+ "}";
 String request = "POST /uploadDistanceSensorValue HTTP/1.1\r\n";
 String host = "Host: " + String(serverAddress) + ":" + String(port) + "\r\n";
 String contentType = "Content-Type: application/json\r\n";

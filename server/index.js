@@ -59,9 +59,10 @@ app.get('/removeSchedule', (req, res) => {
 app.post('/uploadDistanceSensorValue', (req, res) => {
   //console.log("connected")
   //console.log(req.body)
-  const {value} = req.body;
-  distanceSensorValue=value
-  console.log(distanceSensorValue) 
+  const {dist, weight} = req.body;
+  distanceSensorValue=dist
+  console.log(dist) 
+  console.log(weight) 
   res.json({currentValue: distanceSensorValue });
 });
 
