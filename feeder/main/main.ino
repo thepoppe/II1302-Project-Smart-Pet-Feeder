@@ -19,10 +19,12 @@
 #include <WiFiClient.h>
 
 #include <Motor.h>
+#include "HX711.h"
 
 #include <ArduinoJson.h>
 #include "time.h"
 #include <Distance.h>
+
 
 const char* ssid = "iPhone123";
 const char* password = "12345678";
@@ -37,6 +39,12 @@ int in2 = 7;  // Input 2
 int trig = 2;
 int echo = 3;
 
+// load cell Pins
+int dout = 4;
+int sck = 5;
+float calibration_factor = -1100;
+
+HX711 scale;
 
 
 Motor Motor(en, in1, in2);
@@ -50,6 +58,11 @@ const int   daylightOffset_sec = 3600;
 void setup() {
   Serial.begin(115200);  // Initialize serial communication for debugging
   Motor.initMotor();
+
+  scale.begin(dout,sck);
+  scale.set_scale(calibration_factor);
+  scale.tare();
+
   Distance.init();
   connectToWifi(ssid, password);
   configTime(gmtOffset_sec, daylightOffset_sec, ntpServer);
@@ -113,16 +126,16 @@ void loop() {
   if (strcmp(status + 9, "200 OK") != 0) {
     Serial.print(F("Unexpected response: "));
     Serial.println(status);
-    client.stop();
-    return;
+    // client.stop();
+    // return;
   }
 
   // Skip HTTP headers
   char endOfHeaders[] = "\r\n\r\n";
   if (!client.find(endOfHeaders)) {
     Serial.println(F("Invalid response"));
-    client.stop();
-    return;
+    //client.stop();
+    // return;
   }
 
   // Allocate the JSON document
@@ -133,8 +146,8 @@ void loop() {
   if (error) {
     Serial.print(F("deserializeJson() failed: "));
     Serial.println(error.f_str());
-    //client.stop();
-    //return;
+    client.stop();
+    // return;
   }
 
   // Extract values
@@ -171,7 +184,7 @@ void loop() {
 
   }
   else{
-    Serial.print("whaa...");
+    
     Motor.stopMotor();
   }
   
@@ -182,11 +195,17 @@ void loop() {
     return;
   }
 
-Serial.print(Distance.getDistance());
+int  dist = Distance.getDistance();
+Serial.print(dist);
 Serial.println("cm");
 
+// print weight
+float weight = scale.get_units();
+Serial.print(weight);
+Serial.println("g");
+
 // Building post request
-String data = "{\"value\": " + String(Distance.getDistance()) + "}";
+String data = "{\"value\": " + String(dist) + "}";
 String request = "POST /uploadDistanceSensorValue HTTP/1.1\r\n";
 String host = "Host: " + String(serverAddress) + ":" + String(port) + "\r\n";
 String contentType = "Content-Type: application/json\r\n";
@@ -201,7 +220,7 @@ request += data;
 
     // Send the request
     client.print(request);
-    Serial.println("POST request sent.");
+   // Serial.println(request);
 
 
 // handle response
@@ -214,12 +233,14 @@ request += data;
    // }
 
 }
- 
+
+    
+
 
 
   client.stop();
 
-
+  
 
 
   delay(1000);  // Adjust delay as needed
