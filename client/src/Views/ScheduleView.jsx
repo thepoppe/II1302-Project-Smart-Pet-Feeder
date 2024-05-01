@@ -1,5 +1,5 @@
 import React, { useState,useEffect } from 'react';
-import { sendData, getSchedules } from '../expressFunction';
+import { sendData, getSchedules, toggleMotor } from '../expressFunction';
 import "./schedulePage.css"
 
 
@@ -12,11 +12,10 @@ export default function ScheduleView(props) {
 
   const [pet, setPet] = useState("");
   const [amount, setAmount] = useState("");
-
+  const [ManualAmount, setManualAmount] = useState("");
   // Event handler for form submission
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Process the form data (e.g., submit to server)
     console.log("Form submitted:", { datetime, pet, amount });
     sendData(datetime);
   };
@@ -59,6 +58,9 @@ export default function ScheduleView(props) {
           type="number"
           value={amount}
           onChange={(e) => setAmount(e.target.value)}
+          step={10} /* increas value by 10*/ 
+          min={10}
+          max={200}
           required
         />
       </div>
@@ -90,6 +92,23 @@ export default function ScheduleView(props) {
         </div>
         <div className='manual'>
           <h2> Manual feeding</h2>
+          <div className="manualItem">
+            <div >
+        <label>Amount:</label>
+        <input
+          type="number"
+          value={ManualAmount}
+          onChange={(e) => setManualAmount(e.target.value)}
+          step={10}
+          min={10}
+          max={200}
+          required
+        />
+        </div>
+        <button className='feedButton' onClick={(e)=>{ toggleMotor()}}>Feed now!</button>
+        <span>Food has been dispensed successfully</span>
+      </div>
+      
           </div>
       </div>
   );
