@@ -43,6 +43,13 @@ export default function StatusView() {
         return () => clearInterval(interval); // Clean up the interval
     }, []); 
 
+    useEffect(() => {
+        if (percentage < 30) {
+            alert('Food level is low! Needs refill!');
+        }
+    }, [percentage]);
+
+
     return (
         <div className="status-container">
             <h1></h1>
