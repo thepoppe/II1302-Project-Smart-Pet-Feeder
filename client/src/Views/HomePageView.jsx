@@ -1,13 +1,13 @@
 import { Link } from "react-router-dom";
 
 import {Canvas} from "@react-three/fiber";
-import {useGLTF, Stage, PresentationControls} from "@react-three/drei";
-
+import {useGLTF, Stage, PresentationControls, OrbitControls, PerspectiveCamera} from "@react-three/drei";
+import { Suspense } from "react";
+import "./homePage.css"
 function Model(props){
   const {scene} = useGLTF("../../feeder.glb");
   return <primitive  object={scene} {...props}/>
 }
-
 
 function HomePageView(props) {
   return (
@@ -23,35 +23,30 @@ function HomePageView(props) {
   }}
 >
       <div
-     className="threeDstyle"
-
-    style={{
-      marginTop: "1rem",
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      height: "25rem", // Increase the height
-      width: "40rem", // Increase the width
-      alignContent: "center",
-    }}
-      >
-        <Canvas className="threeDstyle" dpr={[1,2]}  camera={{fov: 45}}  style={{
-     width: '100%', // Canvas fills the container div
-     height: '100%', // Canvas fills the container div
-     
-    }} >
-            
-            <PresentationControls speed={1.5} zoom={.5} polar={[-0.1, Math.PI / 4]} >
-            <ambientLight intensity={0.5} />
+        className="threeDstyle"
+        style={{
+          marginTop: "1rem",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+           // Increase the width
+          alignContent: "center",
+        }}>
+          <Suspense>
+        <Canvas shadows className="threeDstyle" dpr={[1,2]}    style={{
+                  width: '100%', // Canvas fills the container div
+                  height: '100%', // Canvas fills the container div
+                  }} >
+                 <ambientLight intensity={0.5} />
+     <OrbitControls range={[0, 0.35, 0]} maxPolarAngle={1.45}/>
+      <PerspectiveCamera makeDefault fov={45} position={[1,1,4]} />
+      
         <pointLight position={[10, 10, 10]} />
             <Stage environment={"sunset"}>
-              <Model scale={0.01} />
-
-            </Stage>
-
-            </PresentationControls>
-            
+              <Model scale={0.0101} />
+          </Stage>
         </Canvas>
+        </Suspense>
         
         </div>
       </div>
@@ -59,19 +54,17 @@ function HomePageView(props) {
       <div>
         <ul className="homeUL">
           <Link to="/schedule">
-            <li className="homeLI">
-              <p>Schedule</p>
-            </li>
+            <button className="LISchedule homeBTN" title="View your schedule">
+              
+            </button>
           </Link>
           <Link to="/status">
-            <li className="homeLI">
-              <p>Status</p>
-            </li>
+            <button className="LIStatus homeBTN" title="View Feeder status">
+            </button>
           </Link>
           <Link to="/settings">
-            <li className="homeLI">
-              <p>Settings</p>
-            </li>
+            <button className="LISetting homeBTN" title="View your settings">
+            </button>
           </Link>
         </ul>
       </div>

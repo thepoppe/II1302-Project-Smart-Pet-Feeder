@@ -4,14 +4,9 @@
   font-weight: 400;
   color: black;
 
-  color-scheme: light dark;
   color: rgba(0, 0, 0, 0.87);
   background-color: white;
 
-  --lighter-color: #bec9ff;
-  --light-color: #bec9ff;
-  --medium-color: #bec9ff;
-  --dark-color: #bec9ff;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -19,26 +14,12 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-threeDstyle {
-  border-radius: 15px;
-  background: linear-gradient(180deg, #bec9ff 0%, #727899 100%);
-  width: 801px;
-  height: 386px;
-  flex-shrink: 0;
-  background: transparent;
-}
-p {
-  text-decoration: inherit;
-  font-weight: 500;
-  color: black;
-}
+
 a {
   font-weight: 500;
   color: #646cff;
-  text-decoration: inherit;
 }
 a:hover {
-  color: #000000;
   text-decoration: underline;
 }
 
@@ -50,54 +31,8 @@ h1 {
   top: 150px;
 }
 
-.logincontainer {
-  width: 100%;
-  text-align: center;
-  margin-top: 5rem;
-}
-.login {
-  color: black;
-  font-feature-settings: "clig" off, "liga" off;
-  font-family: Inter;
-  font-size: 90px;
-  font-style: normal;
-  font-weight: 600;
-  line-height: 120%;
-  letter-spacing: -2.88px;
-}
 
-button {
-  display: inline-block;
-  padding: 10px 20px;
-  font-size: 16px;
-  font-weight: 700;
-  text-align: center;
-  color: black;
-  border-radius: 5px;
-  border-color: honeydew;
-  cursor: pointer;
-  transition: background-color 0.3s, color 0.3s, border-color 0.3s;
-  background-color: #bec9ff;
-}
-button:hover:not([disabled]) {
-  background-color: #8396f8;
-  border-color: #8396f8;
-}
-button:disabled {
-  cursor: not-allowed;
-  opacity: 0.5;
-}
 
-h2 {
-  color: var(--Black, #100420);
-  font-feature-settings: "clig" off, "liga" off;
-  font-family: Inter;
-  font-size: 26px;
-  font-style: normal;
-  font-weight: 500;
-  line-height: 120%;
-  letter-spacing: -1.08px;
-}
 
 .centered-button {
   display: flex;
@@ -129,33 +64,6 @@ ul {
   text-decoration: underline;
 }
 
-.homeUL {
-  display: flex;
-  gap: 3rem;
-  margin-top: 1rem;
-  justify-content: center;
-}
-.homeLI {
-  border: solid;
-  border-width: 1px;
-  border-radius: 25px;
-  border-color: var(--dark-color);
-  padding: 10px;
-  background: var(--light-color);
-  width: 8rem;
-  text-align: center;
-  font-size: x-large;
-  opacity: 80%;
-}
-.homeLI:hover {
-  border-color: var(--dark-color);
-  opacity: 100%;
-  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-}
-.homeLI:focus,
-.homeLI:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
 
 .pet-item {
   padding: 0.5rem;
