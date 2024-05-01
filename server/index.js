@@ -28,21 +28,36 @@ app.get('/motor-status', (req, res) => {
   res.send(motorStatus)
 });
 
+
 // add a new schedule to the schedule array
 app.post('/schedule', (req, res) => {
   const {month, day, hour, minute } = req.body;
+  
+  // Validation to check if date is in the past
+  const now = new Date(); 
+  const scheduleDate = new Date(now); 
+  scheduleDate.setMonth(month);
+  scheduleDate.setDate(day);
+  scheduleDate.setHours(hour);
+  scheduleDate.setMinutes(minute);
+  if (scheduleDate < now) {
+    return res.status(400).json({ message: "Cannot add a schedule in the past." });
+  }
+  
+
+ // Validation done. Add to schedules
   schedules.push({month,day, hour, minute});
   schedules.sort(compareDatesCB);
   console.log(schedules)
   res.json({ message: "Schedule added " });
 });
 
-// Endpoint to get the first schedule in the schedules array ( arduino )
+// Endpoint to get the all schedules in the schedules array (frontend)
 app.get('/allSchedules', (req, res) => {
   res.json(schedules); 
 });
 
-// Endpoint to get all the schedule in the schedules array ( arduino )
+// Endpoint to get the first value in the schedules array ( arduino )
 app.get('/getschedules', (req, res) => {
   res.json(schedules[0]); 
 });
