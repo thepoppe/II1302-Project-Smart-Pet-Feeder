@@ -7,6 +7,7 @@ let motorStatus=false
 let schedules = [];
 let usedSchedules= []
 let distanceSensorValue=null
+let weightSensorValue=null
 
 
 app.use(cors());
@@ -57,19 +58,20 @@ app.get('/removeSchedule', (req, res) => {
 
 // Endpoint to update the current value of the distance sensor
 app.post('/uploadDistanceSensorValue', (req, res) => {
-  //console.log("connected")
-  //console.log(req.body)
   const {dist, weight} = req.body;
-  distanceSensorValue=dist
-  console.log(dist) 
-  console.log(weight) 
-  res.json({currentValue: distanceSensorValue });
+  distanceSensorValue = dist;
+  weightSensorValue = weight;
+  
+  console.log(dist); 
+  console.log(weight);
+  
+  res.json({ distance: distanceSensorValue, weight: weightSensorValue });
 });
 
 //Endpoint to get the value of distance sensor
 
-app.get('/distance-sensor', (req, res) => {
-  res.json({ currentValue: distanceSensorValue });
+app.get('/sensor-values', (req, res) => {
+  res.json({ distance: distanceSensorValue, weight: weightSensorValue });
 });
 
 
