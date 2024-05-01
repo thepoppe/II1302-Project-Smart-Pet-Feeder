@@ -22,8 +22,6 @@ export default function LoginView(props) {
       if (resp.valid !== true)
         throw new Error("Failed to confirm login with server");
 
-      console.log("Logging in");
-      props.login();
       return { login: "success" };
     } catch (error) {
       console.error("Authentication failed:", error);
@@ -44,9 +42,6 @@ export default function LoginView(props) {
       }
       const result = await confirmLoginWithServer(idToken);
       if (result.login === "success") {
-        console.log(
-          "success storing token in localstorage with key: " + props.key
-        );
         localStorage.setItem(props.storageKey, idToken);
         console.log("Logging in");
         props.login();
