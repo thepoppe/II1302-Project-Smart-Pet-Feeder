@@ -89,6 +89,26 @@ void setup() {
       client.print(request);
   }
 
+
+  void openPostion() {
+  Motor.startMotor(true);
+  Motor.speed(220);
+  delay(10);
+  Motor.speed(120);
+  delay(1000);
+  Motor.stopMotor();
+}
+
+// set feeder disk to closed position
+void closedPostion(){
+  Motor.startMotor(false);
+  Motor.speed(220);
+  delay(10);
+  Motor.speed(120);
+  delay(1000);
+  Motor.stopMotor();
+}
+
  
 
 
@@ -178,9 +198,11 @@ void loop() {
 
   if(scheduledHour==timeinfo.tm_hour && scheduledMinut==timeinfo.tm_min){
     Serial.print("Start MOTOR");
-    Motor.startMotor(true);
-    Motor.speed(100);
+    
     getRequest(client, serverAddress, "/removeSchedule");
+    openPostion();
+    delay(1000);
+    closedPostion();
 
   }
   else{
@@ -200,7 +222,7 @@ Serial.print(dist);
 Serial.println("cm");
 
 // print weight
-float weight = scale.get_units();
+float weight = scale.get_units() * -1;
 Serial.print(weight);
 Serial.println("g");
 
