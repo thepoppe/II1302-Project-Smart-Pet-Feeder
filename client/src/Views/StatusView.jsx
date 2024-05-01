@@ -44,7 +44,7 @@ export default function StatusView() {
     }, []); 
 
     useEffect(() => {
-        if (percentage < 30) {
+        if (distance && percentage < 30) {
             alert('Food level is low! Needs refill!');
         }
     }, [percentage]);
