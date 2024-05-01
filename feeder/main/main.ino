@@ -178,7 +178,7 @@ void loop() {
 
   if(scheduledHour==timeinfo.tm_hour && scheduledMinut==timeinfo.tm_min){
     Serial.print("Start MOTOR");
-    Motor.startMotor();
+    Motor.startMotor(true);
     Motor.speed(100);
     getRequest(client, serverAddress, "/removeSchedule");
 
