@@ -18,12 +18,23 @@ void Motor::initMotor(){
   pinMode(_en, OUTPUT);
   pinMode(_in1, OUTPUT);
   pinMode(_in2, OUTPUT);
+
+  digitalWrite(_in1, LOW);
+	digitalWrite(_in2, LOW);
+
 }
 
 
-void Motor::startMotor() {
-  digitalWrite(_in1, HIGH);
-	digitalWrite(_in2, LOW);
+// direction bool determines the direction of the motors rotation.
+void Motor::startMotor(bool rotateLeft) {
+  if(rotateLeft){
+    digitalWrite(_in1, HIGH);
+    digitalWrite(_in2, LOW);
+  }
+  if(! rotateLeft){
+    digitalWrite(_in1, LOW);
+    digitalWrite(_in2, HIGH);
+    }
 } 
 
 void Motor::stopMotor() {
@@ -37,4 +48,6 @@ void Motor::speed(int speed){
   }
   analogWrite(_en,speed);
 }
+
+
 

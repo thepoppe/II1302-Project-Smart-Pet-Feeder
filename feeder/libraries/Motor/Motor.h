@@ -12,7 +12,7 @@ class Motor
     public:
         Motor(int en, int in1, int in2);
         void initMotor();
-        void startMotor();
+        void startMotor(bool rotateLeft);
         void stopMotor();
         void speed(int speed);
 };
