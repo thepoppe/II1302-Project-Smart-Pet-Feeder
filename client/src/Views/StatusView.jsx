@@ -21,17 +21,18 @@ export default function StatusView() {
         .catch(error => console.error('Error:', error));
     }
 
-    function colour(distance) {
-        const percentage=distance/maxDistance;
-        if (percentage >= 0.7) { 
+    function colour(percentage) {
+        if (percentage >= 70) { 
             return '#76b947'; // green
-        } else if (percentage >= 0.3) {
+        } else if (percentage >= 30) {
             return '#f7ea48'; // yellow
         } else {
             return '#e94f37'; // red
         }
     }
- 
+
+    const percentage = (distance / maxDistance) * 100; 
+
 
 
     useEffect(() => {
@@ -48,8 +49,8 @@ export default function StatusView() {
                 <button onClick={getSensorValues} className="centered-button">Update Now</button>
             </div>
             <div className="food-level-container">
-                <div className="food-level-indicator" style={{ height: `${distance}%`, backgroundColor: colour(distance) }}>
-                    <span className="food-level-text">{distance}%</span>
+            <div className="food-level-indicator" style={{ height: `${percentage}%`, backgroundColor: colour(percentage) }}>
+                    <span className="food-level-text">{percentage.toFixed(2)}%</span>
                 </div>
                
             </div>
