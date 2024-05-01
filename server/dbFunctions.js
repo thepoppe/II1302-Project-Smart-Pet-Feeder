@@ -1,51 +1,74 @@
 const { initializeApp, cert } = require("firebase-admin/app");
 const { getFirestore } = require("firebase-admin/firestore");
+const {
+  getAuth,
+  signInWithCredential,
+  GoogleAuthProvider,
+} = require("firebase-admin/auth");
 const serviceAccount = require("./serviceAccountKey.json");
 
 // Initialize Firebase
 const dbURL = "smart-pet-feeder-c7fd2.firebaseio.com";
-initializeApp({
+//TODO hide URL
+const firebaseApp = initializeApp({
   credential: cert(serviceAccount),
-  databaseURL: process.env.databaseURL
+  databaseURL: dbURL,
 });
+
+async function handleAuthRequest(req, res) {
+  const token = req.body.token;
+  console.log("Received token:", token);
+  try {
+    const decodedToken = await getAuth().verifyIdToken(token);
+    const uid = decodedToken.uid;
+    console.log(uid + " has logged in");
+
+    res.json({ valid: true, message: "Received token successfully" });
+  } catch (error) {
+    console.error("Authentication failed:", error);
+    console.error("Error code:", error.code);
+    console.error("Error message:", error.message);
+
+    res.status(500).json({ valid: false, message: "Authentication failed" });
+  }
+}
 
 const db = getFirestore();
 async function addDocumentToCollection(collection, doc, data) {
-    return db.collection(collection).doc(doc).set(data);
-  }
+  return db.collection(collection).doc(doc).set(data);
+}
 async function getDocumentfromCollection(collection, doc) {
-    const docRef = db.collection(collection).doc(doc);
-    const docSnapshot = await docRef.get();
-    
-    if (docSnapshot.exists) {
-        return docSnapshot.data();
-    } else {
-        throw new Error("Document does not exist");
-    }
+  const docRef = db.collection(collection).doc(doc);
+  const docSnapshot = await docRef.get();
+
+  if (docSnapshot.exists) {
+    return docSnapshot.data();
+  } else {
+    throw new Error("Document does not exist");
+  }
 }
 
 async function handleSetDBRequest(req, res) {
-    try {
-      await addDocumentToCollection("Users", "test2", req.body);
-      res.send({ 'Message': 'Success' });
-    } catch (error) {
-      console.error('Error:', error);
-      res.status(500).send({ 'Error': 'Internal Server Error' });
-    }
+  try {
+    await addDocumentToCollection("Users", "test2", req.body);
+    res.send({ Message: "Success" });
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).send({ Error: "Internal Server Error" });
   }
-
+}
 
 async function handleGetUserRequest(req, res) {
-    try {
-        const userData = await getDocumentfromCollection("Users", "test2");
-        res.send({ 'userData': userData });
-    } catch (error) {
-        console.error('Error:', error);
-        res.status(500).send({ 'Error': 'Internal Server Error' });
-    }
+  try {
+    const userData = await getDocumentfromCollection("Users", "test2");
+    res.send({ userData: userData });
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).send({ Error: "Internal Server Error" });
+  }
 }
-  
- module.exports = {
-    handleSetDBRequest,
-    handleGetUserRequest,
+module.exports = {
+  handleAuthRequest,
+  handleSetDBRequest,
+  handleGetUserRequest,
 };
