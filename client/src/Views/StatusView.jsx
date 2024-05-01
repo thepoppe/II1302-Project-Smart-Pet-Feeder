@@ -2,7 +2,7 @@ import React, { useState,useEffect } from 'react';
 
 export default function StatusView() {
     const [distance, setDistance] = useState('');
-    const maxDistance=100;
+    const maxDistance=20;
     const [weight,setWeight]=useState('');
 
     function getSensorValues() {
@@ -31,7 +31,8 @@ export default function StatusView() {
         }
     }
 
-    const percentage = (distance / maxDistance) * 100; 
+    const percentage = Math.min(Math.round((distance / maxDistance) * 100), 100);
+
 
 
 
@@ -50,7 +51,7 @@ export default function StatusView() {
             </div>
             <div className="food-level-container">
             <div className="food-level-indicator" style={{ height: `${percentage}%`, backgroundColor: colour(percentage) }}>
-                    <span className="food-level-text">{percentage.toFixed(2)}%</span>
+            <span className="food-level-text">{percentage}%</span>
                 </div>
                
             </div>
