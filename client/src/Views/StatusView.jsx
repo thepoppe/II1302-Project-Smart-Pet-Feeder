@@ -1,11 +1,10 @@
 import React, { useState,useEffect } from 'react';
 
-
 export default function StatusView() {
-
     const [distance, setDistance] = useState('');
+    const maxDistance=100
 
-    function getDistanceSensor(){
+    function getDistanceSensor() {
         fetch('http://localhost:3000/distance-sensor', {
             method: 'GET',
             headers: {
@@ -14,14 +13,24 @@ export default function StatusView() {
         })
         .then(response => response.json())
         .then(data => {
-    
-                setDistance(data.currentValue);
-            
+            setDistance(data.currentValue);
         })
         .catch(error => console.error('Error:', error));
-    };
-    
+    }
 
+    function colour(distance) {
+        const percentage=distance/maxDistance;
+        if (percentage >= 0.7) { 
+            return '#76b947'; // green
+        } else if (percentage >= 0.3) {
+            return '#f7ea48'; // yellow
+        } else {
+            return '#e94f37'; // red
+        }
+    }
+ 
+
+    
     return (
         <div className="status-container">
             <h1></h1>
@@ -29,8 +38,8 @@ export default function StatusView() {
                 <button onClick={getDistanceSensor} className="centered-button">Update Now</button>
             </div>
             <div className="food-level-container">
-                <div className="food-level-indicator" style={{ height: '50%' }}>
-                    <span className="food-level-text">{distance}</span>
+                <div className="food-level-indicator" style={{ height: `${distance}%`, backgroundColor: colour(distance) }}>
+                    <span className="food-level-text">{distance}%</span>
                 </div>
             </div>
             <div className="history-section">
@@ -40,6 +49,3 @@ export default function StatusView() {
         </div>
     );
 }
-
-
-
