@@ -1,40 +1,39 @@
 import { Link } from "react-router-dom";
 
-import {Canvas} from "@react-three/fiber";
-import {useGLTF, Stage, PresentationControls} from "@react-three/drei";
+import { Canvas } from "@react-three/fiber";
+import { useGLTF, Stage, PresentationControls } from "@react-three/drei";
 
-function Model(props){
-  const {scene} = useGLTF("../../feeder.glb");
-  return <primitive  object={scene} {...props}/>
+function Model(props) {
+  const { scene } = useGLTF("../../feeder.glb");
+  return <primitive object={scene} {...props} />;
 }
-
 
 function HomePageView(props) {
   return (
     <>
-    <div
-  style={{
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    height: "50vh", // This will make the parent div take the full height of the viewport
-    width: "100vw", // This will make the parent div take the full width of the viewport
-    
-  }}
->
       <div
-     className="threeDstyle"
-
-    style={{
-      marginTop: "1rem",
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      height: "25rem", // Increase the height
-      width: "40rem", // Increase the width
-      alignContent: "center",
-    }}
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "50vh", // This will make the parent div take the full height of the viewport
+          width: "100vw", // This will make the parent div take the full width of the viewport
+        }}
       >
+        <div
+          className="threeDstyle"
+          style={{
+            marginTop: "1rem",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "25rem", // Increase the height
+            width: "40rem", // Increase the width
+            alignContent: "center",
+          }}
+        >
+          {/* TEMPORARELY REMOVED
+
         <Canvas className="threeDstyle" dpr={[1,2]}  camera={{fov: 45}}  style={{
      width: '100%', // Canvas fills the container div
      height: '100%', // Canvas fills the container div
@@ -52,7 +51,8 @@ function HomePageView(props) {
             </PresentationControls>
             
         </Canvas>
-        
+  */}
+          <h2>Picture placeholder</h2>
         </div>
       </div>
 
@@ -76,36 +76,40 @@ function HomePageView(props) {
         </ul>
       </div>
 
-      <button onClick={() => {
-    const requestBody = {
-        key1: 'dog1',
-        key2: 'cat1'
-    };
+      <button
+        onClick={() => {
+          const requestBody = {
+            key1: "dog1",
+            key2: "cat1",
+          };
 
-    fetch("http://localhost:3000/testSetDB", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(requestBody)
-    })
-    .then((response) => response.text())
-    .then((text) => console.log(text))
-    .catch((error) => console.error("Error:", error));
-}}
-      >Test SET database
-    </button>
+          fetch("http://localhost:3000/testSetDB", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(requestBody),
+          })
+            .then((response) => response.text())
+            .then((text) => console.log(text))
+            .catch((error) => console.error("Error:", error));
+        }}
+      >
+        Test SET database
+      </button>
 
-
-
-    <button onClick={() => {
-    fetch("http://localhost:3000/testGetDB", {
-        method: "GET",})
-    .then((response) => response.text())
-    .then((text) => console.log(text))
-    .catch((error) => console.error("Error:", error));
-}}
-        >Test GET database</button>
+      <button
+        onClick={() => {
+          fetch("http://localhost:3000/testGetDB", {
+            method: "GET",
+          })
+            .then((response) => response.text())
+            .then((text) => console.log(text))
+            .catch((error) => console.error("Error:", error));
+        }}
+      >
+        Test GET database
+      </button>
     </>
   );
 }
