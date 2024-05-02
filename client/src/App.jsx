@@ -5,23 +5,21 @@ import Settings from "./Views/SettingsView";
 import ErrorPage from "./Views/ErrorPage";
 import LoginView from "./Views/LoginView";
 import TopBar from "./Components/TopBar";
+import Tests from "./Views/tests";
 import React, { useState } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import "./index.css";
 
-
-
 export const ModelContext = React.createContext();
-
+//TODO REMOVE TESTS ROUTE WHEN DONE
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
   return (
-   
     <>
-
       <TopBar loggedIn={loggedIn} logOut={() => setLoggedIn(false)} />
       <ModelContext.Provider value={loggedIn}>
         <Routes>
+          <Route path="/tests" element={<Tests />} />
           <Route
             path="/"
             element={

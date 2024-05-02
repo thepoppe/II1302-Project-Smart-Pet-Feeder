@@ -1,6 +1,9 @@
 const express = require("express");
 const cors = require("cors");
 const app = express();
+const { handleSetDBRequest, handleGetUserRequest } = require("./dbFunctions.js");
+
+//temp model
 const port = 3000;
 const defaultMsg = "HelloWorld";
 let motorStatus=false
@@ -11,6 +14,10 @@ let distanceSensorValue=null
 
 app.use(cors());
 app.use(express.json());
+
+// db tests
+app.post("/testSetDB", handleSetDBRequest);
+app.get("/testGetDB", handleGetUserRequest);
 
 // Toggle motor status ( done by our application when pressing a button) 
 app.post('/toggle-motor', (req, res) => {
