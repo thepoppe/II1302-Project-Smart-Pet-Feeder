@@ -4,10 +4,10 @@ import {Progress } from 'antd';
 import './statusPage.css'
 
 export default function StatusView() {
-
     const [distance, setDistance] = useState('');
+    const maxDistance=100
 
-    function getDistanceSensor(){
+    function getDistanceSensor() {
         fetch('http://localhost:3000/distance-sensor', {
             method: 'GET',
             headers: {
@@ -83,6 +83,3 @@ export default function StatusView() {
         </div>
     );
 }
-
-
-
