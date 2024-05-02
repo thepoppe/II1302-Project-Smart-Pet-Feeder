@@ -4,28 +4,42 @@ import "./schedulePage.css"
 
 
 
-
 export default function ScheduleView(props) {
 
   const [datetime, setDatetime] = useState('');
-  const [schedules, setSchedules]= useState([])
+  const [pet, setPet] = useState('');
+  const [amount, setAmount] = useState('');
+  const [ManualAmount, setManualAmount] = useState('');
+  const [schedules, setSchedules] = useState([]);
 
-  const [pet, setPet] = useState("");
-  const [amount, setAmount] = useState("");
-  const [ManualAmount, setManualAmount] = useState("");
-  // Event handler for form submission
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log("Form submitted:", { datetime, pet, amount });
-    sendData(datetime);
-  };
-  /* example of schedule*/
-  const scheduless = [
-    { date: '2024-05-01', time: '09:00', pet: 'Dog', amount: 200 },
-    { date: '2024-05-02', time: '11:30', pet: 'Cat', amount: 100 },
-  ];
+    sendData(datetime, pet, amount)
+    getSchedules()
+    .then(Schedules => {
+      setSchedules(Schedules)
+      console.log("Fetched schedules:", schedules);
+    })
+    .catch(error => {
+      console.error('Error:', error);
+    });
 
-  useEffect(() => { getSchedules() },[]);
+  };
+
+  useEffect(() => {
+    getSchedules()
+      .then(Schedules => {
+        // Once schedules are fetched, you can handle them here
+        setSchedules(Schedules)
+        console.log("Fetched schedules:", schedules);
+      })
+      .catch(error => {
+        // Handle errors
+        console.error('Error:', error);
+      });
+  }, []);
+
 
 
 
@@ -69,6 +83,7 @@ export default function ScheduleView(props) {
     </div>
     <div className="schedule-list-container"> 
          <h2>Your Schedule:</h2>
+         <div class="schedule-table-container">
          <table className="schedule-table">
             <thead>
                 <tr>
@@ -79,7 +94,7 @@ export default function ScheduleView(props) {
                 </tr>
             </thead>
             <tbody>
-                {scheduless.map((schedule, index) => (
+                {schedules.map((schedule, index) => (
                 <tr key={index}>
                     <td>{`${schedule.date} `}</td>
                     <td>{schedule.time}</td>
@@ -89,6 +104,7 @@ export default function ScheduleView(props) {
                 ))}
             </tbody>
             </table>
+            </div>
         </div>
         <div className='manual'>
           <h2> Manual feeding</h2>

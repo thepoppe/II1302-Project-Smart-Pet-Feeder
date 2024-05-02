@@ -1,3 +1,34 @@
+
+
+export default function resolvePromise(promise, promiseState) {
+  promiseState.promise = promise;
+  promiseState.data = null;
+  promiseState.error = null;
+
+  if (!promise) {
+    return;
+  }
+
+  promise.then(successACB, rejectACB).catch(failureACB);
+
+  function successACB(data) {
+    if (promiseState.promise === promise) {
+      promiseState.data = data;
+    }
+  }
+  function failureACB(error) {
+    if (promiseState.promise === promise) {
+      promiseState.error = error;
+    }
+  }
+  function rejectACB(error) {
+    if (promiseState.promise === promise) {
+      promiseState.error = error;
+    }
+  }
+}
+
+
 export function toggleMotor() {
   fetch("http://localhost:3000/toggle-motor", {
     method: "POST",
@@ -9,18 +40,25 @@ export function toggleMotor() {
 
 
 export function getSchedules() {
-  fetch('http://localhost:3000/allSchedules')
-  .then(response => response.json())
-  .then(data => {
-      setSchedules(data); 
-      console.log(data);  
-  })
-  .catch(error => console.error('Error:', error));
+  return fetch('http://localhost:3000/allSchedules')
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    })
+    .then(data => {
+      return data;
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      throw error; // Rethrow the error to propagate it further
+    });
 }
-
-export function sendData(datetime){
+export function sendData(datetime, pet, amount){
     
   const date = new Date(datetime);
+  const year = date.getFullYear();
   const month= date.getMonth();
   const day=date.getDate(); 
   const hour = date.getHours();
@@ -31,11 +69,11 @@ export function sendData(datetime){
       headers: {
           'Content-Type': 'application/json'
       },
-      body: JSON.stringify({month, day, hour, minute })  
+      body: JSON.stringify({year, month, day, hour, minute, pet, amount})  
   })
   .then(response => response.json())
   .then(data => {   
-          getSchedules(data);   
+         console.log(data)  
   })
   .catch(error => console.error('Error:', error));
 };

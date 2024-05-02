@@ -29,8 +29,8 @@ app.get('/motor-status', (req, res) => {
 
 // add a new schedule to the schedule array
 app.post('/schedule', (req, res) => {
-  const {month, day, hour, minute } = req.body;
-  schedules.push({month,day, hour, minute});
+  const {year, month, day, hour, minute, pet, amount} = req.body;
+  schedules.push({year, month ,day, hour, minute , pet, amount});
   schedules.sort(compareDatesCB);
   console.log(schedules)
   res.json({ message: "Schedule added " });
@@ -38,7 +38,14 @@ app.post('/schedule', (req, res) => {
 
 // Endpoint to get the first schedule in the schedules array ( arduino )
 app.get('/allSchedules', (req, res) => {
-  res.json(schedules); 
+  const schdles = schedules.map(schedule => ({
+    date: `${schedule.year}.${(schedule.month + 1).toString().padStart(2, '0')}.${schedule.day.toString().padStart(2, '0')}`,
+    time: `${schedule.hour.toString().padStart(2, '0')}:${schedule.minute.toString().padStart(2, '0')}`,
+    pet: schedule.pet,
+    amount: schedule.amount
+  }));
+  console.log(schdles)
+  res.json(schdles);
 });
 
 // Endpoint to get all the schedule in the schedules array ( arduino )
