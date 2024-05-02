@@ -64,7 +64,14 @@ app.post('/schedule', (req, res) => {
 
 // Endpoint to get the all schedules in the schedules array (frontend)
 app.get('/allSchedules', (req, res) => {
-  res.json(schedules); 
+  const schdles = schedules.map(schedule => ({
+    date: `${schedule.year}.${(schedule.month + 1).toString().padStart(2, '0')}.${schedule.day.toString().padStart(2, '0')}`,
+    time: `${schedule.hour.toString().padStart(2, '0')}:${schedule.minute.toString().padStart(2, '0')}`,
+    pet: schedule.pet,
+    amount: schedule.amount
+  }));
+  console.log(schdles)
+  res.json(schdles);
 });
 
 // Endpoint to get the first value in the schedules array ( arduino )

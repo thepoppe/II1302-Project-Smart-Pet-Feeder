@@ -6,10 +6,7 @@
   padding: 2rem 3rem;
   box-sizing: border-box;
 }
-.navigation a {
-  color: black;
-  font-size: large;
-}
+
 .navcenter-link {
   grid-column: 1;
   justify-self: start;
@@ -21,20 +18,26 @@
   width: 100%;
 }
 
-.brand-logo {
-  color: rgb(0, 0, 0);
-  text-decoration: none;
+
+
+.ul{
   display: flex;
-  align-items: center;
-  font-size: 2rem;
 }
+
+.dropdown{
+  padding: 0.5em 1em;
+  position: absolute;
+  right: 100px;
+  top: 40px;
+}
+
 
 /* 
     OBS The code beneath is taken from w3schools for drop down button
     Code modified to suit application
     source: https://www.w3schools.com/howto/howto_css_dropdown.asp
 */
-.dropdown {
+.dropdownn {
   grid-column: 3;
   justify-self: end;
   position: relative;
