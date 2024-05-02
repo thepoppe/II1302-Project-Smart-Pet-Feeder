@@ -5,30 +5,39 @@ import Settings from "./Views/SettingsView";
 import ErrorPage from "./Views/ErrorPage";
 import LoginView from "./Views/LoginView";
 import TopBar from "./Components/TopBar";
-import React, { useState } from "react";
+import Tests from "./Views/tests";
+import React, { useEffect, useState } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import "./index.css";
 
-
-
 export const ModelContext = React.createContext();
-
+//TODO REMOVE TESTS ROUTE WHEN DONE
 function App() {
+  const tokenStorageKey = "token";
   const [loggedIn, setLoggedIn] = useState(false);
-  return (
-   
-    <>
+  useEffect(() => {
+    const token = localStorage.getItem(tokenStorageKey);
+    if (token) {
+      setLoggedIn(true);
+    }
+  }, []);
 
+  return (
+    <>
       <TopBar loggedIn={loggedIn} logOut={() => setLoggedIn(false)} />
       <ModelContext.Provider value={loggedIn}>
         <Routes>
+          <Route path="/tests" element={<Tests />} />
           <Route
             path="/"
             element={
               loggedIn ? (
                 <HomePage />
               ) : (
-                <LoginView login={() => setLoggedIn(true)} />
+                <LoginView
+                  storageKey={tokenStorageKey}
+                  login={() => setLoggedIn(true)}
+                />
               )
             }
           />

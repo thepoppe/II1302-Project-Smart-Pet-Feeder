@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { getAuth, signOut } from "firebase/auth";
 import "./TopBar.css";
 import logo from '../../icons/logo.png';
 
@@ -26,6 +27,19 @@ export default function TopBar(props) {
 
   const menuprops = {items,};
 
+
+
+  async function handleLogout() {
+    try {
+      const auth = getAuth();
+      signOut(auth);
+      console.log("User logging out");
+      localStorage.clear();
+      props.logOut();
+    } catch (error) {
+      console.error("Sign out failed:", error);
+    }
+  }
 
   return (
     <>
