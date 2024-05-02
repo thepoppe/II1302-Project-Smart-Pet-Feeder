@@ -55,8 +55,8 @@ export default function StatusView() {
         xField: 'day',
         yField: 'amount',
         point: {
-          shapeField: 'square',
-          sizeField: 5,
+          shapeField: 'circle',
+          sizeField: 2,
         },
         interaction: {
           tooltip: {
