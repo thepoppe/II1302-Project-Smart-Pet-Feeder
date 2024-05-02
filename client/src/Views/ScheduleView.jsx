@@ -76,15 +76,15 @@ export default function ScheduleView(props) {
                 </tr>
             </thead>
             <tbody>
-                {schedules.map((schedule, index) => {
-                  
-                  <tr key={index}>
+                {schedules.map((schedule) => {
+                  return(
+                  <tr key={schedule.date}>
                     <td>{`${schedule.date}`}</td>
                     <td>{schedule.time}</td>
                     <td>{schedule.pet}</td>
                     <td>{schedule.amount} gram</td>
                 </tr>
-                }
+                )}
                 )}
             </tbody>
             </table>
