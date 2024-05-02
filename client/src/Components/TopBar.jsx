@@ -1,7 +1,22 @@
 import { Link } from "react-router-dom";
+import { getAuth, signOut } from "firebase/auth";
 import "./TopBar.css";
+
 export default function TopBar(props) {
   let loggedIn = props.loggedIn;
+
+  async function handleLogout() {
+    try {
+      const auth = getAuth();
+      signOut(auth);
+      console.log("User logging out");
+      localStorage.clear();
+      props.logOut();
+    } catch (error) {
+      console.error("Sign out failed:", error);
+    }
+  }
+
   return (
     <>
       <nav>
@@ -20,7 +35,7 @@ export default function TopBar(props) {
                 <button className="dropdownbtn" disabled>
                   About
                 </button>
-                <button onClick={() => props.logOut()} className="dropdownbtn">
+                <button onClick={handleLogout} className="dropdownbtn">
                   Log Out
                 </button>
               </div>
