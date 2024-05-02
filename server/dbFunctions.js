@@ -44,8 +44,38 @@ async function handleGetUserRequest(req, res) {
         res.status(500).send({ 'Error': 'Internal Server Error' });
     }
 }
+
+async function addPet(userId, petName, petType) {
+  try {
+    await db.collection('Users').doc(userId).collection('Pets').add({
+      name: petName,
+      type: petType
+    });
+    console.log('Pet added successfully');
+  } catch (error) {
+    console.error('Failed to add pet:', error);
+  }
+}
+
+async function addSchedule(userId, time, amount, isActive) {
+  try {
+    await db.collection('Users').doc(userId).collection('Schedules').add({
+      time: time,
+      amount: amount,
+      isActive: isActive
+    });
+    console.log('Schedule added successfully');
+  } catch (error) {
+    console.error('Failed to add schedule:', error);
+  }
+}
   
  module.exports = {
     handleSetDBRequest,
     handleGetUserRequest,
+    addPet,
+    addSchedule,
+
 };
+
+
