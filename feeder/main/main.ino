@@ -196,17 +196,25 @@ void loop() {
     return;
   }
 
+  float weight = scale.get_units() * -1;
+  int neededw = 50;
+
   if(scheduledHour==timeinfo.tm_hour && scheduledMinut==timeinfo.tm_min){
     Serial.print("Start MOTOR");
     
-    getRequest(client, serverAddress, "/removeSchedule");
-    openPostion();
-    delay(1000);
+    getRequest(client, serverAddress, "/removeSchedule");  
+    if(weight < neededw)
+      openPostion();
+    while(weight < neededw){
+      Serial.print(weight);
+      Serial.println("g");
+      delay(100);
+      weight = scale.get_units() * -1;
+    }
     closedPostion();
 
   }
   else{
-    
     Motor.stopMotor();
   }
   
@@ -222,9 +230,9 @@ Serial.print(dist);
 Serial.println("cm");
 
 // print weight
-float weight = scale.get_units() * -1;
-Serial.print(weight);
-Serial.println("g");
+weight = scale.get_units() * -1;
+//Serial.print(weight);
+//Serial.println("g");
 
 // Building post request
 String data = "{\"dist\": " + String(dist) + ",\"weight\":" + String(weight)+ "}";
