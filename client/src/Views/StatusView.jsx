@@ -4,9 +4,10 @@ import {Progress } from 'antd';
 import './statusPage.css'
 
 export default function StatusView() {
-    const [distance, setDistance] = useState('');
+    const [distance, setDistance] = useState(0);
     const maxDistance=20;
     const [weight,setWeight]=useState('');
+    const percentage = Math.min(Math.round((distance / maxDistance) * 100), 100);
 
     function getSensorValues() {
         fetch('http://localhost:3000/sensor-values', {
@@ -24,38 +25,20 @@ export default function StatusView() {
         .catch(error => console.error('Error:', error));
     }
 
-    function colour(percentage) {
-        if (percentage >= 70) { 
-            return '#76b947'; // green
-        } else if (percentage >= 30) {
-            return '#f7ea48'; // yellow
-        } else {
-            return '#e94f37'; // red
-        }
-    }
+   
 
-    const percentage = Math.min(Math.round((distance / maxDistance) * 100), 100);
 
 
 
 
     useEffect(() => {
         getSensorValues(); // Run it initially
-        const interval = setInterval(() => {
-        getSensorValues();}, 1000); // Update every 1000 milliseconds (1 second)
-        return () => clearInterval(interval); // Clean up the interval
+       
     }, []); 
 
-    useEffect(() => {
-        if (distance && percentage < 30) {
-            alert('Food level is low! Needs refill!');
-        }
-    }, [percentage]);
-
-
     
-    const amount = 60;
 
+//GRaf dummy
     const data = [
         { day: '1991', amount: 80 },
         { day: '1992', amount: 80 },
@@ -92,37 +75,26 @@ export default function StatusView() {
             <h2>Food-level in container</h2>
                <div className='foodContainer' >
                 
-                {50 < amount && amount <= 100 ? (
-        <Progress type="circle" percent={amount} strokeColor="green"  strokeWidth={8} circleIconFontSize='2em' size={200} />
-                ) : 20 < amount && amount <= 50 ? (
-                    <Progress type="circle" percent={amount} strokeColor=" yellow"  strokeWidth={8} circleIconFontSize='2em' />
+                {50 < percentage && percentage <= 100 ? (
+                    <Progress type="circle" percent={percentage} strokeColor="green"  strokeWidth={8} circleIconFontSize='2em' size={200} />
+                ) : 20 < percentage && percentage <= 50 ? (
+                    <Progress type="circle" percent={percentage} strokeColor=" yellow"  strokeWidth={8} circleIconFontSize='2em' />
                 ) : (
-                    <Progress type="circle" percent={amount} strokeColor="red"  strokeWidth={8} circleIconFontSize='2em' />
+                    <Progress type="circle" percent={percentage} strokeColor="red"  strokeWidth={8} circleIconFontSize='2em' />
                 )}
                 <button onClick={getSensorValues} className="updateBTN">Update Now</button>
                 </div>
             </div>
             <div className="statusItems">
-            <div className="food-level-container">
-                <div className="food-level-indicator" style={{ height: `${percentage}%`, backgroundColor: colour(percentage) }}>
-                    <span className="food-level-text">{percentage}%</span>
-                </div>
+                <h2>Food-level in Bowl</h2>
             </div>
-            <div>
-                <span className="food-level-text">{weight}g</span>
-            </div>
-            <div className="statusItems bowl">
-                <h2>food in bowl</h2>
-            </div>
-            
         </div>
+        <div>
+            <h2>Eat pattern</h2>
+            <div className="history-graph-placeholder">
+                <Line  {...config}/>
+            </div>
         </div>
-</>
-    );
+    </>
+    )
 }
-
-{/*
-<h2>Eat pattern</h2>
-                <div className="history-graph-placeholder">
-                    <Line  {...config}/>
-*/}

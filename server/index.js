@@ -9,7 +9,7 @@ const defaultMsg = "HelloWorld";
 let motorStatus=false
 let schedules = [];
 let usedSchedules= []
-let distanceSensorValue=null
+let distanceSensorValue=15
 let weightSensorValue=null
 
 

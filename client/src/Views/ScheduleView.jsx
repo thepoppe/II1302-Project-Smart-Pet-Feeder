@@ -21,7 +21,7 @@ export default function ScheduleView(props) {
 
   
   useEffect(() => {
-    getSchedules().then((data) => setSchedules(data)).then(() => {console.log("EER");console.log(schedules)})
+    getSchedules().then((data) => setSchedules(data))
     }, [pet]);
 
 
@@ -77,9 +77,9 @@ export default function ScheduleView(props) {
                 </tr>
             </thead>
             <tbody>
-                {schedules.map((schedule) => {
+                {schedules.map((schedule, index) => {
                   return(
-                  <tr key={schedule.date}>
+                  <tr key={index}>
                     <td>{`${schedule.date}`}</td>
                     <td>{schedule.time}</td>
                     <td>{schedule.pet}</td>
