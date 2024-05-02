@@ -59,16 +59,17 @@ app.post('/schedule', (req, res) => {
   schedules.push({month,day, hour, minute});
   schedules.sort(compareDatesCB);
   console.log(schedules)
-  res.json({ message: "Schedule added " });
+  res.json({ success: true, message: "Schedule added " });
 });
 
 // Endpoint to get the all schedules in the schedules array (frontend)
+//TODO Fix pet amount
 app.get('/allSchedules', (req, res) => {
   const schdles = schedules.map(schedule => ({
-    date: `${schedule.year}.${(schedule.month + 1).toString().padStart(2, '0')}.${schedule.day.toString().padStart(2, '0')}`,
+    date: `${(schedule.month + 1).toString().padStart(2, '0')}.${schedule.day.toString().padStart(2, '0')}`,
     time: `${schedule.hour.toString().padStart(2, '0')}:${schedule.minute.toString().padStart(2, '0')}`,
-    pet: schedule.pet,
-    amount: schedule.amount
+    pet: "placeholder pet",
+    amount: "placeholder amount"
   }));
   console.log(schdles)
   res.json(schdles);

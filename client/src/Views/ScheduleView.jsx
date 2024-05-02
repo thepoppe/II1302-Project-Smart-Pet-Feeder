@@ -1,6 +1,6 @@
 import React, { useState,useEffect } from 'react';
 import { sendData, getSchedules, toggleMotor } from '../expressFunction';
-import "./schedulePage.css"
+import "./schedulePage.css";
 
 
 
@@ -16,30 +16,12 @@ export default function ScheduleView(props) {
     e.preventDefault();
     console.log("Form submitted:", { datetime, pet, amount });
     sendData(datetime, pet, amount)
-    getSchedules()
-    .then(Schedules => {
-      setSchedules(Schedules)
-      console.log("Fetched schedules:", schedules);
-    })
-    .catch(error => {
-      console.error('Error:', error);
-    });
+  }
 
-  };
-
+  
   useEffect(() => {
-    getSchedules()
-      .then(Schedules => {
-        // Once schedules are fetched, you can handle them here
-        setSchedules(Schedules)
-        console.log("Fetched schedules:", schedules);
-      })
-      .catch(error => {
-        // Handle errors
-        console.error('Error:', error);
-      });
-  }, []);
-
+    getSchedules().then((data) => setSchedules(data)).then(() => {console.log("EER");console.log(schedules)})
+    }, [pet]);
 
 
 
@@ -94,14 +76,16 @@ export default function ScheduleView(props) {
                 </tr>
             </thead>
             <tbody>
-                {schedules.map((schedule, index) => (
-                <tr key={index}>
-                    <td>{`${schedule.date} `}</td>
+                {schedules.map((schedule, index) => {
+                  
+                  <tr key={index}>
+                    <td>{`${schedule.date}`}</td>
                     <td>{schedule.time}</td>
                     <td>{schedule.pet}</td>
                     <td>{schedule.amount} gram</td>
                 </tr>
-                ))}
+                }
+                )}
             </tbody>
             </table>
             </div>

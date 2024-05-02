@@ -48,6 +48,8 @@ export function getSchedules() {
       return response.json();
     })
     .then(data => {
+      console.log("getschedules")
+      console.log(data)
       return data;
     })
     .catch(error => {
