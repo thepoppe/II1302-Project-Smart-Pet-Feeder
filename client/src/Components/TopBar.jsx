@@ -12,7 +12,7 @@ export default function TopBar(props) {
 
   const items = [
     {
-      label: ( <Link to="/" className="brand-logo">
+      label: ( <Link to="/" className="brand-logo" onClick={handleLogout}>
       logout
     </Link>),
       key : "1",
@@ -52,7 +52,7 @@ export default function TopBar(props) {
           </Link>
         </li>
       
-      {  loggedIn ?
+      {  loggedIn &&
         (
         <li >
         <Dropdown menu={menuprops} placement="bottom" >
@@ -61,8 +61,7 @@ export default function TopBar(props) {
         </Button>
         </Dropdown>
         </li>
-        ) :
-        (<></>)
+        )
    }
       </ul>
     </nav>
