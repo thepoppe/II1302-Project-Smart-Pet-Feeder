@@ -53,7 +53,6 @@ export default function StatusView() {
     }, [percentage]);
 
 
-    };
     
     const amount = 60;
 
@@ -82,11 +81,12 @@ export default function StatusView() {
           },
         },
         style: {
-          lineWidth: 2,
+            lineWidth: 2,
         },
-      };
+    };
 
     return (
+        <>
         <div className="statusContainer">
             <div className="statusItems">
             <h2>Food-level in container</h2>
@@ -103,24 +103,26 @@ export default function StatusView() {
                 </div>
             </div>
             <div className="statusItems">
-                <h2>Eat pattern</h2>
-                <div className="history-graph-placeholder">
-                    <Line  {...config}/>
             <div className="food-level-container">
-            <div className="food-level-indicator" style={{ height: `${percentage}%`, backgroundColor: colour(percentage) }}>
-            <span className="food-level-text">{percentage}%</span>
+                <div className="food-level-indicator" style={{ height: `${percentage}%`, backgroundColor: colour(percentage) }}>
+                    <span className="food-level-text">{percentage}%</span>
                 </div>
-               
             </div>
-
             <div>
-
-            <span className="food-level-text">{weight}g</span>
+                <span className="food-level-text">{weight}g</span>
             </div>
             <div className="statusItems bowl">
-            <h2>food in bowl</h2>
+                <h2>food in bowl</h2>
             </div>
             
         </div>
+        </div>
+</>
     );
 }
+
+{/*
+<h2>Eat pattern</h2>
+                <div className="history-graph-placeholder">
+                    <Line  {...config}/>
+*/}

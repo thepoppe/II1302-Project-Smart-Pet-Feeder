@@ -41,7 +41,7 @@ app.get('/motor-status', (req, res) => {
 
 // add a new schedule to the schedule array
 app.post('/schedule', (req, res) => {
-  const {month, day, hour, minute } = req.body;
+  const {month, day, hour, pet, amount, minute} = req.body;
   
   // Validation to check if date is in the past
   const now = new Date(); 
