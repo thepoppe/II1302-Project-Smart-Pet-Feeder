@@ -1,7 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const app = express();
-const { handleSetDBRequest, handleGetUserRequest } = require("./dbFunctions.js");
+const { handleSetDBRequest, handleGetUserRequest, handleAuthRequest} = require("./dbFunctions.js");
 
 //temp model
 const port = 3000;
@@ -10,6 +10,7 @@ let motorStatus=false
 let schedules = [];
 let usedSchedules= []
 let distanceSensorValue=null
+let weightSensorValue=null
 
 
 app.use(cors());
@@ -18,6 +19,9 @@ app.use(express.json());
 // db tests
 app.post("/testSetDB", handleSetDBRequest);
 app.get("/testGetDB", handleGetUserRequest);
+
+//auth
+app.post("/login", handleAuthRequest);
 
 // Toggle motor status ( done by our application when pressing a button) 
 app.post('/toggle-motor', (req, res) => {
@@ -34,21 +38,44 @@ app.get('/motor-status', (req, res) => {
   res.send(motorStatus)
 });
 
+
 // add a new schedule to the schedule array
 app.post('/schedule', (req, res) => {
-  const {month, day, hour, minute } = req.body;
+  const {month, day, hour, pet, amount, minute} = req.body;
+  
+  // Validation to check if date is in the past
+  const now = new Date(); 
+  const scheduleDate = new Date(now); 
+  scheduleDate.setMonth(month);
+  scheduleDate.setDate(day);
+  scheduleDate.setHours(hour);
+  scheduleDate.setMinutes(minute);
+  if (scheduleDate < now) {
+    return res.status(400).json({ message: "Cannot add a schedule in the past." });
+  }
+  
+
+ // Validation done. Add to schedules
   schedules.push({month,day, hour, minute});
   schedules.sort(compareDatesCB);
   console.log(schedules)
-  res.json({ message: "Schedule added " });
+  res.json({ success: true, message: "Schedule added " });
 });
 
-// Endpoint to get the first schedule in the schedules array ( arduino )
+// Endpoint to get the all schedules in the schedules array (frontend)
+//TODO Fix pet amount
 app.get('/allSchedules', (req, res) => {
-  res.json(schedules); 
+  const schdles = schedules.map(schedule => ({
+    date: `${(schedule.month + 1).toString().padStart(2, '0')}.${schedule.day.toString().padStart(2, '0')}`,
+    time: `${schedule.hour.toString().padStart(2, '0')}:${schedule.minute.toString().padStart(2, '0')}`,
+    pet: "placeholder pet",
+    amount: "placeholder amount"
+  }));
+  //console.log(schdles)
+  res.json(schdles);
 });
 
-// Endpoint to get all the schedule in the schedules array ( arduino )
+// Endpoint to get the first value in the schedules array ( arduino )
 app.get('/getschedules', (req, res) => {
   res.json(schedules[0]); 
 });
@@ -64,18 +91,20 @@ app.get('/removeSchedule', (req, res) => {
 
 // Endpoint to update the current value of the distance sensor
 app.post('/uploadDistanceSensorValue', (req, res) => {
-  //console.log("connected")
-  //console.log(req.body)
-  const {value} = req.body;
-  distanceSensorValue=value
-  console.log(distanceSensorValue) 
-  res.json({currentValue: distanceSensorValue });
+  const {dist, weight} = req.body;
+  distanceSensorValue = dist;
+  weightSensorValue = weight;
+  
+  console.log(dist); 
+  console.log(weight);
+  
+  res.json({ distance: distanceSensorValue, weight: weightSensorValue });
 });
 
 //Endpoint to get the value of distance sensor
 
-app.get('/distance-sensor', (req, res) => {
-  res.json({ currentValue: distanceSensorValue });
+app.get('/sensor-values', (req, res) => {
+  res.json({ distance: distanceSensorValue, weight: weightSensorValue });
 });
 
 

@@ -1,0 +1,86 @@
+
+.logincontainer {
+    display : flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    align-content: center;
+    gap: 20px;
+  }
+
+  /* login page  */
+.login{
+    display : flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    align-content: center;
+    gap: 20px;
+    align-self: center;
+    position: absolute;
+    top: 20%;
+
+    color: black;
+    font-feature-settings: "clig" off, "liga" off;
+    font-family: Inter;
+    font-size: 90px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 120%;
+    letter-spacing: -2.88px;
+      
+  
+  }
+  
+  
+.h2{
+color: var(--Black, #100420);
+font-feature-settings: 'clig' off, 'liga' off;
+font-family: Inter;
+font-size: 26px;
+font-style: normal;
+font-weight: 600;
+line-height: 120%;
+letter-spacing: -1.08px;
+align-self: center;
+position: absolute;
+top: 50%;
+
+}
+
+.loginBTN{
+    align-self: center;
+    position: absolute;
+    top: 60%;
+}
+
+  .icon-button {
+    display: inline-block;
+    padding: 10px 20px;
+    font-feature-settings: 'clig' off, 'liga' off;
+    font-family: Inter;
+    font-size: 20px;
+    font-weight: 700;
+    text-align: center;
+    color: rgb(255, 255, 255);
+    border-radius: 20px;
+    border-color: rgb(0, 0, 0);
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+
+    background-color: #222324;
+    align-self: center;
+    
+    background-image: url('src/icons/google.svg');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center left;
+    padding-left: 70px; /* Adjust as needed */
+  }
+  
+  button:hover:not([disabled]) {
+    background-color: #222324;
+    border-color: #0c46f3;
+  }
+  button:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }

@@ -10,11 +10,28 @@ void setup() {
 }
 
 void loop() {
-  Motor.startMotor();
-  delay(2000);
-  Motor.speed(255);
-  delay(2000);
-  Motor.speed(20);
-  delay(2000);
+  Motor.startMotor(1);
+  Motor.speed(220);
+  delay(10);
+  Motor.speed(50);
+  delay(100);
+  Motor.speed(40);
+  delay(1000);
+  Motor.speed(30);
+  delay(1000);
+
   Motor.stopMotor();
+  delay(2000);
+  Motor.startMotor(0);
+  Motor.speed(220);
+  delay(10);
+  Motor.speed(50);
+  delay(100);
+  Motor.speed(40);
+  delay(1000);
+  Motor.speed(30);
+  delay(1000);
+
+
+
 }
