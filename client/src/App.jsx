@@ -2,6 +2,7 @@ import ErrorPage from "./Views/ErrorPage";
 import LoginView from "./Views/LoginView";
 import TopBar from "./Components/TopBar";
 import Tests from "./Views/tests";
+import SuspenseGif from "./Components/suspense";
 import React, { useEffect, useState, lazy, Suspense } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import "./index.css";
@@ -28,7 +29,7 @@ function App() {
   return (
     <>
       <TopBar loggedIn={loggedIn} logOut={() => setLoggedIn(false)} />
-      <Suspense fallback={<h1>Loading</h1>}>
+      <Suspense fallback={<SuspenseGif />}>
         <Routes>
           <Route path="/tests" element={<Tests />} />
           <Route
