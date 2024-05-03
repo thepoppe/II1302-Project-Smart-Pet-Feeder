@@ -6,8 +6,8 @@ import './statusPage.css'
 export default function StatusView() {
     const [distance, setDistance] = useState(0);
     const [weight,setWeight]=useState(0);
-    const maxDistance=20;
-    const maxWeight=50;
+    const maxDistance=100;
+    const maxWeight=30;
 
     // Removes decimals and makes sure its under 100
     const distancePercentage = Math.min(Math.round((distance / maxDistance) * 100), 100); 
@@ -28,9 +28,13 @@ export default function StatusView() {
         }).catch(error => console.error('Error:', error));
     }
     useEffect(() => {
-        getSensorValues(); // Run it initially
-       
-    }, []); 
+        getSensorValues(); // Run initially
+        const interval = setInterval(() => {
+            getSensorValues(); // Run every 1000ms (1 second)
+        }, 1000);
+
+        return () => clearInterval(interval); // Cleanup on component unmount
+    }, []);
 
 //GRaf dummy
     const data = [
@@ -77,9 +81,9 @@ export default function StatusView() {
                 {50 < distancePercentage && distancePercentage <= 100 ? (
                     <Progress type="circle" percent={distancePercentage} strokeColor="green"  strokeWidth={8} circleIconFontSize='2em' size={200} />
                 ) : 20 < distancePercentage && distancePercentage <= 50 ? (
-                    <Progress type="circle" percent={distancePercentage} strokeColor=" yellow"  strokeWidth={8} circleIconFontSize='2em' />
+                    <Progress type="circle" percent={distancePercentage} strokeColor=" yellow"  strokeWidth={8} circleIconFontSize='2em' size={200} />
                 ) : (
-                    <Progress type="circle" percent={distancePercentage} strokeColor="red"  strokeWidth={8} circleIconFontSize='2em' />
+                    <Progress type="circle" percent={distancePercentage} strokeColor="red"  strokeWidth={8} circleIconFontSize='2em' size={200} />
                 )}
                 <button onClick={getSensorValues} className="updateBTN">Update Now</button>
                 </div>
