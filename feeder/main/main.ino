@@ -92,7 +92,7 @@ void setup() {
 
   void openPostion() {
   Motor.startMotor(true);
-  Motor.speed(220);
+  Motor.speed(250);
 
   delay(1000);
   Motor.stopMotor();
@@ -101,7 +101,7 @@ void setup() {
 // set feeder disk to closed position
 void closedPostion(){
   Motor.startMotor(false);
-  Motor.speed(220);
+  Motor.speed(250);
 
   delay(1000);
   Motor.stopMotor();
