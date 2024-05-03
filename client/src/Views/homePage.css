@@ -33,7 +33,7 @@
   }
   
   .LISchedule{
-    background-image: url('/Users/ahmadmatar/Documents/GitHub/II1302-Project-Smart-Pet-Feeder/client/icons/calendar_plus_icon.svg');
+    background-image: url('/src/icons/calendar_plus_icon.svg');
     background-size: 50px;
     background-repeat: no-repeat;
     background-position: center;
@@ -45,7 +45,7 @@
 
 
   .LISetting{
-    background-image: url('/Users/ahmadmatar/Documents/GitHub/II1302-Project-Smart-Pet-Feeder/client/icons/setting_icon.svg');
+    background-image: url('/src/icons/setting_icon.svg');
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
@@ -54,7 +54,7 @@
   }
 
   .LIStatus{
-    background-image: url('/Users/ahmadmatar/Documents/GitHub/II1302-Project-Smart-Pet-Feeder/client/icons/info_circle_icon 1.svg');
+    background-image: url('/src/icons/info_circle_icon 1.svg');
     background-size: 50px;
     background-repeat: no-repeat;
     background-position: center ;

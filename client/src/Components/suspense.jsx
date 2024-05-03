@@ -1,5 +1,5 @@
 import React from "react";
-import Gif from "../../icons/loading.gif";
+import Gif from "../icons/loading.gif";
 
 const SuspenseGif = () => {
   return (
