@@ -32,16 +32,16 @@
     margin: 0 auto; /* Center horizontally */
 }
 .bowl{
-    max-width: 100%;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    grid-column: span 2; 
-    
-
+   display: flex;
+   justify-content: center;
 }
 
 .history{
+    grid-column: span 2;     
+}
 
+.chart{
+    display: flex;
+    justify-content: center;
 }
 

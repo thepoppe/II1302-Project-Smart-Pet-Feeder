@@ -1,6 +1,7 @@
 
 
 export default function resolvePromise(promise, promiseState) {
+  
   promiseState.promise = promise;
   promiseState.data = null;
   promiseState.error = null;
