@@ -177,8 +177,11 @@ void loop() {
   serializeJson(doc,Serial); // Debug code  remove after when not needed
   Serial.println();
 
+  int scheduledMonth =  doc["month"];
+  int scheduledDay =  doc["day"];
   int scheduledHour= doc["hour"];
-  int scheduledMinut = doc["minute"];
+  int scheduledMinute = doc["minute"];
+
 
   struct tm timeinfo;
   if(!getLocalTime(&timeinfo)){
@@ -197,7 +200,7 @@ void loop() {
   float weight = scale.get_units() * -1;
   int neededw = 50;
 
-  if(scheduledHour==timeinfo.tm_hour && scheduledMinut==timeinfo.tm_min){
+  if(scheduledMonth ==timeinfo.tm_mon && scheduledDay==timeinfo.tm_mday && scheduledHour==timeinfo.tm_hour && scheduledMinute==timeinfo.tm_min){
     Serial.print("Start MOTOR");
     
     getRequest(client, serverAddress, "/removeSchedule");  
