@@ -180,7 +180,7 @@ void loop() {
   int scheduledMonth =  doc["month"];
   int scheduledDay =  doc["day"];
   int scheduledHour= doc["hour"];
-  int scheduledMinute = doc["minute"];
+  int scheduledMinut = doc["minute"];
 
 
   struct tm timeinfo;
@@ -200,7 +200,8 @@ void loop() {
   float weight = scale.get_units() * -1;
   int neededw = 50;
 
-  if(scheduledMonth ==timeinfo.tm_mon && scheduledDay==timeinfo.tm_mday && scheduledHour==timeinfo.tm_hour && scheduledMinute==timeinfo.tm_min){
+  if(scheduledMonth == timeinfo.tm_mon && scheduledDay == timeinfo.tm_mday &&scheduledHour==timeinfo.tm_hour && scheduledMinut==timeinfo.tm_min){
+    
     Serial.print("Start MOTOR");
     
     getRequest(client, serverAddress, "/removeSchedule");  
