@@ -7,22 +7,18 @@ export default function SettingsView() {
     name: '',
     amount:'',    
   });
+  const [petName, setPetName] = useState(''); 
+  const [amount, setAmount] = useState(''); 
   const [userSettings, setUserSettings] = useState({ name: '', email:'' });
 
 
-  const handleNewPetChange = (event) => {
-    const { name, value } = event.target;
-    setNewPet((prevPet) => ({
-      ...prevPet,
-      [name]: value,
-    }));
-  };
-
   const handleAddPetSubmit = (event) => {
     event.preventDefault();
+    setNewPet({ name: petName, amount :amount }); 
+    console.log("petname,", petName);
+    console.log("pet amount", amount)
     setPets([...pets, newPet]);
-    setNewPet({ name: '' }); 
-    setAddForm(false); 
+    
   };
 
   const handleDeletePet = (petIndex) => {
@@ -44,48 +40,49 @@ export default function SettingsView() {
   };
 
   return (
-    <div className="container">
-      {AddPetForm && (
+    <div className="SettingPageContainer">
+      <div className='settingPageItems'>
+      <h2>Add a new Pet:</h2>
         <div className="add-pet-form">
-          <form onSubmit={handleAddPetSubmit}>
-            <label htmlFor="pet-name">Pet's Name:</label>
+          <form  className="form" onSubmit={handleAddPetSubmit}>
+            <div className="form-group">
+            <div  htmlFor="pet-name">Pet's Name:</div>
             <input
               type="text"
-              id="pet-name"
-              name="name"
-              value={newPet.name}
-              onChange={handleNewPetChange}
+              onChange={(e)=> setPetName(e.target.value)}
+              value={petName}
               required
             /> 
-            <div>
-            <label htmlFor="pet-amount">Amount of food (grams):</label>
+            </div>
+            <div className="form-group">
+            <div htmlFor="pet-amount">Amount of food (grams):</div>
             <input
               type="number"
-              id="pet-amount"
-              name="amount"
-              value={newPet.amount}
-              onChange={handleNewPetChange}
+              value={amount}
+              onChange={(e)=> setAmount(e.target.value)}
               required
             />
           </div>           
-            <button type="button" onClick={() => setAddForm(false)}>Cancel</button>
+            <button className='submit-btn' type="submit" >Add Pet</button>
           </form>
         </div>
         
-      )}
-      
+      </div>
+      <div className='settingPageItems'>
       <h2>My Pets</h2>
       <ul className="homeUL">
         {pets.map((pet, index) => (
           <li className="pet-item homeLI" key={index}>
-            {pet.name}
+            <span>{pet.name}</span>
+            
+            <span>{pet.amount}</span>
             <button className="delete-button" onClick={() => handleDeletePet(index)}>X</button>
           </li>
+          
         ))}
       </ul>
-
-      <button className="centered-button" onClick={() => setAddForm(true)}>Add New</button>
-
+      </div>
+      <div className='settingPageItems setting-grid'>
       <h2>My Settings</h2>
       <div className="settings-container">
         <div>
@@ -110,6 +107,7 @@ export default function SettingsView() {
         </div>
 
         <button className="centered-button" onClick={handleSaveSettings}>Save Settings</button>
+      </div>
       </div>
     </div>
   );
