@@ -19,10 +19,12 @@
 #include <WiFiClient.h>
 
 #include <Motor.h>
+#include "HX711.h"
 
 #include <ArduinoJson.h>
 #include "time.h"
 #include <Distance.h>
+
 
 const char* ssid = "iPhone123";
 const char* password = "12345678";
@@ -37,6 +39,12 @@ int in2 = 7;  // Input 2
 int trig = 2;
 int echo = 3;
 
+// load cell Pins
+int dout = 4;
+int sck = 5;
+float calibration_factor = -1100;
+
+HX711 scale;
 
 
 Motor Motor(en, in1, in2);
@@ -50,6 +58,11 @@ const int   daylightOffset_sec = 3600;
 void setup() {
   Serial.begin(115200);  // Initialize serial communication for debugging
   Motor.initMotor();
+
+  scale.begin(dout,sck);
+  scale.set_scale(calibration_factor);
+  scale.tare();
+
   Distance.init();
   connectToWifi(ssid, password);
   configTime(gmtOffset_sec, daylightOffset_sec, ntpServer);
@@ -75,6 +88,26 @@ void setup() {
       request += "\r\nConnection: close\r\n\r\n";
       client.print(request);
   }
+
+
+  void openPostion() {
+  Motor.startMotor(true);
+  Motor.speed(220);
+  delay(10);
+  Motor.speed(120);
+  delay(1000);
+  Motor.stopMotor();
+}
+
+// set feeder disk to closed position
+void closedPostion(){
+  Motor.startMotor(false);
+  Motor.speed(220);
+  delay(10);
+  Motor.speed(120);
+  delay(1000);
+  Motor.stopMotor();
+}
 
  
 
@@ -113,16 +146,16 @@ void loop() {
   if (strcmp(status + 9, "200 OK") != 0) {
     Serial.print(F("Unexpected response: "));
     Serial.println(status);
-    client.stop();
-    return;
+    // client.stop();
+    // return;
   }
 
   // Skip HTTP headers
   char endOfHeaders[] = "\r\n\r\n";
   if (!client.find(endOfHeaders)) {
     Serial.println(F("Invalid response"));
-    client.stop();
-    return;
+    //client.stop();
+    // return;
   }
 
   // Allocate the JSON document
@@ -133,8 +166,8 @@ void loop() {
   if (error) {
     Serial.print(F("deserializeJson() failed: "));
     Serial.println(error.f_str());
-    //client.stop();
-    //return;
+    client.stop();
+    // return;
   }
 
   // Extract values
@@ -163,15 +196,25 @@ void loop() {
     return;
   }
 
+  float weight = scale.get_units() * -1;
+  int neededw = 50;
+
   if(scheduledHour==timeinfo.tm_hour && scheduledMinut==timeinfo.tm_min){
     Serial.print("Start MOTOR");
-    Motor.startMotor();
-    Motor.speed(100);
-    getRequest(client, serverAddress, "/removeSchedule");
+    
+    getRequest(client, serverAddress, "/removeSchedule");  
+    if(weight < neededw)
+      openPostion();
+    while(weight < neededw){
+      Serial.print(weight);
+      Serial.println("g");
+      delay(100);
+      weight = scale.get_units() * -1;
+    }
+    closedPostion();
 
   }
   else{
-    Serial.print("whaa...");
     Motor.stopMotor();
   }
   
@@ -182,11 +225,17 @@ void loop() {
     return;
   }
 
-Serial.print(Distance.getDistance());
+int  dist = Distance.getDistance();
+Serial.print(dist);
 Serial.println("cm");
 
+// print weight
+weight = scale.get_units() * -1;
+//Serial.print(weight);
+//Serial.println("g");
+
 // Building post request
-String data = "{\"value\": " + String(Distance.getDistance()) + "}";
+String data = "{\"dist\": " + String(dist) + ",\"weight\":" + String(weight)+ "}";
 String request = "POST /uploadDistanceSensorValue HTTP/1.1\r\n";
 String host = "Host: " + String(serverAddress) + ":" + String(port) + "\r\n";
 String contentType = "Content-Type: application/json\r\n";
@@ -201,7 +250,7 @@ request += data;
 
     // Send the request
     client.print(request);
-    Serial.println("POST request sent.");
+   // Serial.println(request);
 
 
 // handle response
@@ -214,12 +263,14 @@ request += data;
    // }
 
 }
- 
+
+    
+
 
 
   client.stop();
 
-
+  
 
 
   delay(1000);  // Adjust delay as needed

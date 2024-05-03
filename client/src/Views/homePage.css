@@ -1,0 +1,76 @@
+
+.threeDstyle {
+    border-radius: 15px;
+    background: linear-gradient(180deg, #bec9ff 0%, #727899 100%);
+    width: 801px;
+    height: 386px;
+    flex-shrink: 0;
+    background: transparent;
+    cursor: pointer; 
+  }
+
+
+.homeUL {
+    display: flex;
+    gap: 8rem;
+    margin-top: 1rem;
+    justify-content: center;
+    cursor: pointer;
+  }
+
+  .homeBTN{
+    border: solid;
+    border-width: 1px;
+    border-radius: 25px;
+    padding: 10px;
+    width: 60px;
+    height: 60px;
+    text-align: center;
+    font-size: large;
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+  }
+  
+  .LISchedule{
+    background-image: url('/Users/ahmadmatar/Documents/GitHub/II1302-Project-Smart-Pet-Feeder/client/icons/calendar_plus_icon.svg');
+    background-size: 50px;
+    background-repeat: no-repeat;
+    background-position: center;
+    margin-bottom: 5px;
+
+  }
+  
+
+
+
+  .LISetting{
+    background-image: url('/Users/ahmadmatar/Documents/GitHub/II1302-Project-Smart-Pet-Feeder/client/icons/setting_icon.svg');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+
+
+  }
+
+  .LIStatus{
+    background-image: url('/Users/ahmadmatar/Documents/GitHub/II1302-Project-Smart-Pet-Feeder/client/icons/info_circle_icon 1.svg');
+    background-size: 50px;
+    background-repeat: no-repeat;
+    background-position: center ;
+
+  
+
+  }
+ 
+  .homeBTN:hover {
+    cursor: pointer; 
+    border-color: black;
+    opacity: 100%;
+   
+  }
+
+  .homeBTN:focus,
+  .homeBTN:focus-visible {
+   
+  }

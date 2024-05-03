@@ -1,7 +1,11 @@
 import { useEffect } from "react";
 import { GoogleAuthProvider, signInWithPopup, getAuth } from "firebase/auth";
 
+import "./login.css"
+
 export default function LoginView(props) {
+
+
   const provider = new GoogleAuthProvider();
   const auth = getAuth();
 
@@ -56,11 +60,14 @@ export default function LoginView(props) {
 
   return (
     <div className="logincontainer">
-      <span className="login">Welcome to our app.</span>
-      <h2> Log in with your Google account to customize your Pet Feeder.</h2>
-      <div>
-        <button onClick={() => handleLogin()}>Press to log in</button>
+      <div className="login"> Welcome to our app. </div>
+      <div className="h2"> Log in with your Google account to customize your Pet Feeder.</div>
+      <div className="loginBTN">
+        <button className="icon-button" onClick={handleLogin}>
+          log in
+        </button>
       </div>
     </div>
   );
 }
+
