@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { addNewPet, getPets, sendEmail, getEmail,  } from '../expressFunction';
 
 export default function SettingsView() {
   const [pets, setPets] = useState([]); //store the list of pets
@@ -11,13 +12,14 @@ export default function SettingsView() {
   const [amount, setAmount] = useState(''); 
   const [userSettings, setUserSettings] = useState({ name: '', email:'' });
 
+  const [email, setEmail] = useState('');
+
 
   const handleAddPetSubmit = (event) => {
     event.preventDefault();
     setNewPet({ name: petName, amount :amount }); 
-    console.log("petname,", petName);
-    console.log("pet amount", amount)
-    setPets([...pets, newPet]);
+ 
+    addNewPet(newPet).then(()=>{ })
     
   };
 
@@ -26,17 +28,12 @@ export default function SettingsView() {
     setPets(updatedPets);
   };
 
-  const handleUserSettingsChange = (event) => {
-    const { name, email,  value } = event.target;
-    setUserSettings((prevSettings) => ({
-      ...prevSettings,
-      [name]: value,
-      [email]: value,
-    }));
-  };
 
-  const handleSaveSettings = () => {
-    console.log('User settings saved:', userSettings);
+
+  const handleSaveSettings = (event) => {
+    event.preventDefault();
+    /**TO DO impelement function i expressFunction.js */
+    sendEmail(email); 
   };
 
   return (
@@ -86,14 +83,7 @@ export default function SettingsView() {
       <h2>My Settings</h2>
       <div className="settings-container">
         <div>
-          <label >Name:</label>
-          <input
-            type="text"
-            id="name"
-            name="name"
-            value={userSettings.name}
-            onChange={handleUserSettingsChange}
-          />
+         Add your e-mail for notification:  
         </div>
         <div>
           <label >Email:</label>
@@ -101,8 +91,8 @@ export default function SettingsView() {
             type="text"
             id="email"
             name="email"
-            value={userSettings.email}
-            onChange={handleUserSettingsChange}
+            value={email}
+            onChange={(e)=> setEmail(e.target.value)}
           />
         </div>
 

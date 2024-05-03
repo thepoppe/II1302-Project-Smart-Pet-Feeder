@@ -80,3 +80,32 @@ export function sendData(datetime, pet, amount){
   })
   .catch(error => console.error('Error:', error));
 };
+
+/** delete a specific schedule from server and update schedules on frontend */
+export function deleteSchedule(schedule){
+  // TO DO 
+}
+
+
+export function addNewPet(pet){
+  // TO DO: write code to add pet in server
+}
+/** function to fetch all pet from server*/
+export function getPets(){
+
+}
+
+/** delete a specific pet from server and update frontend */
+export function deletePet(schedule){
+  // TO DO 
+}
+
+/** function to send user email to server */
+export function sendEmail(email){
+  // TO DO add code to add email to server //
+}
+
+/** function to get user email from server */
+export function getEmail(){
+  //TO DO 
+}

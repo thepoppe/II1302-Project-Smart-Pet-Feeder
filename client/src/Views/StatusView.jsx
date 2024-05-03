@@ -73,9 +73,9 @@ export default function StatusView() {
                 {50 < percentage && percentage <= 100 ? (
                     <Progress type="circle" percent={percentage} strokeColor="green"  strokeWidth={8} circleIconFontSize='2em' size={200} />
                 ) : 20 < percentage && percentage <= 50 ? (
-                    <Progress type="circle" percent={percentage} strokeColor=" yellow"  strokeWidth={8} circleIconFontSize='2em' />
+                    <Progress type="circle" percent={percentage} strokeColor=" yellow"  strokeWidth={8} circleIconFontSize='2em' size={200} />
                 ) : (
-                    <Progress type="circle" percent={percentage} strokeColor="red"  strokeWidth={8} circleIconFontSize='2em' />
+                    <Progress type="circle" percent={percentage} strokeColor="red"  strokeWidth={8} circleIconFontSize='2em' size={200}/>
                 )}
                 <button onClick={getSensorValues} className="updateBTN">Update Now</button>
                 </div>
