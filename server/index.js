@@ -1,7 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const app = express();
-const { handleSetDBRequest, handleGetUserRequest, handleAuthRequest} = require("./dbFunctions.js");
+const { handleSetDBRequest, handleGetUserRequest, handleAuthRequest, addSchedule, getSchedules} = require("./dbFunctions.js");
 
 //temp model
 const port = 3000;
@@ -113,3 +113,54 @@ function compareDatesCB(d1, d2){
     return 0
   }
 }
+
+// Add pet endpoint
+app.post('/users/:userId/pets', async (req, res) => {
+  const { userId } = req.params;
+  const { name, type } = req.body;
+  try {
+    await addPet(userId, name, type);
+    res.status(201).send('Pet added successfully');
+  } catch (error) {
+    console.error('Failed to add pet:', error);
+    res.status(500).send({ 'Error': 'Internal Server Error' });
+  }
+});
+
+// Add schedule endpoint
+app.post('/users/:userId/schedules', async (req, res) => {
+  const { userId } = req.params;
+  const { time, amount, isActive } = req.body;
+  try {
+    await addSchedule(userId, time, amount, isActive);
+    res.status(201).send('Schedule added successfully');
+  } catch (error) {
+    console.error('Failed to add schedule:', error);
+    res.status(500).send({ 'Error': 'Internal Server Error' });
+  }
+});
+
+app.get('/users/:userId/schedules', async (req, res) => {
+  const { userId } = req.params;
+  try {
+    const schedules = await getSchedules(userId);
+    (userId);
+    res.json(schedules);
+  } catch (error) {
+    console.error('Failed to retrieve schedules:', error);
+    res.status(500).send({ 'Error': 'Internal Server Error' });
+  }
+});
+
+app.get('/users/:userId/pets', async (req, res) => {
+  const { userId } = req.params;
+  try {
+    const pets = await getPets(userId);
+    res.json(pets);
+  } catch (error) {
+    console.error('Failed to retrieve pets:', error);
+    res.status(500).send({ 'Error': 'Internal Server Error' });
+  }
+});
+
+
