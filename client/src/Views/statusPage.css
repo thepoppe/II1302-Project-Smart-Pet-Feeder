@@ -28,8 +28,8 @@
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s ease;
-    width: fit-content; /* Set width based on content */
-    margin: 0 auto; /* Center horizontally */
+    width: fit-content; 
+    margin: 0 auto; 
 }
 .bowl{
    display: flex;
@@ -39,7 +39,6 @@
 .history{
     grid-column: span 2;     
 }
-
 .chart{
     display: flex;
     justify-content: center;

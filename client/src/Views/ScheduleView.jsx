@@ -1,6 +1,6 @@
 import React, { useState,useEffect } from 'react';
 import { sendData, getSchedules, toggleMotor } from '../expressFunction';
-import "./schedulePage.css";
+
 
 
 
@@ -69,7 +69,7 @@ export default function ScheduleView(props) {
         <input
               type="datetime-local"
               value={datetime}
-              onChange={e => setDatetime(e.target.value)}
+              onChange={(e) => setDatetime(e.target.value)}
               required
           />
       </div>
@@ -107,6 +107,7 @@ export default function ScheduleView(props) {
                 <th>Time</th>
                 <th>Pet</th>
                 <th>Amount</th>
+                <th className='header-cell'>Action</th> {/* New column for the delete button */}
                 </tr>
             </thead>
             <tbody>
@@ -117,6 +118,9 @@ export default function ScheduleView(props) {
                     <td>{schedule.time}</td>
                     <td>{schedule.pet}</td>
                     <td>{schedule.amount} gram</td>
+                    <td>
+          <button className='delete-button' onClick={() => handleDelete(index)}>X</button>
+        </td> {/* Delete button */}
                 </tr>
                 )}
                 )}
