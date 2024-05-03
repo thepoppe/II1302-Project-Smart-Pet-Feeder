@@ -9,7 +9,7 @@ const defaultMsg = "HelloWorld";
 let motorStatus=false
 let schedules = [];
 let usedSchedules= []
-let distanceSensorValue=15
+let distanceSensorValue=null
 let weightSensorValue=null
 
 
@@ -71,7 +71,7 @@ app.get('/allSchedules', (req, res) => {
     pet: "placeholder pet",
     amount: "placeholder amount"
   }));
-  console.log(schdles)
+  //console.log(schdles)
   res.json(schdles);
 });
 
