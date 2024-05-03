@@ -93,8 +93,7 @@ void setup() {
   void openPostion() {
   Motor.startMotor(true);
   Motor.speed(220);
-  delay(10);
-  Motor.speed(120);
+
   delay(1000);
   Motor.stopMotor();
 }
@@ -103,8 +102,7 @@ void setup() {
 void closedPostion(){
   Motor.startMotor(false);
   Motor.speed(220);
-  delay(10);
-  Motor.speed(120);
+
   delay(1000);
   Motor.stopMotor();
 }
@@ -203,14 +201,15 @@ void loop() {
     Serial.print("Start MOTOR");
     
     getRequest(client, serverAddress, "/removeSchedule");  
-    if(weight < neededw)
+    // if(weight < neededw)
       openPostion();
-    while(weight < neededw){
-      Serial.print(weight);
-      Serial.println("g");
-      delay(100);
-      weight = scale.get_units() * -1;
-    }
+    //while(weight < neededw){
+    //  Serial.print(weight);
+    //  Serial.println("g");
+    //  delay(100);
+    //  weight = scale.get_units() * -1;
+    //}
+    delay(1000);
     closedPostion();
 
   }
