@@ -93,12 +93,40 @@ async function addSchedule(userId, time, amount, isActive) {
   }
 }
 
+async function getSchedules(userId) {
+  try {
+    const scheduleCollection = db.collection('Users').doc(userId).collection('Schedules');
+    const snapshot = await scheduleCollection.get();
+    const schedules = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    return schedules;
+  } catch (error) {
+    console.error('Error fetching schedules:', error);
+    throw error;
+  }
+}
+
+async function getPets(userId) {
+  try {
+    const petsCollection = db.collection('Users').doc(userId).collection('Pets');
+    const snapshot = await petsCollection.get();
+    const pets = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    return pets;
+  } catch (error) {
+    console.error('Error fetching pets:', error);
+    throw error;
+  }
+}
+
+
+
 module.exports = {
   addPet,
   addSchedule,
   handleAuthRequest,
   handleSetDBRequest,
   handleGetUserRequest,
+  getPets,
+  getSchedules,  
 };
 
 
