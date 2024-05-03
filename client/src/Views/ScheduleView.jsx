@@ -15,9 +15,17 @@ export default function ScheduleView(props) {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log("Form submitted:", { datetime, pet, amount });
-    sendData(datetime, pet, amount).then(()=>{ 
-        getSchedules().then((data) => setSchedules(data));
-    })   
+    sendData(datetime, pet, amount) .then(() => {
+    
+        return getSchedules();
+      })
+      .then((data) => {
+        setSchedules(data);
+      })
+      .catch((error) => {
+   
+        console.error("An error occurred:", error);
+      });
   }
   
   useEffect(() => {
