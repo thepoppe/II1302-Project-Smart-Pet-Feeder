@@ -15,21 +15,47 @@ export default function ScheduleView(props) {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log("Form submitted:", { datetime, pet, amount });
-    sendData(datetime, pet, amount).then(() => {
-        return getSchedules();
-      })
-      .then((data) => {
-        setSchedules(data);
-      })
-      .catch((error) => {
-   
-        console.error("An error occurred:", error);
-      });
+    sendData(datetime, pet, amount) .then(() => {
+    
+      return getSchedules();
+    })
+    .then((data) => {
+      setSchedules(data);
+    })
+    .catch((error) => {
+ 
+      console.error("An error occurred:", error);
+    });
+    }
+  
+
+
+  function sendCurrentDate() {
+    const now = new Date();
+    const month = now.getMonth();
+    const day = now.getDate();
+    const hour = now.getHours();
+    const minute = now.getMinutes();
+
+    fetch('http://localhost:3000/schedule', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ month, day, hour, minute })
+    })
+    .then(response => response.json())
+    .then(data => {
+      getSchedules().then((data) => setSchedules(data));
+    })
+    .catch(error => console.error('Error:', error));
   }
+
+
   
   useEffect(() => {
     getSchedules().then((data) => setSchedules(data))
-    }, [pet]);
+    }, []);
 
 
 
@@ -117,7 +143,7 @@ export default function ScheduleView(props) {
           required
         />
         </div>
-        <button className='feedButton' onClick={(e)=>{ toggleMotor()}}>Feed now!</button>
+        <button className='feedButton' onClick={sendCurrentDate}>Feed now!</button>
         <span>Food has been dispensed successfully</span>
       </div>
       

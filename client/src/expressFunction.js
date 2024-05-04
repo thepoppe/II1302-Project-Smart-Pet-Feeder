@@ -67,7 +67,7 @@ export function sendData(datetime, pet, amount){
   const hour = date.getHours();
   const minute = date.getMinutes();
 
-  fetch('http://localhost:3000/schedule', {
+  return  fetch('http://localhost:3000/schedule', {
       method: 'POST',
       headers: {
           'Content-Type': 'application/json'

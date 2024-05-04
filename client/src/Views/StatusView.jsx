@@ -5,9 +5,13 @@ import './statusPage.css'
 
 export default function StatusView() {
     const [distance, setDistance] = useState(0);
-    const maxDistance=20;
-    const [weight,setWeight]=useState('');
-    const percentage = Math.min(Math.round((distance / maxDistance) * 100), 100);
+    const [weight,setWeight]=useState(0);
+    const maxDistance=100;
+    const maxWeight=30;
+
+    // Removes decimals and makes sure its under 100
+    const distancePercentage = Math.min(Math.round((distance / maxDistance) * 100), 100); 
+    const weightPercentage = Math.min(Math.round((weight / maxWeight) * 100), 100);
 
     function getSensorValues() {
         fetch('http://localhost:3000/sensor-values', {
@@ -24,9 +28,13 @@ export default function StatusView() {
         }).catch(error => console.error('Error:', error));
     }
     useEffect(() => {
-        getSensorValues(); // Run it initially
-       
-    }, []); 
+        getSensorValues(); // Run initially
+        const interval = setInterval(() => {
+            getSensorValues(); // Run every 1000ms (1 second)
+        }, 1000);
+
+        return () => clearInterval(interval); // Cleanup on component unmount
+    }, []);
 
 //GRaf dummy
     const data = [
@@ -70,12 +78,12 @@ export default function StatusView() {
             <h2>Food-level in container</h2>
                <div className='foodContainer' >
                 
-                {50 < percentage && percentage <= 100 ? (
-                    <Progress type="circle" percent={percentage} strokeColor="green"  strokeWidth={8} circleIconFontSize='2em' size={200} />
-                ) : 20 < percentage && percentage <= 50 ? (
-                    <Progress type="circle" percent={percentage} strokeColor=" yellow"  strokeWidth={8} circleIconFontSize='2em' size={200} />
+                {50 < distancePercentage && distancePercentage <= 100 ? (
+                    <Progress type="circle" percent={distancePercentage} strokeColor="green"  strokeWidth={8} circleIconFontSize='2em' size={200} />
+                ) : 20 < distancePercentage && distancePercentage <= 50 ? (
+                    <Progress type="circle" percent={distancePercentage} strokeColor=" yellow"  strokeWidth={8} circleIconFontSize='2em' size={200} />
                 ) : (
-                    <Progress type="circle" percent={percentage} strokeColor="red"  strokeWidth={8} circleIconFontSize='2em' size={200}/>
+                    <Progress type="circle" percent={distancePercentage} strokeColor="red"  strokeWidth={8} circleIconFontSize='2em' size={200} />
                 )}
                 <button onClick={getSensorValues} className="updateBTN">Update Now</button>
                 </div>
@@ -83,7 +91,7 @@ export default function StatusView() {
             <div className="statusItems">
                 <h2>Food-level in Bowl</h2>
                 <div className='bowl'>
-                <Progress type="circle" percent={75} format={(percent) => `${percent} gram`}  size={200} />
+                <Progress type="circle" percent={weightPercentage} format={(percent) => `${weight} gram`}  size={200} />
                 </div>
             </div>
             <div className="statusItems history">
