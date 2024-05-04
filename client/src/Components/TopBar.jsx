@@ -43,7 +43,6 @@ export default function TopBar(props) {
 
   return (
     <>
-    
       <nav >
       <ul className="ul">
         <li className="logo">
@@ -66,7 +65,6 @@ export default function TopBar(props) {
       </ul>
     </nav>
     </>
-
   );
 }
 

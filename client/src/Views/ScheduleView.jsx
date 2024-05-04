@@ -15,8 +15,7 @@ export default function ScheduleView(props) {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log("Form submitted:", { datetime, pet, amount });
-    sendData(datetime, pet, amount) .then(() => {
-    
+    sendData(datetime, pet, amount).then(() => {
         return getSchedules();
       })
       .then((data) => {
