@@ -20,7 +20,7 @@ export default function TopBar(props) {
     }
     ,
     {
-      label : "About",
+      label :( <Link to="/about">About</Link>),
       key : "2",
     },
   ];
@@ -65,7 +65,6 @@ export default function TopBar(props) {
    }
       </ul>
     </nav>
-
     </>
 
   );

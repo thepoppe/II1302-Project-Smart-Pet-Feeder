@@ -10,6 +10,7 @@ function Model(props){
 }
 
 function HomePageView(props) {
+
   return (
     <>
     <div
@@ -42,7 +43,7 @@ function HomePageView(props) {
       <PerspectiveCamera makeDefault fov={45} position={[1,1,4]} />
       
         <pointLight position={[10, 10, 10]} />
-            <Stage environment={"sunset"}>
+            <Stage environment={"night"}>
               <Model scale={0.0101} />
           </Stage>
         </Canvas>

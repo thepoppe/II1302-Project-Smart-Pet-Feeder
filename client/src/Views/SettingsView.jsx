@@ -67,25 +67,39 @@ export default function SettingsView() {
       </div>
       <div className='settingPageItems'>
       <h2>My Pets</h2>
-      <ul className="homeUL">
-        {pets.map((pet, index) => (
-          <li className="pet-item homeLI" key={index}>
-            <span>{pet.name}</span>
-            
-            <span>{pet.amount}</span>
-            <button className="delete-button" onClick={() => handleDeletePet(index)}>X</button>
-          </li>
-          
-        ))}
-      </ul>
+      <div>
+      <table className="schedule-table">
+            <thead>
+                <tr>
+                <th>Pet</th>
+                <th>Amount</th>
+                <th className='header-cell'>Action</th> {/* New column for the delete button */}
+                </tr>
+            </thead>
+            <tbody>
+                {pets.map((pet, index) => {
+                  return(
+                  <tr key={index}>
+                    <td>{pet.name}</td>
+                    <td>{pet.amount} gram</td>
+                    <td>
+          <button className='delete-button' onClick={() => handleDeletePet(index)}>X</button>
+        </td> {/* Delete button */}
+                </tr>
+                )}
+                )}
+            </tbody>
+            </table>
+      </div>
       </div>
       <div className='settingPageItems setting-grid'>
       <h2>My Settings</h2>
       <div className="settings-container">
-        <div>
+        <div >
          Add your e-mail for notification:  
         </div>
-        <div>
+        <div className='setting-gridItem'>
+          <div>
           <label >Email:</label>
           <input
             type="text"
@@ -94,9 +108,9 @@ export default function SettingsView() {
             value={email}
             onChange={(e)=> setEmail(e.target.value)}
           />
+          </div>
+        <button className="submit-btn" onClick={handleSaveSettings}>submit</button>
         </div>
-
-        <button className="centered-button" onClick={handleSaveSettings}>Save Settings</button>
       </div>
       </div>
     </div>
