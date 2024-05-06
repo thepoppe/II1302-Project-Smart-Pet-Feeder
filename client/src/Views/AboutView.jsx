@@ -23,7 +23,7 @@ function About(props){
                         <li><strong>Food Level Tracking:</strong> Keep track of the food level in both the bowl and the food container, ensuring you never run out of food.</li>
                         <li><strong>Eating Pattern Monitoring:</strong> Monitor your pet's eating patterns to ensure they are maintaining a healthy diet.</li>
                         <li><strong>Pet Profiles:</strong> Create profiles for your pets</li>
-                        <li><strong>Notification Alerts:</strong> Receive notifications via email to stay updated on your pet's feeding schedule and food levels.</li>
+                        <li><strong>Notification Alerts:</strong> Receive notifications via email to stay updated on food levels.</li>
                     </ul>
                 </section>
 
