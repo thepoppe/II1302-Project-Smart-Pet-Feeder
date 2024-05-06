@@ -1,3 +1,4 @@
+import { compareDatesCB } from "./serverUtils.js";
 const { initializeApp, cert } = require("firebase-admin/app");
 const { getFirestore } = require("firebase-admin/firestore");
 const {
@@ -80,6 +81,38 @@ async function addPet(userId, petName, petType) {
   }
 }
 
+async function addSensor(userId, dist, weight) {
+  try {
+    await db.collection('Users').doc(userId).collection('Sensor').doc('currentValues').set({
+      dist: dist,
+      weight: weight
+    }, { merge: true });
+
+    console.log('Sensor values successfully updated');
+  } catch (error) {
+    console.error('Failed to update sensor values:', error);
+  }
+}
+async function getSensorValues(userId) {
+  try {
+ 
+    const sensor = db.collection('Users').doc(userId).collection('Sensor').doc('currentValues');
+    const docSnapshot = await sensor.get();
+    
+    if (docSnapshot.exists) {
+      return { id: docSnapshot.id, userId: userId, ...docSnapshot.data() };
+    } else {
+      console.log('No current sensor values found');
+      return null;
+    }
+  } catch (error) {
+    console.error('Error fetching sensor values:', error);
+    throw error; 
+  }
+}
+
+
+
 async function addSchedule(userId,day,hour,month,minute,pet,amount) {
   
   try {
@@ -114,6 +147,30 @@ async function getSchedules(userId) {
   }
 }
 
+async function getNextSchedule(userId) {
+  if (!userId) {
+    throw new Error('Missing userId parameter');
+  }
+  const scheduleCollection = db.collection('Users').doc(userId).collection('Schedules');
+  const snapshot = await scheduleCollection.get();
+  const schedules = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+  const sortedSchedules = schedules.sort(compareDatesCB);
+  const nextSchedule = sortedSchedules[0];
+
+  if (nextSchedule) {
+    await scheduleCollection.doc(nextSchedule.id).delete();
+    await db.collection('Users').doc(userId).collection('usedSchedules').doc(nextSchedule.id).set(nextSchedule);
+
+    return nextSchedule;
+  } else {
+    throw new Error('No upcoming schedules found');
+  }
+}
+
+
+
+
 async function getPets(userId) {
   try {
     const petsCollection = db.collection('Users').doc(userId).collection('Pets');
@@ -136,6 +193,9 @@ module.exports = {
   handleGetUserRequest,
   getPets,
   getSchedules,  
+  addSensor,
+  getSensorValues,
+  getNextSchedule,
 };
 
 

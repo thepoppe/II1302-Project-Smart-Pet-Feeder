@@ -1,7 +1,8 @@
 const express = require("express");
 const cors = require("cors");
 const app = express();
-const { handleSetDBRequest, handleGetUserRequest, handleAuthRequest, addSchedule, getSchedules} = require("./dbFunctions.js");
+import { compareDatesCB } from "./serverUtils.js";
+const {getSensorValues,getNextSchedule, addSensor,handleSetDBRequest, handleGetUserRequest, handleAuthRequest, addSchedule, getSchedules} = require("./dbFunctions.js");
 
 //temp model
 const port = 3000;
@@ -121,24 +122,8 @@ app.listen(port, () => {
 
 
 
-function compareDatesCB(d1, d2){
-  if(d1.month - d2.month){
-    return d1.month - d2.month;
-  }
-  else if (d1.day-d2.day){
-    return d1.day-d2.day
-  }
-  else if(d1.hour-d2.hour){
-    return d1.hour-d2.hour
-  }
-  else if(d1.minute-d2.minute){
-    return d1.minute-d2.minute
-  }
-  // Same month-day-hour-minute
-  else{
-    return 0
-  }
-}
+// FIRESTORE FUNCTIONS BELOW
+
 
 // Add pet endpoint
 app.post('/users/:userId/pets', async (req, res) => {
@@ -152,6 +137,36 @@ app.post('/users/:userId/pets', async (req, res) => {
     res.status(500).send({ 'Error': 'Internal Server Error' });
   }
 });
+
+app.post('/users/:userId/uploadSensorValues', async (req, res) => {
+  const { userId } = req.params;
+  const { dist, weight } = req.body;
+
+  // Validation
+  if (dist === undefined || weight === undefined) {
+    return res.status(400).json({ error: "Invalid weight or distance data" });
+  }
+
+  try {
+    await addSensor(userId, dist, weight); // upload to firestore
+    res.status(201).json({ message: "Sensor data uploaded successfully." });
+  } catch (error) {
+    console.error(`Error uploading sensor data :`, error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+app.get('/users/:userId/sensorValues', async (req, res) => {
+  const { userId } = req.params;
+  try {
+    const sensorValues = await getSensorValues(userId);
+    res.json(sensorValues);
+  } catch (error) {
+    console.error('Failed to retrieve sensor values:', error);
+    res.status(500).send({ 'Error': 'Internal Server Error' });
+  }
+});
+
 
 // Add schedule endpoint
 app.post('/users/:userId/schedules', async (req, res) => {
@@ -196,30 +211,11 @@ app.get('/users/:userId/next-schedule', async (req, res) => {
   }
 
   try {
-
-    // Get all the schedules
-    const scheduleCollection = db.collection('Users').doc(userId).collection('Schedules');
-    const snapshot = await scheduleCollection.get();
-    const schedules = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-
-    // Sort the schedules
-    const sortedSchedules = schedules.sort(compareDatesCB);
-
+    const nextSchedule = await getNextSchedule(userId);
+    res.json(nextSchedule);
+  } 
     // Find the first upcoming schedule
-    const nextSchedule = sortedSchedules[0];
-
-    if (nextSchedule) {
-      // Delete it form Schedules
-      await scheduleCollection.doc(nextSchedule.id).delete();
-
-      // Add it to usedSchedules
-      await db.collection('Users').doc(userId).collection('usedSchedules').doc(nextSchedule.id).set(nextSchedule);
-
-      res.json(nextSchedule);
-    } else {
-      res.status(404).send({ error: 'No upcoming schedules found' });
-    }
-  } catch (error) {
+     catch (error) {
     console.error('Failed to retrieve and move next schedule:', error);
     res.status(500).send({ 'Error': 'Internal Server Error' });
   }
