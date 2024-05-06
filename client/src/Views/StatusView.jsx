@@ -108,7 +108,3 @@ export default function StatusView() {
     )
 }
 
-/**
-                <Line  {...config}/>
- * 
- */
