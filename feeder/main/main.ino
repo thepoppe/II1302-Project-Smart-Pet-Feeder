@@ -94,7 +94,7 @@ void setup() {
   Motor.startMotor(true);
   Motor.speed(250);
 
-  delay(1000);
+  delay(500);
   Motor.stopMotor();
 }
 
@@ -103,7 +103,7 @@ void closedPostion(){
   Motor.startMotor(false);
   Motor.speed(250);
 
-  delay(1000);
+  delay(600);
   Motor.stopMotor();
 }
 
@@ -206,15 +206,19 @@ void loop() {
     
     getRequest(client, serverAddress, "/removeSchedule");  
     // if(weight < neededw)
-      openPostion();
     //while(weight < neededw){
     //  Serial.print(weight);
     //  Serial.println("g");
     //  delay(100);
     //  weight = scale.get_units() * -1;
     //}
-    delay(1000);
+    int i =0;
+    while(i<5){
+      i++;
+      openPostion();
+    delay(100);
     closedPostion();
+    }
 
   }
   else{
