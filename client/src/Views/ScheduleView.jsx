@@ -39,6 +39,7 @@ export default function ScheduleView(props) {
       const day = now.getDate();
       const hour = now.getHours();
       const minute = now.getMinutes();
+      const amount=ManualAmount
   
       fetch(`http://localhost:3000/users/${userId}/schedules`, {
       method: 'POST',
