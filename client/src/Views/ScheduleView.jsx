@@ -30,19 +30,22 @@ export default function ScheduleView(props) {
   
 
 
-  function sendCurrentDate() {
-    const now = new Date();
-    const month = now.getMonth();
-    const day = now.getDate();
-    const hour = now.getHours();
-    const minute = now.getMinutes();
-
-    fetch('http://localhost:3000/schedule', {
+    function sendCurrentDate() {
+      const userId = localStorage.getItem('userId');
+      console.log("user")
+      console.log(userId)
+      const now = new Date();
+      const month = now.getMonth();
+      const day = now.getDate();
+      const hour = now.getHours();
+      const minute = now.getMinutes();
+  
+      fetch(`http://localhost:3000/users/${userId}/schedules`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ month, day, hour, minute })
+      body: JSON.stringify({ month, day, hour, minute,pet,amount })
     })
     .then(response => response.json())
     .then(data => {

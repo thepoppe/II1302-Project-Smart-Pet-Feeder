@@ -80,12 +80,16 @@ async function addPet(userId, petName, petType) {
   }
 }
 
-async function addSchedule(userId, time, amount, isActive) {
+async function addSchedule(userId,day,hour,month,minute,pet,amount) {
+  
   try {
     await db.collection('Users').doc(userId).collection('Schedules').add({
-      time: time,
-      amount: amount,
-      isActive: isActive
+      month: month,
+      day: day,
+      hour: hour,
+      minute: minute,
+      pet: pet,
+      amount: amount
     });
     console.log('Schedule added successfully');
   } catch (error) {
@@ -93,11 +97,16 @@ async function addSchedule(userId, time, amount, isActive) {
   }
 }
 
+
 async function getSchedules(userId) {
   try {
     const scheduleCollection = db.collection('Users').doc(userId).collection('Schedules');
     const snapshot = await scheduleCollection.get();
-    const schedules = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    const schedules = snapshot.docs.map(doc => ({
+      id: doc.id,
+      userId: userId,
+      ...doc.data()
+    }));
     return schedules;
   } catch (error) {
     console.error('Error fetching schedules:', error);

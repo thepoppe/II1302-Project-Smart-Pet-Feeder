@@ -156,27 +156,75 @@ app.post('/users/:userId/pets', async (req, res) => {
 // Add schedule endpoint
 app.post('/users/:userId/schedules', async (req, res) => {
   const { userId } = req.params;
-  const { time, amount, isActive } = req.body;
+  const {month, day,hour,minute,amount,pet } = req.body;
   try {
-    await addSchedule(userId, time, amount, isActive);
-    res.status(201).send('Schedule added successfully');
+  
+    await addSchedule(userId,day,hour,month,minute,pet,amount);
+    res.status(201).send('Schedule added successfully', userId);
   } catch (error) {
     console.error('Failed to add schedule:', error);
     res.status(500).send({ 'Error': 'Internal Server Error' });
   }
 });
 
+
 app.get('/users/:userId/schedules', async (req, res) => {
-  const { userId } = req.params;
+  const { userId } = req.params; 
+  if (!userId) {
+    return res.status(400).send({ error: 'Missing userId parameter' });
+  }
   try {
     const schedules = await getSchedules(userId);
-    (userId);
-    res.json(schedules);
+    console.log(schedules)
+    const formattedSchedules = schedules.map(schedule => ({
+      date: `${(schedule.month + 1).toString().padStart(2, '0')}.${schedule.day.toString().padStart(2, '0')}`,
+      time: `${schedule.hour.toString().padStart(2, '0')}:${schedule.minute.toString().padStart(2, '0')}`,
+      pet: schedule.pet, 
+      amount: schedule.amount 
+    }));
+    res.json(formattedSchedules);
   } catch (error) {
     console.error('Failed to retrieve schedules:', error);
     res.status(500).send({ 'Error': 'Internal Server Error' });
   }
 });
+
+app.get('/users/:userId/next-schedule', async (req, res) => {
+  const { userId } = req.params;
+  if (!userId) {
+    return res.status(400).send({ error: 'Missing userId parameter' });
+  }
+
+  try {
+
+    // Get all the schedules
+    const scheduleCollection = db.collection('Users').doc(userId).collection('Schedules');
+    const snapshot = await scheduleCollection.get();
+    const schedules = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+    // Sort the schedules
+    const sortedSchedules = schedules.sort(compareDatesCB);
+
+    // Find the first upcoming schedule
+    const nextSchedule = sortedSchedules[0];
+
+    if (nextSchedule) {
+      // Delete it form Schedules
+      await scheduleCollection.doc(nextSchedule.id).delete();
+
+      // Add it to usedSchedules
+      await db.collection('Users').doc(userId).collection('usedSchedules').doc(nextSchedule.id).set(nextSchedule);
+
+      res.json(nextSchedule);
+    } else {
+      res.status(404).send({ error: 'No upcoming schedules found' });
+    }
+  } catch (error) {
+    console.error('Failed to retrieve and move next schedule:', error);
+    res.status(500).send({ 'Error': 'Internal Server Error' });
+  }
+});
+
 
 app.get('/users/:userId/pets', async (req, res) => {
   const { userId } = req.params;
