@@ -110,6 +110,7 @@ void closedPostion(){
  // Initalize the values to -1 to show that they havent been set yet.
 int hoursWhenFed = -1;
 int minutesWhenFed = -1;
+float bowlWeightFed = -1;
 
 void loop() {
   // Code to send and receive data packets over WiFi
@@ -212,6 +213,7 @@ void loop() {
       closedPostion();
       weight = scale.get_units() * -1;
     }
+    bowlWeightFed = scale.get_units() * -1;
 
   }
   else{
@@ -229,11 +231,14 @@ void loop() {
   int minutesSinceFed = 60*(timeinfo.tm_hour-hoursWhenFed)+(timeinfo.timeinfo.tm_min); 
   int minuteTresh = 10;
 
+  // check if "minuteTresh" minutes passed since bowl fill (feeding). If so check bowl weight has decreased at least y grams since last feed.
   if( isFedbefore && minutesSinceFed > minuteTresh){
-    // SEND ALERT for not fed.
-    Serial.print("==II==ALERT : NOT FED FOR ");
-    Serial.print(minuteTresh);
-    Serial.print("MINUTES==II==");
+    if(bowlWeightFed != -1 &&  bowlWeightFed -  (scale.get_units() * -1) <10 ){
+        // SEND ALERT for not fed.
+        Serial.print("==II==ALERT : NOT FED FOR ");
+        Serial.print(minuteTresh);
+        Serial.print("MINUTES==II==");
+      }
   }
 
 int  dist = Distance.getDistance();
