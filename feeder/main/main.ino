@@ -107,8 +107,10 @@ void closedPostion(){
   Motor.stopMotor();
 }
 
- 
-
+ // Initalize the values to -1 to show that they havent been set yet.
+int hoursWhenFed = -1;
+int minutesWhenFed = -1;
+float bowlWeightFed = -1;
 
 void loop() {
   // Code to send and receive data packets over WiFi
@@ -179,6 +181,7 @@ void loop() {
 
   int scheduledHour= doc["hour"];
   int scheduledMinut = doc["minute"];
+  int neededw = doc["amount"];
 
   struct tm timeinfo;
   if(!getLocalTime(&timeinfo)){
@@ -186,7 +189,6 @@ void loop() {
     return;
   }
 
-  int currentHour =  timeinfo.tm_hour;
 
 
    if (!client.connect(serverAddress, port)) {
@@ -195,22 +197,24 @@ void loop() {
   }
 
   float weight = scale.get_units() * -1;
-  int neededw = 50;
+  
+
+  
+
 
   if(scheduledHour==timeinfo.tm_hour && scheduledMinut==timeinfo.tm_min){
-    Serial.print("Start MOTOR");
+    Serial.print("Start Dispense");
     
     getRequest(client, serverAddress, "/removeSchedule");  
-    // if(weight < neededw)
+    
+
+    while(weight < neededw){    
       openPostion();
-    //while(weight < neededw){
-    //  Serial.print(weight);
-    //  Serial.println("g");
-    //  delay(100);
-    //  weight = scale.get_units() * -1;
-    //}
-    delay(1000);
-    closedPostion();
+      delay(100);
+      closedPostion();
+      weight = scale.get_units() * -1;
+    }
+    bowlWeightFed = scale.get_units() * -1;
 
   }
   else{
@@ -218,10 +222,26 @@ void loop() {
   }
   
  
-
  if (!client.connect(serverAddress, port)) {
     Serial.println("Initial Connection failed between client and server");
     return;
+  }
+
+  
+  bool isFedbefore = hoursWhenFed != -1 && minutesWhenFed != -1;
+  int minutesSinceFed = 60*(timeinfo.tm_hour-hoursWhenFed)+(timeinfo.tm_min-minutesSinceFed); 
+  int minuteTresh = 10;
+  float weightTresh = 10;
+
+  // check if "minuteTresh" minutes passed since bowl fill (feeding). 
+  // If bowl weight has not decreased at least weightTresh grams since last feed send alert. 
+  if( isFedbefore && minutesSinceFed > minuteTresh){
+    if(bowlWeightFed != -1 &&  bowlWeightFed -  (scale.get_units() * -1) < weightTresh ){
+        // SEND ALERT for not fed.
+        Serial.print("==II==ALERT  BOWL UNCHANGED FOR ");
+        Serial.print(minuteTresh);
+        Serial.print("MINUTES==II==");
+      }
   }
 
 int  dist = Distance.getDistance();
@@ -230,8 +250,8 @@ Serial.println("cm");
 
 // print weight
 weight = scale.get_units() * -1;
-//Serial.print(weight);
-//Serial.println("g");
+Serial.print(weight);
+Serial.println("g");
 
 // Building post request
 String data = "{\"dist\": " + String(dist) + ",\"weight\":" + String(weight)+ "}";
