@@ -107,8 +107,9 @@ void closedPostion(){
   Motor.stopMotor();
 }
 
- 
-
+ // Initalize the values to -1 to show that they havent been set yet.
+int hoursWhenFed = -1;
+int minutesWhenFed = -1;
 
 void loop() {
   // Code to send and receive data packets over WiFi
@@ -186,7 +187,6 @@ void loop() {
     return;
   }
 
-  int currentHour =  timeinfo.tm_hour;
 
 
    if (!client.connect(serverAddress, port)) {
@@ -197,11 +197,15 @@ void loop() {
   float weight = scale.get_units() * -1;
   int neededw = 50; // FOR TESTING GET THIS FROM DB LATER
 
+  
+
+
   if(scheduledHour==timeinfo.tm_hour && scheduledMinut==timeinfo.tm_min){
     Serial.print("Start Dispense");
     
     getRequest(client, serverAddress, "/removeSchedule");  
-   
+    
+
     while(weight < neededw){    
       openPostion();
       delay(100);
@@ -215,10 +219,21 @@ void loop() {
   }
   
  
-
  if (!client.connect(serverAddress, port)) {
     Serial.println("Initial Connection failed between client and server");
     return;
+  }
+
+  
+  bool isFedbefore = hoursWhenFed != -1 && minutesWhenFed != -1;
+  int minutesSinceFed = 60*(timeinfo.tm_hour-hoursWhenFed)+(timeinfo.timeinfo.tm_min); 
+  int minuteTresh = 10;
+
+  if( isFedbefore && minutesSinceFed > minuteTresh){
+    // SEND ALERT for not fed.
+    Serial.print("==II==ALERT : NOT FED FOR ");
+    Serial.print(minuteTresh);
+    Serial.print("MINUTES==II==");
   }
 
 int  dist = Distance.getDistance();
