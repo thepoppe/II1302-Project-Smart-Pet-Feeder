@@ -1,6 +1,7 @@
 const { initializeApp, cert } = require("firebase-admin/app");
 const { getFirestore } = require("firebase-admin/firestore");
 const {
+
   getAuth,
   signInWithCredential,
   GoogleAuthProvider,
@@ -18,10 +19,23 @@ const firebaseApp = initializeApp({
 async function handleAuthRequest(req, res) {
   const token = req.body.token;
   console.log("Received token:", token);
+  console.log("\n");
+  
   try {
     const decodedToken = await getAuth().verifyIdToken(token);
     const uid = decodedToken.uid;
     console.log(uid + " has logged in");
+    console.log("user email: ", decodedToken.email);
+    const userEmail = decodedToken.email;
+
+    try {
+     await db.collection('Users').doc(uid).set({ email: userEmail });
+      console.log('user added successfully');
+    } catch (error) {
+      console.error('Failed to add email:', error);
+    }
+   // const email = await getEmailFromFirestore(uid);
+
 
     res.json({ valid: true, message: "Received token successfully" });
   } catch (error) {
@@ -33,10 +47,31 @@ async function handleAuthRequest(req, res) {
   }
 }
 
+async function getUserEmail(uid) {
+  try {
+    const userDoc = await db.collection('Users').doc(uid).get();
+    if (userDoc.exists) {
+      const userData = userDoc.data();
+      const email = userData.email; // Assuming 'email' is the field name where the email is stored
+      return email;
+    } else {
+      console.log("No such document!");
+      return null;
+    }
+  } catch (error) {
+    console.error("Error getting document:", error);
+    throw error;
+  }
+}
+
 const db = getFirestore();
+
+
 async function addDocumentToCollection(collection, doc, data) {
   return db.collection(collection).doc(doc).set(data);
 }
+
+
 async function getDocumentfromCollection(collection, doc) {
   const docRef = db.collection(collection).doc(doc);
   const docSnapshot = await docRef.get();
@@ -99,6 +134,7 @@ module.exports = {
   handleAuthRequest,
   handleSetDBRequest,
   handleGetUserRequest,
+  getUserEmail,
 };
 
 

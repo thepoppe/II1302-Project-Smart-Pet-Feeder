@@ -1,7 +1,8 @@
 const express = require("express");
+const nodemailer = require('nodemailer');
 const cors = require("cors");
 const app = express();
-const { handleSetDBRequest, handleGetUserRequest, handleAuthRequest} = require("./dbFunctions.js");
+const { handleSetDBRequest, handleGetUserRequest, handleAuthRequest, getUserEmail} = require("./dbFunctions.js");
 
 //temp model
 const port = 3000;
@@ -13,6 +14,38 @@ let distanceSensorValue=null
 let weightSensorValue=null
 
 
+
+const transporter = nodemailer.createTransport({
+ service:'gmail',
+  auth:{
+    user:'smart.feeder14@gmail.com',
+    pass: 'eohn bvhe cqcj xsup'
+  },
+  secure: true
+})
+
+/************** end point for testing send email */
+app.post("/sendmail", (req, res)=>{
+  
+  const mailData = {
+  from: 'smart.feeder14@gmail.com',  // sender address
+  to: 'ahmadmatar8@gmail.com',   // list of receivers
+  subject: 'Sending Email using Node.js',
+  text: 'That was easy!'
+  }
+
+  console.log("got post req")
+
+  transporter.sendMail(mailData, function(error, info){
+    if (error) {
+      res.json({message : error})
+    } else {
+      res.json({message : 'email send'})
+    }
+  });
+} );
+
+
 app.use(cors());
 app.use(express.json());
 
@@ -21,6 +54,7 @@ app.post("/testSetDB", handleSetDBRequest);
 app.get("/testGetDB", handleGetUserRequest);
 
 //auth
+
 app.post("/login", handleAuthRequest);
 
 // Toggle motor status ( done by our application when pressing a button) 
@@ -89,15 +123,44 @@ app.get('/removeSchedule', (req, res) => {
   res.json({ message: "Schedule removed" });
 });
 
+const uid = 'mxnYVKim7FT3IKdeuertuI2si6r2';
 // Endpoint to update the current value of the distance sensor
-app.post('/uploadDistanceSensorValue', (req, res) => {
+
+
+
+app.post('/uploadDistanceSensorValue', async (req, res) => {
   const {dist, weight} = req.body;
   distanceSensorValue = dist;
   weightSensorValue = weight;
+  console.log("distance", distanceSensorValue); 
+  console.log("wieght", weightSensorValue);
+  console.log("uid ",uid);
+
   
-  console.log(dist); 
-  console.log(weight);
+ const userEmail = await getUserEmail(uid);
   
+
+  console.log("email", userEmail)
+  if(distanceSensorValue < 20){
+   
+    const mailData = {
+      from: 'smart.feeder14@gmail.com',  // sender address
+      to: userEmail,   // list of receivers
+      subject: 'Sending Email using Node.js',
+      text: 'low food level fyll now!!!'
+      }
+
+      transporter.sendMail(mailData, function(error, info){
+        if (error) {
+          console.log(error);
+          res.json({message : error})
+        } else {
+          res.json({message : 'email send'})
+        }
+      });
+
+      
+  }
   res.json({ distance: distanceSensorValue, weight: weightSensorValue });
 });
 

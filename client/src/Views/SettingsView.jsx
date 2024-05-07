@@ -32,7 +32,7 @@ export default function SettingsView() {
 
   const handleSaveSettings = (event) => {
     event.preventDefault();
-    /**TO DO impelement function i expressFunction.js */
+
     sendEmail(email); 
   };
 
