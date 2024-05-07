@@ -93,7 +93,6 @@ app.post('/uploadDistanceSensorValue', (req, res) => {
   const {dist, weight} = req.body;
   distanceSensorValue = dist;
   weightSensorValue = weight;
-  
   console.log(dist); 
   console.log(weight);
   
@@ -126,12 +125,10 @@ app.listen(port, () => {
 app.post('/users/:userId/uploadSensorValues', async (req, res) => {
   const { userId } = req.params;
   const { dist, weight } = req.body;
-
   // Validation
   if (dist === undefined || weight === undefined) {
     return res.status(400).json({ error: "Invalid weight or distance data" });
   }
-
   try {
     await addSensor(userId, dist, weight); // upload to firestore
     res.status(201).json({ message: "Sensor data uploaded successfully." });
@@ -160,7 +157,7 @@ app.post('/users/:userId/schedules', async (req, res) => {
   try {
   
     await addSchedule(userId,day,hour,month,minute,pet,amount);
-    res.status(201).send('Schedule added successfully', userId);
+    res.status(201).send({ message: 'Schedule added successfully', userId: userId });
   } catch (error) {
     console.error('Failed to add schedule:', error);
     res.status(500).send({ 'Error': 'Internal Server Error' });
@@ -194,15 +191,14 @@ app.delete('/users/:userId/schedules', async (req, res) => {
   const { date, time, pet, amount } = req.body;
 
   console.log("date is", date)
-  // Parse date and time into components
+
+  // Extract date and time to be correctly ormated before interacting with the database
   let [month, day] = date.split('.');
   let [hour, minute] = time.split(':');
   month=month-1
   day = parseInt(day);
   hour = parseInt(hour);
   minute = parseInt(minute);
-  
-
 
   try {
     const result = await removeSchedule(userId, { day, hour, month, minute, pet, amount });
@@ -228,29 +224,14 @@ app.get('/users/:userId/next-schedule', async (req, res) => {
     const nextSchedule = await getNextSchedule(userId);
     res.json(nextSchedule);
   } 
-    // Find the first upcoming schedule
+
      catch (error) {
     console.error('Failed to retrieve and move next schedule:', error);
     res.status(500).send({ 'Error': 'Internal Server Error' });
   }
 });
 
-app.delete('/users/:userId/schedules', async (req, res) => {
-  const { userId } = req.params;
-  const { date, time, pet, amount } = req.body; 
 
-  try {
-    const result = await removeSchedule(userId, { date, time, pet, amount });
-    if (result) {
-      res.status(200).json({ message: "Schedule removed successfully" });
-    } else {
-      res.status(404).json({ message: "No matching schedule found" });
-    }
-  } catch (error) {
-    console.error('Error removing schedule:', error);
-    res.status(500).json({ error: "Internal Server Error" });
-  }
-});
 
 // Add pet endpoint
 app.post('/users/:userId/pets', async (req, res) => {
