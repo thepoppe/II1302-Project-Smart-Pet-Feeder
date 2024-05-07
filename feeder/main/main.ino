@@ -181,6 +181,7 @@ void loop() {
 
   int scheduledHour= doc["hour"];
   int scheduledMinut = doc["minute"];
+  int neededw = doc["amount"];
 
   struct tm timeinfo;
   if(!getLocalTime(&timeinfo)){
@@ -196,7 +197,7 @@ void loop() {
   }
 
   float weight = scale.get_units() * -1;
-  int neededw = 50; // FOR TESTING GET THIS FROM DB LATER
+  
 
   
 
@@ -228,7 +229,7 @@ void loop() {
 
   
   bool isFedbefore = hoursWhenFed != -1 && minutesWhenFed != -1;
-  int minutesSinceFed = 60*(timeinfo.tm_hour-hoursWhenFed)+(timeinfo.timeinfo.tm_min); 
+  int minutesSinceFed = 60*(timeinfo.tm_hour-hoursWhenFed)+(timeinfo.tm_min-minutesSinceFed); 
   int minuteTresh = 10;
   float weightTresh = 10;
 
