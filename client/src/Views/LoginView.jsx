@@ -46,6 +46,9 @@ export default function LoginView(props) {
       }
       const result = await confirmLoginWithServer(idToken);
       if (result.login === "success") {
+        const userId = success.user.uid;  
+        console.log(userId)
+        localStorage.setItem('userId', userId);  
         localStorage.setItem(props.storageKey, idToken);
         console.log("Logging in");
         props.login();

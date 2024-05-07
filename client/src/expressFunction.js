@@ -41,7 +41,10 @@ export function toggleMotor() {
 
 
 export function getSchedules() {
-  return fetch('http://localhost:3000/allSchedules')
+  const userId = localStorage.getItem('userId');
+  return fetch(`http://localhost:3000/users/${userId}/schedules`, {
+    method: 'GET',
+  })
     .then(response => {
       if (!response.ok) {
         throw new Error('Network response was not ok');
@@ -49,8 +52,8 @@ export function getSchedules() {
       return response.json();
     })
     .then(data => {
-      console.log("getschedules")
-      console.log(data)
+      console.log("getschedules");
+      console.log(data);
       return data;
     })
     .catch(error => {
@@ -58,16 +61,19 @@ export function getSchedules() {
       throw error; // Rethrow the error to propagate it further
     });
 }
+
 export function sendData(datetime, pet, amount){
-    
+  const userId = localStorage.getItem('userId');
+
   const date = new Date(datetime);
   const year = date.getFullYear();
   const month= date.getMonth();
-  const day=date.getDate(); 
+  const day=date.getDate();
   const hour = date.getHours();
   const minute = date.getMinutes();
 
-  return  fetch('http://localhost:3000/schedule', {
+
+  return  fetch(`http://localhost:3000/users/${userId}/schedules`, {
       method: 'POST',
       headers: {
           'Content-Type': 'application/json'

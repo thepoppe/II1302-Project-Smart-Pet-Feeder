@@ -179,6 +179,8 @@ void loop() {
   serializeJson(doc,Serial); // Debug code  remove after when not needed
   Serial.println();
 
+  int scheduledMonth =  doc["month"];
+  int scheduledDay =  doc["day"];
   int scheduledHour= doc["hour"];
   int scheduledMinut = doc["minute"];
   int neededw = doc["amount"];
@@ -202,8 +204,9 @@ void loop() {
   
 
 
-  if(scheduledHour==timeinfo.tm_hour && scheduledMinut==timeinfo.tm_min){
-    Serial.print("Start Dispense");
+  if(scheduledMonth == timeinfo.tm_mon && scheduledDay == timeinfo.tm_mday &&scheduledHour==timeinfo.tm_hour && scheduledMinut==timeinfo.tm_min){
+    
+    Serial.print("Start MOTOR");
     
     getRequest(client, serverAddress, "/removeSchedule");  
     
