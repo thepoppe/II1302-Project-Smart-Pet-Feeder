@@ -195,22 +195,19 @@ void loop() {
   }
 
   float weight = scale.get_units() * -1;
-  int neededw = 50;
+  int neededw = 50; // FOR TESTING GET THIS FROM DB LATER
 
   if(scheduledHour==timeinfo.tm_hour && scheduledMinut==timeinfo.tm_min){
-    Serial.print("Start MOTOR");
+    Serial.print("Start Dispense");
     
     getRequest(client, serverAddress, "/removeSchedule");  
-    // if(weight < neededw)
+   
+    while(weight < neededw){    
       openPostion();
-    //while(weight < neededw){
-    //  Serial.print(weight);
-    //  Serial.println("g");
-    //  delay(100);
-    //  weight = scale.get_units() * -1;
-    //}
-    delay(1000);
-    closedPostion();
+      delay(100);
+      closedPostion();
+      weight = scale.get_units() * -1;
+    }
 
   }
   else{
@@ -230,8 +227,8 @@ Serial.println("cm");
 
 // print weight
 weight = scale.get_units() * -1;
-//Serial.print(weight);
-//Serial.println("g");
+Serial.print(weight);
+Serial.println("g");
 
 // Building post request
 String data = "{\"dist\": " + String(dist) + ",\"weight\":" + String(weight)+ "}";
