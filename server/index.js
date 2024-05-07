@@ -1,8 +1,8 @@
 const express = require("express");
 const cors = require("cors");
 const app = express();
-import { compareDatesCB } from "./serverUtils.js";
-const {getSensorValues,getNextSchedule, addSensor,handleSetDBRequest, handleGetUserRequest, handleAuthRequest, addSchedule, getSchedules} = require("./dbFunctions.js");
+const { compareDatesCB } = require('./serverUtils.js');
+const {removeSchedule ,getSensorValues,getNextSchedule, addSensor,handleSetDBRequest, handleGetUserRequest, handleAuthRequest, addSchedule, getSchedules} = require("./dbFunctions.js");
 
 //temp model
 const port = 3000;
@@ -59,7 +59,7 @@ app.post('/schedule', (req, res) => {
  // Validation done. Add to schedules
   schedules.push({month,day, hour, minute});
   schedules.sort(compareDatesCB);
-  console.log(schedules)
+ 
   res.json({ success: true, message: "Schedule added " });
 });
 
@@ -85,8 +85,6 @@ app.get('/getschedules', (req, res) => {
 app.get('/removeSchedule', (req, res) => {
   let first=schedules.shift()
   usedSchedules.unshift(first)
-  console.log(schedules)
-  console.log(usedSchedules)
   res.json({ message: "Schedule removed" });
 });
 
@@ -124,19 +122,6 @@ app.listen(port, () => {
 
 // FIRESTORE FUNCTIONS BELOW
 
-
-// Add pet endpoint
-app.post('/users/:userId/pets', async (req, res) => {
-  const { userId } = req.params;
-  const { name, type } = req.body;
-  try {
-    await addPet(userId, name, type);
-    res.status(201).send('Pet added successfully');
-  } catch (error) {
-    console.error('Failed to add pet:', error);
-    res.status(500).send({ 'Error': 'Internal Server Error' });
-  }
-});
 
 app.post('/users/:userId/uploadSensorValues', async (req, res) => {
   const { userId } = req.params;
@@ -190,7 +175,7 @@ app.get('/users/:userId/schedules', async (req, res) => {
   }
   try {
     const schedules = await getSchedules(userId);
-    console.log(schedules)
+  
     const formattedSchedules = schedules.map(schedule => ({
       date: `${(schedule.month + 1).toString().padStart(2, '0')}.${schedule.day.toString().padStart(2, '0')}`,
       time: `${schedule.hour.toString().padStart(2, '0')}:${schedule.minute.toString().padStart(2, '0')}`,
@@ -203,6 +188,35 @@ app.get('/users/:userId/schedules', async (req, res) => {
     res.status(500).send({ 'Error': 'Internal Server Error' });
   }
 });
+
+app.delete('/users/:userId/schedules', async (req, res) => {
+  const { userId } = req.params;
+  const { date, time, pet, amount } = req.body;
+
+  console.log("date is", date)
+  // Parse date and time into components
+  let [month, day] = date.split('.');
+  let [hour, minute] = time.split(':');
+  month=month-1
+  day = parseInt(day);
+  hour = parseInt(hour);
+  minute = parseInt(minute);
+  
+
+
+  try {
+    const result = await removeSchedule(userId, { day, hour, month, minute, pet, amount });
+    if (result) {
+      res.status(200).json({ message: "Schedule removed successfully" });
+    } else {
+      res.status(404).json({ message: "No matching schedule found" });
+    }
+  } catch (error) {
+    console.error('Error removing schedule:', error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
 
 app.get('/users/:userId/next-schedule', async (req, res) => {
   const { userId } = req.params;
@@ -221,6 +235,35 @@ app.get('/users/:userId/next-schedule', async (req, res) => {
   }
 });
 
+app.delete('/users/:userId/schedules', async (req, res) => {
+  const { userId } = req.params;
+  const { date, time, pet, amount } = req.body; 
+
+  try {
+    const result = await removeSchedule(userId, { date, time, pet, amount });
+    if (result) {
+      res.status(200).json({ message: "Schedule removed successfully" });
+    } else {
+      res.status(404).json({ message: "No matching schedule found" });
+    }
+  } catch (error) {
+    console.error('Error removing schedule:', error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+// Add pet endpoint
+app.post('/users/:userId/pets', async (req, res) => {
+  const { userId } = req.params;
+  const { name, type } = req.body;
+  try {
+    await addPet(userId, name, type);
+    res.status(201).send('Pet added successfully');
+  } catch (error) {
+    console.error('Failed to add pet:', error);
+    res.status(500).send({ 'Error': 'Internal Server Error' });
+  }
+});
 
 app.get('/users/:userId/pets', async (req, res) => {
   const { userId } = req.params;

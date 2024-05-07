@@ -1,4 +1,4 @@
-import { compareDatesCB } from "./serverUtils.js";
+const { compareDatesCB } = require('./serverUtils.js');
 const { initializeApp, cert } = require("firebase-admin/app");
 const { getFirestore } = require("firebase-admin/firestore");
 const {
@@ -168,6 +168,35 @@ async function getNextSchedule(userId) {
   }
 }
 
+async function removeSchedule(userId, { day, hour, month, minute, pet, amount }) {
+  const schedulesRef = db.collection('Users').doc(userId).collection('Schedules');
+  const allSchedulesSnapshot = await schedulesRef.get();
+
+  if (allSchedulesSnapshot.empty) {
+    console.log('No schedules found ');
+    return false;
+  }
+
+  const snapshot = await schedulesRef
+      .where('day', '==', day)
+      .where('hour', '==', hour)
+      .where('month', '==', month)
+      .where('minute', '==', minute)
+      .where('pet', '==', pet)
+      .where('amount', '==', amount)
+      .limit(1)
+      .get();
+
+  if (snapshot.empty) {
+    console.log('No matching schedules found.');
+    return false;
+  }
+  const doc = snapshot.docs[0]; 
+  await doc.ref.delete();
+  console.log('Schedule removed successfully.');
+  return true;
+}
+
 
 
 
@@ -185,7 +214,11 @@ async function getPets(userId) {
 
 
 
+
+
+
 module.exports = {
+  removeSchedule,
   addPet,
   addSchedule,
   handleAuthRequest,

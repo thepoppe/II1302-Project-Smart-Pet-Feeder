@@ -55,6 +55,39 @@ export default function ScheduleView(props) {
     .catch(error => console.error('Error:', error));
   }
 
+  function handleDelete(index) {
+    const schedule = schedules[index];
+    const userId = localStorage.getItem('userId');
+  
+    fetch(`http://localhost:3000/users/${userId}/schedules`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        date: schedule.date, 
+        time: schedule.time, 
+        pet: schedule.pet,
+        amount: schedule.amount
+      })
+      
+    })
+    .then(response => {
+      if (response.ok) {
+        return getSchedules(); 
+      } else {
+        throw new Error('Failed to delete the schedule');
+      }
+    })
+    .then(data => {
+      setSchedules(data);
+    })
+    .catch(error => {
+      console.error('Error:', error);
+    });
+  }
+  
+
 
   
   useEffect(() => {
