@@ -140,12 +140,15 @@ async function getSchedules(userId) {
       userId: userId,
       ...doc.data()
     }));
+    schedules.sort(compareDatesCB);
+
     return schedules;
   } catch (error) {
     console.error('Error fetching schedules:', error);
     throw error;
   }
 }
+
 
 async function getNextSchedule(userId) {
   if (!userId) {
