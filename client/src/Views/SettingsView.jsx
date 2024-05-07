@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { addNewPet, getPets, sendEmail, getEmail,  } from '../expressFunction';
+import { addNewPet, getPets, sendEmail, getUserEmail,  } from '../expressFunction';
 
 export default function SettingsView() {
   const [pets, setPets] = useState([]); //store the list of pets
@@ -10,6 +10,7 @@ export default function SettingsView() {
   });
   const [petName, setPetName] = useState(''); 
   const [amount, setAmount] = useState(''); 
+  const [changeEmail, setChangeEmail] = useState(false);
   const [userSettings, setUserSettings] = useState({ name: '', email:'' });
 
   const [email, setEmail] = useState('');
@@ -22,6 +23,8 @@ export default function SettingsView() {
     addNewPet(newPet).then(()=>{ })
     
   };
+
+  const userEmail = getUserEmail();
 
   const handleDeletePet = (petIndex) => {
     const updatedPets = pets.filter((_, index) => index !== petIndex);
@@ -98,6 +101,7 @@ export default function SettingsView() {
         <div >
          Add your e-mail for notification:  
         </div>
+        { (changeEmail) ? 
         <div className='setting-gridItem'>
           <div>
           <label >Email:</label>
@@ -111,7 +115,14 @@ export default function SettingsView() {
           </div>
         <button className="submit-btn" onClick={handleSaveSettings}>submit</button>
         </div>
+            : (<div>
+              <div >{userEmail}</div>
+              <button onClick={setChangeEmail(true)}>Change</button>
+               </div>)
+          }
       </div>
+ 
+
       </div>
     </div>
   );
