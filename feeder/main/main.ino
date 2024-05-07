@@ -15,270 +15,160 @@
   MIT License
 */
 
-#include <WiFi.h>  // Include WiFi library for example (or Bluetooth.h)
+#include <WiFi.h>
 #include <WiFiClient.h>
-
 #include <Motor.h>
-#include "HX711.h"
-
+#include <HX711.h>
 #include <ArduinoJson.h>
-#include "time.h"
 #include <Distance.h>
-
+#include "time.h"
 
 const char* ssid = "iPhone123";
 const char* password = "12345678";
+const char* ntpServer = "pool.ntp.org";
+const long gmtOffset_sec = 3600;
+const int daylightOffset_sec = 3600;
+const char* serverAddress = "172.20.10.3";
+const int serverPort = 3000;
 
-// Motor connection pins
-int en = 9;   // Enable pin
-int in1 = 8;  // Input 1
-int in2 = 7;  // Input 2
+// Motor pins
+const int enPin = 9;   // Enable pin
+const int in1Pin = 8;  // Input 1
+const int in2Pin = 7;  // Input 2
+Motor motor(enPin, in1Pin, in2Pin);
 
+// Distance sensor pins
+const int trigPin = 2;
+const int echoPin = 3;
+Distance distance(trigPin, echoPin);
 
-// Distance pins
-int trig = 2;
-int echo = 3;
-
-// load cell Pins
-int dout = 4;
-int sck = 5;
-float calibration_factor = -1100;
-
+// Load cell pins
+const int doutPin = 4;
+const int sckPin = 5;
+const float calibrationFactor = -1100;
 HX711 scale;
 
-
-Motor Motor(en, in1, in2);
-Distance Distance(trig, echo);
-
-// Time related constants
-const char* ntpServer = "pool.ntp.org";
-const long  gmtOffset_sec = 3600;
-const int   daylightOffset_sec = 3600;
-
 void setup() {
-  Serial.begin(115200);  // Initialize serial communication for debugging
-  Motor.initMotor();
-
-  scale.begin(dout,sck);
-  scale.set_scale(calibration_factor);
+  Serial.begin(115200);
+  motor.initMotor();
+  scale.begin(doutPin, sckPin);
+  scale.set_scale(calibrationFactor);
   scale.tare();
-
-  Distance.init();
+  distance.init();
   connectToWifi(ssid, password);
   configTime(gmtOffset_sec, daylightOffset_sec, ntpServer);
-
 }
 
-  
-  void connectToWifi(const char* ssid, const char* pass){
-    WiFi.begin(ssid, password);  // Connect to Wi-Fi network
-    while (WiFi.status() != WL_CONNECTED) {
-      delay(500);
-      Serial.println("Connecting to WiFi..");
-    }
-    Serial.print("Connected");
+void connectToWifi(const char* ssid, const char* pass) {
+  WiFi.begin(ssid, pass);
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.println("Connecting to WiFi...");
   }
+  Serial.println("Connected to WiFi");
+}
 
-  
-  void getRequest(WiFiClient client, const char* serverAddress, char* resourceToGet){
-      String request = "GET "; 
-      request +=  resourceToGet;
-      request += " HTTP/1.1\r\nHost: ";
-      request += serverAddress;
-      request += "\r\nConnection: close\r\n\r\n";
-      client.print(request);
-  }
+void getRequest(WiFiClient client, const char* resourceToGet) {
+  String request = "GET " + String(resourceToGet) + " HTTP/1.1\r\nHost: " + serverAddress + "\r\nConnection: close\r\n\r\n";
+  client.print(request);
+}
 
 
-  void openPostion() {
-  Motor.startMotor(true);
+  void moveRotorToOpen(bool open, int delay) {
+  Motor.startMotor(open);
   Motor.speed(250);
-
-  delay(500);
+  delay(delay);
   Motor.stopMotor();
 }
 
-// set feeder disk to closed position
-void closedPostion(){
-  Motor.startMotor(false);
-  Motor.speed(250);
 
-  delay(600);
-  Motor.stopMotor();
+
+bool connectToServer(WiFiClient &client) {
+  if (!client.connect(serverAddress, serverPort)) {
+    Serial.println("Failed to connect to server");
+    return false;
+  }
+  return true;
 }
 
- 
-
-
-void loop() {
-  // Code to send and receive data packets over WiFi
-  WiFiClient client;
-
-  // Specify the server address and port (usually port 80 for HTTP)
-  const char* serverAddress = "172.20.10.3";
-  const int port = 3000;
-  if (!client.connect(serverAddress, port)) {
-    Serial.println("Initial Connection failed between client and server");
-    return;
-  }
-
-  getRequest(client, serverAddress, "/getschedules");
-    
-
-      //String request = "GET /getschedules HTTP/1.1\r\nHost: ";
-      //request += serverAddress;
-      //request += "\r\nConnection: close\r\n\r\n";
-      //client.print(request);
-
-
-
+void fetchSchedules(WiFiClient &client) {
+  getRequest(client, "/getschedules");
   Serial.println("Waiting for response...");
 
-
-  // CODE BELOW WAS TAKEN FROM  https://arduinojson.org/v7/example/http-client/
-
-  // Check HTTP status
-  char status[32] = { 0 };
+  char status[32] = {0};
   client.readBytesUntil('\r', status, sizeof(status));
-  // It should be "HTTP/1.0 200 OK" or "HTTP/1.1 200 OK"
   if (strcmp(status + 9, "200 OK") != 0) {
     Serial.print(F("Unexpected response: "));
     Serial.println(status);
-    // client.stop();
-    // return;
+    return;
   }
 
-  // Skip HTTP headers
   char endOfHeaders[] = "\r\n\r\n";
   if (!client.find(endOfHeaders)) {
     Serial.println(F("Invalid response"));
-    //client.stop();
-    // return;
+    return;
   }
 
-  // Allocate the JSON document
   DynamicJsonDocument doc(200);
-
-  // Parse JSON object
   DeserializationError error = deserializeJson(doc, client);
   if (error) {
     Serial.print(F("deserializeJson() failed: "));
-    Serial.println(error.f_str());
-    client.stop();
-    // return;
-  }
-
-  // Extract values
-  Serial.println(F("Response:"));
-  
-  // END OF CODE TAKEN FROM WEBSITE
-
-
-  serializeJson(doc,Serial); // Debug code  remove after when not needed
-  Serial.println();
-
-  int scheduledMonth =  doc["month"];
-  int scheduledDay =  doc["day"];
-  int scheduledHour= doc["hour"];
-  int scheduledMinut = doc["minute"];
-
-
-  struct tm timeinfo;
-  if(!getLocalTime(&timeinfo)){
-    Serial.println("Failed to obtain time");
+    Serial.println(error.c_str());
     return;
   }
-
-  int currentHour =  timeinfo.tm_hour;
-
-
-   if (!client.connect(serverAddress, port)) {
-    Serial.println("Initial Connection failed between client and server");
-    return;
-  }
-
-  float weight = scale.get_units() * -1;
-  int neededw = 50;
-
-  if(scheduledMonth == timeinfo.tm_mon && scheduledDay == timeinfo.tm_mday &&scheduledHour==timeinfo.tm_hour && scheduledMinut==timeinfo.tm_min){
-    
-    Serial.print("Start MOTOR");
-    
-    getRequest(client, serverAddress, "/removeSchedule");  
-    // if(weight < neededw)
-    //while(weight < neededw){
-    //  Serial.print(weight);
-    //  Serial.println("g");
-    //  delay(100);
-    //  weight = scale.get_units() * -1;
-    //}
-    int i =0;
-    while(i<5){
-      i++;
-      openPostion();
-    delay(100);
-    closedPostion();
-    }
-
-  }
-  else{
-    Motor.stopMotor();
-  }
-  
- 
-
- if (!client.connect(serverAddress, port)) {
-    Serial.println("Initial Connection failed between client and server");
-    return;
-  }
-
-int  dist = Distance.getDistance();
-Serial.print(dist);
-Serial.println("cm");
-
-// print weight
-weight = scale.get_units() * -1;
-//Serial.print(weight);
-//Serial.println("g");
-
-// Building post request
-String data = "{\"dist\": " + String(dist) + ",\"weight\":" + String(weight)+ "}";
-String request = "POST /uploadDistanceSensorValue HTTP/1.1\r\n";
-String host = "Host: " + String(serverAddress) + ":" + String(port) + "\r\n";
-String contentType = "Content-Type: application/json\r\n";
-String contentLength = "Content-Length: " + String(data.length()) + "\r\n";
-String connection = "Connection: close\r\n\r\n";
-
-request += host;
-request += contentType;
-request += contentLength;
-request += connection;
-request += data;
-
-    // Send the request
-    client.print(request);
-   // Serial.println(request);
-
-
-// handle response
-  String response = ""; // Initialize empty string to store response
-
- while (client.connected() || client.available()) {
-   // while (client.available()) {
-        char c = client.read();
-        response += c; // Append each read character into the response string
-   // }
-
 }
 
-    
+bool isScheduledTime() {
+  struct tm timeinfo;
+  if (!getLocalTime(&timeinfo)) {
+    Serial.println("Failed to obtain time");
+    return false;
+  }
+
+  int scheduledMonth = doc["month"];
+  int scheduledDay = doc["day"];
+  int scheduledHour = doc["hour"];
+  int scheduledMinute = doc["minute"];
+
+  return (scheduledMonth == timeinfo.tm_mon && scheduledDay == timeinfo.tm_mday && scheduledHour == timeinfo.tm_hour && scheduledMinute == timeinfo.tm_min);
+}
+
+void executeScheduledActions(WiFiClient &client) {
+  Serial.println("Start MOTOR");
+  getRequest(client, "/removeSchedule");
+  for (int i = 0; i < 5; i++) {
+    moveRotorToOpen(true, 500);
+    delay(100);
+    moveRotorToOpen(false, 600);
+  }
+}
+
+void sendSensorData(WiFiClient &client, int distanceValue, float weight) {
+  Serial.print(distanceValue);
+  Serial.println("cm");
+
+  String data = "{\"dist\": " + String(distanceValue) + ",\"weight\": " + String(weight) + "}";
+  String request = "POST /uploadDistanceSensorValue HTTP/1.1\r\nHost: " + String(serverAddress) + ":" + String(serverPort) + "\r\nContent-Type: application/json\r\nContent-Length: " + String(data.length()) + "\r\nConnection: close\r\n\r\n" + data;
+  client.print(request);
+}
 
 
+void loop() {
+  WiFiClient client;
+  if (!connectToServer(client)) {
+    return;
+  }
+
+  fetchSchedules(client);
+
+  if (isScheduledTime()) {
+    executeScheduledActions(client);
+  }
+
+  int distanceValue = distance.getDistance();
+  float weight = scale.get_units();
+  sendSensorData(client, distanceValue, weight);
 
   client.stop();
-
-  
-
-
-  delay(1000);  // Adjust delay as needed
+  delay(1000);
 }
