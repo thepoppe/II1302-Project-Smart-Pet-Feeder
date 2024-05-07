@@ -230,12 +230,14 @@ void loop() {
   bool isFedbefore = hoursWhenFed != -1 && minutesWhenFed != -1;
   int minutesSinceFed = 60*(timeinfo.tm_hour-hoursWhenFed)+(timeinfo.timeinfo.tm_min); 
   int minuteTresh = 10;
+  float weightTresh = 10;
 
-  // check if "minuteTresh" minutes passed since bowl fill (feeding). If so check bowl weight has decreased at least y grams since last feed.
+  // check if "minuteTresh" minutes passed since bowl fill (feeding). 
+  // If bowl weight has not decreased at least weightTresh grams since last feed send alert. 
   if( isFedbefore && minutesSinceFed > minuteTresh){
-    if(bowlWeightFed != -1 &&  bowlWeightFed -  (scale.get_units() * -1) <10 ){
+    if(bowlWeightFed != -1 &&  bowlWeightFed -  (scale.get_units() * -1) < weightTresh ){
         // SEND ALERT for not fed.
-        Serial.print("==II==ALERT : NOT FED FOR ");
+        Serial.print("==II==ALERT  BOWL UNCHANGED FOR ");
         Serial.print(minuteTresh);
         Serial.print("MINUTES==II==");
       }
