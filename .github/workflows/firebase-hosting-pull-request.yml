@@ -19,6 +19,9 @@ jobs:
       - name: Generate firebaseConfig.js
         run: |
           echo '${{ secrets.FIREBASECONFIG }}' > client/firebaseConfig.js
+      - name: Generate env file
+        run: |
+          echo '${{ secrets.IP_ADDRESS }}' > client/.env
       - run: (cd client && npm install && npm run build)
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
