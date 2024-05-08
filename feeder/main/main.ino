@@ -17,20 +17,74 @@
 
 #include <WiFi.h>
 #include <WiFiClient.h>
-#include <Motor.h>
+#include <WebServer.h>
+//#include <Motor.h>
 #include <HX711.h>
 #include <ArduinoJson.h>
 #include <Distance.h>
 #include "time.h"
+#include <cstring>
 
-const char* ssid = "iPhone123";
-const char* password = "12345678";
+String ssid = "Poppes iPhone";
+String password = "";
+String userID = "";
+const char* arduinoSSID = "Pet-Feeder-Setup";
+const char* ArduinoPassword = "123456789";
+
 const char* ntpServer = "pool.ntp.org";
 const long gmtOffset_sec = 3600;
 const int daylightOffset_sec = 3600;
-const char* serverAddress = "172.20.10.3";
+const char* serverAddress = "172.20.10.7";
 const int serverPort = 3000;
+int schedule[4] = {0};
 
+// Motor Code
+class Motor
+{
+    private:
+        int _en;
+        int _in1;
+        int _in2;
+    public:
+        Motor(int en, int in1, int in2);
+        void initMotor();
+        void startMotor(bool rotateLeft);
+        void stopMotor();
+        void speed(int speed);
+};
+Motor::Motor(int en, int in1, int in2){
+  _en = en;
+  _in1 = in1;
+  _in2 = in2;
+}
+void Motor::initMotor(){
+  pinMode(_en, OUTPUT);
+  pinMode(_in1, OUTPUT);
+  pinMode(_in2, OUTPUT);
+  digitalWrite(_in1, LOW);
+	digitalWrite(_in2, LOW);
+}
+// direction bool determines the direction of the motors rotation.
+void Motor::startMotor(bool rotateLeft) {
+  if(rotateLeft){
+    digitalWrite(_in1, HIGH);
+    digitalWrite(_in2, LOW);
+  }
+  if(! rotateLeft){
+    digitalWrite(_in1, LOW);
+    digitalWrite(_in2, HIGH);
+    }
+} 
+void Motor::stopMotor() {
+  digitalWrite(_in1, LOW);
+	digitalWrite(_in2, LOW);
+}
+void Motor::speed(int speed){
+  if (speed >=256){
+    return;
+  }
+  analogWrite(_en,speed);
+}
 // Motor pins
 const int enPin = 9;   // Enable pin
 const int in1Pin = 8;  // Input 1
@@ -48,42 +102,28 @@ const int sckPin = 5;
 const float calibrationFactor = -1100;
 HX711 scale;
 
-void setup() {
-  Serial.begin(115200);
-  motor.initMotor();
-  scale.begin(doutPin, sckPin);
-  scale.set_scale(calibrationFactor);
-  scale.tare();
-  distance.init();
-  connectToWifi(ssid, password);
-  configTime(gmtOffset_sec, daylightOffset_sec, ntpServer);
-}
 
-void connectToWifi(const char* ssid, const char* pass) {
-  WiFi.begin(ssid, pass);
+
+void connectToWifi() {
+  WiFi.begin(ssid, password);
   while (WiFi.status() != WL_CONNECTED) {
-    delay(500);
+    delay(2000);
     Serial.println("Connecting to WiFi...");
   }
   Serial.println("Connected to WiFi");
 }
 
-void getRequest(WiFiClient client, const char* resourceToGet) {
-  String request = "GET " + String(resourceToGet) + " HTTP/1.1\r\nHost: " + serverAddress + "\r\nConnection: close\r\n\r\n";
-  client.print(request);
-}
 
-
-  void moveRotorToOpen(bool open, int delay) {
-  Motor.startMotor(open);
-  Motor.speed(250);
-  delay(delay);
-  Motor.stopMotor();
+void moveRotorToOpen(bool open, int time) {
+  motor.startMotor(open); // Use the motor object instead of the class name
+  motor.speed(250); // Use the motor object instead of the class name
+  delay(time);
+  motor.stopMotor(); // Use the motor object instead of the class name
 }
 
 
 
-bool connectToServer(WiFiClient &client) {
+bool connectToServer(WiFiClient& client) {
   if (!client.connect(serverAddress, serverPort)) {
     Serial.println("Failed to connect to server");
     return false;
@@ -91,14 +131,20 @@ bool connectToServer(WiFiClient &client) {
   return true;
 }
 
-void fetchSchedules(WiFiClient &client) {
-  getRequest(client, "/getschedules");
+// CODE for fetchSchedules WAS TAKEN FROM  https://arduinojson.org/v7/example/http-client/
+void fetchSchedules(WiFiClient& client) {
+  if (!connectToServer(client)){
+    return;
+  }
+  String request = "GET /getschedules HTTP/1.1\r\nHost: " + String(serverAddress) + "\r\nConnection: close\r\n\r\n";
+  client.print(request);
   Serial.println("Waiting for response...");
 
   char status[32] = {0};
   client.readBytesUntil('\r', status, sizeof(status));
   if (strcmp(status + 9, "200 OK") != 0) {
     Serial.print(F("Unexpected response: "));
+    Serial.println("Status: ");
     Serial.println(status);
     return;
   }
@@ -116,6 +162,11 @@ void fetchSchedules(WiFiClient &client) {
     Serial.println(error.c_str());
     return;
   }
+  schedule[0] = doc["month"];
+  schedule[1] = doc["day"];
+  schedule[2] = doc["hour"];
+  schedule[3] = doc["minute"];
+  return;
 }
 
 bool isScheduledTime() {
@@ -125,17 +176,41 @@ bool isScheduledTime() {
     return false;
   }
 
-  int scheduledMonth = doc["month"];
-  int scheduledDay = doc["day"];
-  int scheduledHour = doc["hour"];
-  int scheduledMinute = doc["minute"];
+  if (schedule[0] < 0) {
+    return false;
+  }
 
-  return (scheduledMonth == timeinfo.tm_mon && scheduledDay == timeinfo.tm_mday && scheduledHour == timeinfo.tm_hour && scheduledMinute == timeinfo.tm_min);
+  int scheduledMonth = schedule[0];
+  int scheduledDay = schedule[1];
+  int scheduledHour = schedule[2];
+  int scheduledMinute = schedule[3];
+  
+  
+  
+  Serial.println("S: " + String(scheduledMonth) + "," + String(scheduledDay) + "," + String(scheduledHour) + "," + String(scheduledMinute));
+  Serial.println("T: " + String(timeinfo.tm_mon) + "," + String(timeinfo.tm_mday) + "," + String(timeinfo.tm_hour) + "," + String(timeinfo.tm_min));
+
+  return(scheduledMonth == timeinfo.tm_mon && scheduledDay == timeinfo.tm_mday && scheduledHour == timeinfo.tm_hour && scheduledMinute == timeinfo.tm_min);
 }
 
-void executeScheduledActions(WiFiClient &client) {
+
+
+void clearSchedules(WiFiClient& client){
+  Serial.println("Clear Schedules");
+  if (!connectToServer(client)){
+    return;
+  }
+  String request = "POST /removeSchedule HTTP/1.1\r\nHost: " + String(serverAddress) + "\r\nConnection: close\r\n\r\n";
+  client.print(request);
+  for(int i = 0; i < sizeof(schedule) / sizeof(int); i++){
+    schedule[i] = 0;
+  }
+  return;
+}
+
+
+void executeScheduledActions() {
   Serial.println("Start MOTOR");
-  getRequest(client, "/removeSchedule");
   for (int i = 0; i < 5; i++) {
     moveRotorToOpen(true, 500);
     delay(100);
@@ -143,32 +218,190 @@ void executeScheduledActions(WiFiClient &client) {
   }
 }
 
-void sendSensorData(WiFiClient &client, int distanceValue, float weight) {
-  Serial.print(distanceValue);
-  Serial.println("cm");
+void sendSensorData(WiFiClient& client) {
+  int distanceValue = distance.getDistance();
+  float weight = scale.get_units();
 
+  // if data is changed send update
+  if (!connectToServer(client)){
+    return;
+  }
   String data = "{\"dist\": " + String(distanceValue) + ",\"weight\": " + String(weight) + "}";
   String request = "POST /uploadDistanceSensorValue HTTP/1.1\r\nHost: " + String(serverAddress) + ":" + String(serverPort) + "\r\nContent-Type: application/json\r\nContent-Length: " + String(data.length()) + "\r\nConnection: close\r\n\r\n" + data;
   client.print(request);
 }
 
 
-void loop() {
-  WiFiClient client;
-  if (!connectToServer(client)) {
-    return;
+
+
+/**********************************************
+Code for wifiCredentialSetup() and sendWifiHTML() inspired by Rui Santos at
+https://randomnerdtutorials.com/esp32-access-point-ap-web-server/
+Some parts copied, some parts modified
+***********************************************/
+void sendWifiHTML(WiFiClient& client, bool done, String addr) {
+  // Send the HTML content to the client
+  client.println("<!DOCTYPE html><html>");
+  client.println("<head><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">");
+  client.println("<link rel=\"icon\" href=\"data:,\">");
+  client.println("<style>html { font-family: Helvetica; display: inline-block; margin: 0px auto; text-align: center;}");
+  client.println(".button { background-color: #4CAF50; border: none; color: white; padding: 16px 40px; text-decoration: none; font-size: 30px; margin: 2px; cursor: pointer;}");
+  client.println(".button2 {background-color: #555555;}</style></head>");
+  client.println("<body>");
+  
+  if (!done) {
+    client.println("<h1>Smart Pet Feeder Wifi Setup</h1>");
+    client.println("<form id=\"wifi-form\" action=\"/submit\">");
+    client.println("<label for=\"wifi\">Enter Wifi SSID:</label><br>");
+    client.println("<input type=\"text\" id=\"wifi\" name=\"wifi\" /><br>");
+    client.println("<label for=\"pw\">Enter Wifi Password:</label><br>");
+    client.println("<input type=\"text\" id=\"pw\" name=\"pw\" /><br>");
+    client.println("<input type=\"submit\" value=\"Submit\"></input>");
+    client.println("</form>");
+  } else {
+    client.println("<h1>Setup Complete, Read carefully</h1>");
+    client.println("<p>Pet Feeder is now connected to your wifi</p>");
+    client.println("<p>Disconnect from Pet Feeders Wifi and Connect to the same wifi with your device.</p>");
+    client.println("<p>Go to Smartpetfeeder.com and login.</p>");
+    client.println("<p>Click on setting and connect device.</p>");
+    client.println("<p>Enter this \"" + String(addr) + "\" in the box and press Connect </p>");
+    client.println("<p>You are done!</p>");
+  }
+  client.println("</body></html>");
+}
+
+String readHTTPRespons(WiFiClient& client) {
+    String firstLine = "";
+    while (!firstLine.endsWith("\r\n")) {
+      if (client.available()) {
+      char c = client.read();
+      firstLine += c;
+      }
+    }
+    return firstLine;
+}
+
+bool readWifiCredentials(WiFiClient& client) {
+  String firstLine = readHTTPRespons(client);
+
+  if (firstLine.startsWith("GET /submit")) {
+    String params = firstLine.substring(firstLine.indexOf("?") + 1);
+    int paramSplitter = params.indexOf('&');
+    String ssidParam = params.substring(0, paramSplitter);
+    String pwParam = params.substring(paramSplitter + 1);
+    ssidParam = ssidParam.substring(ssidParam.indexOf("=") + 1);
+    ssidParam.replace("+", " ");
+    ssid = ssidParam.c_str();
+    password = pwParam.substring(pwParam.indexOf("=") + 1, pwParam.indexOf(" ")).c_str();
+    return true;
+  }
+  return false;
+}
+
+
+
+void wifiCredentialSetup() {
+  Serial.println("WebServer started to aquire wifi details");
+  IPAddress staticIP(192, 168, 1, 1);
+  IPAddress gateway(192, 168, 1, 1);
+  IPAddress subnet(255, 255, 255, 0);
+  WiFiServer server(80);
+
+  WiFi.softAPConfig(staticIP, gateway, subnet);
+  WiFi.softAP(arduinoSSID, ArduinoPassword);
+
+  IPAddress IP = WiFi.softAPIP();
+  server.begin();
+
+  while (true) {
+    WiFiClient client = server.available();
+
+    if (client) {
+      Serial.println("New Client.");
+
+      while (client.connected()) {
+        if (client.available()) {
+          bool success = readWifiCredentials(client);
+          if(success){
+            Serial.println("Success, Wifi details collected");
+            Serial.println("ssid: "+ ssid);
+            Serial.println("password: "+ password);
+            connectToWifi();
+            IPAddress IP = WiFi.localIP();
+            sendWifiHTML(client, true, String(IP[0]) + "." + String(IP[1]) + "." + String(IP[2]) + "." + String(IP[3]));
+            server.end();
+            return;
+          }
+          break;
+        }
+      }
+      sendWifiHTML(client, false, "");
+      client.stop();
+      Serial.println("Client disconnected.");
+      
+    }
+  }
+}
+
+
+void handleAuth(WebServer& server) {
+  Serial.println("handle auth");
+  if (server.method() == HTTP_POST) {
+    Serial.println("Post request");
+    String authToken = server.arg("plain");
+    Serial.println("Received token: " + authToken);
+    userID = authToken;
+    server.sendHeader("Access-Control-Allow-Origin", "*");
+    server.send(200, "text/plain", "Received POST request to /auth");
+  } else {
+    server.send(405, "text/plain", "Method Not Allowed");
+  }
+}
+
+void verifyUser() {
+  Serial.println("Listening for connections on Auth endpoint");
+
+  WebServer server(80);
+  server.on("/auth", HTTP_POST, std::bind(handleAuth, std::ref(server)));
+  server.begin();
+
+  while (userID.isEmpty()) {
+    server.handleClient();
+    delay(2000);
+  }
+}
+
+
+void setup() {
+  Serial.println("Setup started");
+  Serial.begin(115200);
+  motor.initMotor();
+  scale.begin(doutPin, sckPin);
+  scale.set_scale(calibrationFactor);
+  scale.tare();
+  distance.init();
+  if (ssid.isEmpty() || password.isEmpty()) {
+    wifiCredentialSetup();
+  }
+    connectToWifi();
+  if (userID.isEmpty()){
+    verifyUser();
   }
 
+  configTime(gmtOffset_sec, daylightOffset_sec, ntpServer);
+}
+
+
+void loop() {
+  WiFiClient client;
   fetchSchedules(client);
 
   if (isScheduledTime()) {
-    executeScheduledActions(client);
+    clearSchedules(client);
+    executeScheduledActions();
   }
-
-  int distanceValue = distance.getDistance();
-  float weight = scale.get_units();
-  sendSensorData(client, distanceValue, weight);
-
+  sendSensorData(client);
   client.stop();
+
   delay(1000);
 }
