@@ -44,7 +44,7 @@ export default function Tests() {
             headers: {
               "Content-Type": "text/plain",
             },
-            body: localStorage.getItem("token"),
+            body: localStorage.getItem("userId"),
           })
             .then((response) => response.text())
             .then((text) => console.log(text))
