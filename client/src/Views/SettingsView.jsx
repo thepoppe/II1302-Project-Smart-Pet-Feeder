@@ -9,7 +9,7 @@ export default function SettingsView() {
   const [changeEmail, setChangeEmail] = useState(false);
 
 
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState('exampe@example.com');
 
 
   const handleAddPetSubmit = (event) => {
@@ -17,12 +17,9 @@ export default function SettingsView() {
     console.log("Form data:", { petName, petType, petAmount });
     addPet(petName, petType, petAmount).then( ()=> {
      return getPets()
-    }).then((data) => {
-      
+    }).then((data) => {     
       setPets(data);
-
     }).catch((error) => {
- 
       console.error("An error occurred:", error);
     });
     
@@ -145,8 +142,7 @@ export default function SettingsView() {
         <div >
          Add your e-mail for notification:  
         </div>
-        { (changeEmail) ? 
-        <div className='setting-gridItem'>
+       <div className='setting-gridItem'>
           <div>
           <label >Email:</label>
           <input
@@ -158,12 +154,8 @@ export default function SettingsView() {
           />
           </div>
         <button className="submit-btn" onClick={handleSaveSettings}>submit</button>
-        </div>
-            : (<div>
-              <div >{email}</div>
-              <button onClick={setChangeEmail(true)}>Change</button>
-               </div>)
-          }
+        </div> 
+          
       </div>
  
 

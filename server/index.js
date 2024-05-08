@@ -16,6 +16,7 @@ const {removeScheduleWithId,removeSchedule,
       addPet,
       getPets,
       deletePet,
+      updateMail
     } = require("./dbFunctions.js");
 
 //temp model
@@ -258,5 +259,40 @@ app.delete('/users/:userId/pets', async(req, res) => {
   res.status(500).json({ error: "Internal Server Error" });
 }
 });
+
+
+
+// endpoint for update email and get email.
+
+app.post('/users/:userId/updatemail', async (req, res) =>{
+  const { userId } = req.params;
+  const {email} = req.body;
+try{
+  const result = await updateMail(userId, {email});
+  if (result) {
+    res.status(200).json({ message: " email add successfully" });
+  } else {
+    res.status(404).json({ message: "No matching found" });
+  }
+} catch (error) {
+  console.error('Error update mail: ', error);
+  res.status(500).json({ error: "Internal Server Error" });
+}
+})
+
+
+
+app.get('/users/:userId/email', async (res, req) => {
+  const { userId } = req.params;
+try{
+  const email = await getUserEmail(userId);
+  res.json(email);
+
+} catch(error){
+  console.error('Failed to retrieve email:', error);
+  res.status(500).send({ 'Error': 'Internal Server Error' });
+}
+});
+
 
 
