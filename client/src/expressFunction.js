@@ -69,7 +69,7 @@ export function sendData(datetime, pet, amount){
       headers: {
           'Content-Type': 'application/json'
       },
-      body: JSON.stringify({month, day, hour, pet, amount, minute })  
+      body: JSON.stringify({year,month, day, hour, pet, amount, minute })  
   })
   .then(response => response.json())
   .then(data => {   
