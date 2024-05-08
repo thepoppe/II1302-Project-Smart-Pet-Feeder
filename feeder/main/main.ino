@@ -27,7 +27,7 @@
 
 String ssid = "iPhone123";
 String password = "12345678";
-String userID = "vxq2MZ9zwfMEvRh1Ao7FTO5hwZL2";
+String userId = "vxq2MZ9zwfMEvRh1Ao7FTO5hwZL2";
 const char* arduinoSSID = "Pet-Feeder-Setup";
 const char* ArduinoPassword = "123456789";
 
@@ -90,7 +90,7 @@ void fetchSchedules(WiFiClient& client) {
   if (!connectToServer(client)){
     return;
   }
-  String request = "GET /getschedules HTTP/1.1\r\nHost: " + String(serverAddress) + "\r\nConnection: close\r\n\r\n";
+  String request = "GET /users/"+userId+"/schedules HTTP/1.1\r\nHost: " + String(serverAddress) + "\r\nConnection: close\r\n\r\n";
   client.print(request);
   Serial.println("Waiting for response...");
 
