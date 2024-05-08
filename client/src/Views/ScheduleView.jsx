@@ -138,7 +138,7 @@ export default function ScheduleView(props) {
       const selectedPet = pets.find((p) => p.name === e.target.value);
       setPet(selectedPet.name);
       setAmount(selectedPet.amount);
-    }}required>
+    }}>
           <option value="">Select a pet</option>
           {pets.map((pet, index) => (
             <option key={index} value={pet.name}>{pet.name}</option>
