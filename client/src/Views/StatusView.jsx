@@ -86,7 +86,6 @@ export default function StatusView() {
                 ) : (
                     <Progress type="circle" percent={distancePercentage} strokeColor="red"  strokeWidth={8} circleIconFontSize='2em' size={200} />
                 )}
-                <button onClick={getSensorValues} className="updateBTN">Update Now</button>
                 </div>
             </div>
             <div className="statusItems">

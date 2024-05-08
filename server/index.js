@@ -119,12 +119,12 @@ app.post('/users/:userId/schedules', async (req, res) => {
    scheduleDate.setHours(hour);
    scheduleDate.setMinutes(minute);
    if (scheduleDate < now) {
-     return res.status(400).json({ message: "Cannot add a schedule in the past." });
+     return res.status(400).json({ message: "Cannot add a schedule in the past.", status: 400});
    }
   try {
   
     await addSchedule(userId,day,hour,month,minute,pet,amount);
-    res.status(201).send({ message: 'Schedule added successfully', userId: userId });
+    res.status(201).send({ message: 'Schedule added successfully', userId: userId , status: 201 });
   } catch (error) {
     console.error('Failed to add schedule:', error);
     res.status(500).send({ 'Error': 'Internal Server Error' });
@@ -283,7 +283,6 @@ app.get('/users/:userId/email', async (req, res) => {
 try{
   const email = await getUserEmail(userId);
   res.json(email);
-
 } catch(error){
   console.error('Failed to retrieve email:', error);
   res.status(500).send({ 'Error': 'Internal Server Error' });

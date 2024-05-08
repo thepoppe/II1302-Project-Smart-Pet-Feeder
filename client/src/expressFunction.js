@@ -64,7 +64,7 @@ export function sendData(datetime, pet, amount){
   const minute = date.getMinutes();
 
 
-  return  fetch(`http://localhost:3000/users/${userId}/schedules`, {
+return  fetch(`http://localhost:3000/users/${userId}/schedules`, {
       method: 'POST',
       headers: {
           'Content-Type': 'application/json'
@@ -72,8 +72,8 @@ export function sendData(datetime, pet, amount){
       body: JSON.stringify({year,month, day, hour, pet, amount, minute })  
   })
   .then(response => response.json())
-  .then(data => {   
-         console.log(data)  
+  .then(data => {
+    return data;       
   })
   .catch(error => console.error('Error:', error));
 };

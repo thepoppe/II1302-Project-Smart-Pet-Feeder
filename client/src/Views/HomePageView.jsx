@@ -55,17 +55,16 @@ function HomePageView(props) {
       <div>
         <ul className="homeUL">
           <Link to="/schedule">
-            <button className="LISchedule homeBTN" title="View your schedule">
-              
-            </button>
+            <button className="LISchedule homeBTN" title="View your schedule"></button>
+            <div>Schedule</div>
           </Link>
           <Link to="/status">
-            <button className="LIStatus homeBTN" title="View Feeder status">
-            </button>
+            <button className="LIStatus homeBTN" title="View Feeder status"></button>
+            <div style={{ textAlign: "center" }}>Status</div>
           </Link>
           <Link to="/settings">
-            <button className="LISetting homeBTN" title="View your settings">
-            </button>
+            <button className="LISetting homeBTN" title="View your settings"></button>
+            <div style={{ textAlign: "center" }}>Settings</div>
           </Link>
         </ul>
       </div>

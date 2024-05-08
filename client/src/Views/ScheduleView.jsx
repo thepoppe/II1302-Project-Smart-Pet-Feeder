@@ -1,8 +1,6 @@
 import React, { useState,useEffect } from 'react';
 import { sendData, getSchedules, getPets} from '../expressFunction';
-import { get } from 'firebase/database';
-
-
+import {message} from "antd";
 
 
 export default function ScheduleView(props) {
@@ -14,24 +12,59 @@ export default function ScheduleView(props) {
   const [schedules, setSchedules] = useState([]);
   const[pets, setPets] = useState([]);
 
+  const [messageApi, contextHolder] = message.useMessage();
+ 
+  const success = () => {
+    messageApi.open({
+      type: 'success',
+      content: 'schedule added sccessfully',
+      duration: 2,
+    });
+  };
+
+  const manualFeed = () => {
+    messageApi.open({
+      type: 'success',
+      content: 'Food is dipenesd',
+      duration: 2,
+    });
+  };
+
+  const error = () => {
+    messageApi.open({
+      type: 'error',
+      content: 'Cannot add a schedule in the past',
+      duration: 4,
+    });
+  };
+
+  const errorAmount = () => {
+    messageApi.open({
+      type: 'error',
+      content: 'Fill in the amount',
+      duration: 5,
+    });
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log("Form submitted:", { datetime, pet, amount });
-    sendData(datetime, pet, amount) .then(() => {
-    
-      return getSchedules();
+    sendData(datetime, pet, amount).then((data) => {
+      if (data.status === 400) {
+        error();
+        return getSchedules();
+      } else {
+        // Handle other status codes if needed
+        success();
+        return getSchedules();
+      }
     })
     .then((data) => {
       setSchedules(data);
     })
     .catch((error) => {
- 
       console.error("An error occurred:", error);
-    });
-    }
-  
-
+    });}
 
     function sendCurrentDate() {
       const userId = localStorage.getItem('userId');
@@ -42,7 +75,11 @@ export default function ScheduleView(props) {
       const day = now.getDate();
       const hour = now.getHours();
       const minute = now.getMinutes();
-      const amount=ManualAmount
+      if(ManualAmount == ''){
+        errorAmount();
+        return;
+      }
+      const amount= ManualAmount;
   
       fetch(`http://localhost:3000/users/${userId}/schedules`, {
       method: 'POST',
@@ -56,6 +93,7 @@ export default function ScheduleView(props) {
       getSchedules().then((data) => setSchedules(data));
     })
     .catch(error => console.error('Error:', error));
+    manualFeed();
   }
 
   function handleDelete(index) {
@@ -73,7 +111,6 @@ export default function ScheduleView(props) {
         pet: schedule.pet,
         amount: schedule.amount
       })
-      
     })
     .then(response => {
       if (response.ok) {
@@ -89,35 +126,19 @@ export default function ScheduleView(props) {
       console.error('Error:', error);
     });
   }
-  
-
-
-  
   useEffect(() => {
-    // Fetch schedules
     getSchedules()
         .then((data) => setSchedules(data))
         .catch((error) => {
-            // Handle error appropriately, e.g., show an error message
             console.error('Error fetching schedules:', error);
         });
-
-    // Fetch pet
     getPets()
         .then((data) => setPets(data))
         .catch((error) => {
-            // Handle error appropriately, e.g., show an error message
             console.error('Error fetching pets:', error);
         });
 }, []);
-  
-    console.log("pets", pets)
-  
-    
-  
-
-
-
+   
   return (
       <div className='scheduleContainer'>
         <div className='form-container'>
@@ -160,6 +181,7 @@ export default function ScheduleView(props) {
       <button type="submit" className='submit-btn'>Submit</button>
     </form>
     </div>
+    {contextHolder}
     <div className="schedule-list-container"> 
          <h2>Your Schedule:</h2>
          <div class="schedule-table-container">
@@ -203,11 +225,10 @@ export default function ScheduleView(props) {
           step={10}
           min={10}
           max={200}
-          required
         />
         </div>
         <button className='feedButton' onClick={sendCurrentDate}>Feed now!</button>
-        <span>Food has been dispensed successfully</span>
+        {contextHolder}
       </div>
       
           </div>
