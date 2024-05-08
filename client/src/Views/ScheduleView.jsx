@@ -1,5 +1,6 @@
 import React, { useState,useEffect } from 'react';
 import { sendData, getSchedules, toggleMotor, getPets} from '../expressFunction';
+import { get } from 'firebase/database';
 
 
 
@@ -11,7 +12,7 @@ export default function ScheduleView(props) {
   const [amount, setAmount] = useState('');
   const [ManualAmount, setManualAmount] = useState('');
   const [schedules, setSchedules] = useState([]);
- // const[pets, setPets] = useState([]);
+  const[pets, setPets] = useState([]);
 
 
   const handleSubmit = (e) => {
@@ -90,11 +91,25 @@ export default function ScheduleView(props) {
   }
   
 
-const pets = getPets()?.then((data)=> {return data;}) || [];
+
   
   useEffect(() => {
-    getSchedules().then((data) => setSchedules(data));
-    }, []);
+    // Fetch schedules
+    getSchedules()
+        .then((data) => setSchedules(data))
+        .catch((error) => {
+            // Handle error appropriately, e.g., show an error message
+            console.error('Error fetching schedules:', error);
+        });
+
+    // Fetch pet
+    getPets()
+        .then((data) => setPets(data))
+        .catch((error) => {
+            // Handle error appropriately, e.g., show an error message
+            console.error('Error fetching pets:', error);
+        });
+}, []);
   
     console.log("pets", pets)
   
@@ -119,12 +134,16 @@ const pets = getPets()?.then((data)=> {return data;}) || [];
       </div>
       <div className="form-group">
         <div>Pet:</div>
-        <select value={pet} onChange={(e) => setPet(e.target.value)} required>
+        <select value={pet}  onChange={(e) => {
+      const selectedPet = pets.find((p) => p.name === e.target.value);
+      setPet(selectedPet.name);
+      setAmount(selectedPet.amount);
+    }}required>
           <option value="">Select a pet</option>
-          {pets.map((pet, index)=>{
-            <option id={index} >pet.name</option>
-          } )}
-        </select>
+          {pets.map((pet, index) => (
+            <option key={index} value={pet.name}>{pet.name}</option>
+          ))}
+</select>
       </div>
       <div className="form-group">
         <div>Amount:</div>
