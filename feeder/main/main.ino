@@ -300,7 +300,7 @@ void handleAuth(WebServer& server) {
     Serial.println("Post request");
     String authToken = server.arg("plain");
     Serial.println("Received token: " + authToken);
-    userID = authToken;
+    userId = authToken;
     server.sendHeader("Access-Control-Allow-Origin", "*");
     server.send(200, "text/plain", "Received POST request to /auth");
   } else {
@@ -315,7 +315,7 @@ void verifyUser() {
   server.on("/auth", HTTP_POST, std::bind(handleAuth, std::ref(server)));
   server.begin();
 
-  while (userID.isEmpty()) {
+  while (userId.isEmpty()) {
     server.handleClient();
     delay(2000);
   }
@@ -334,7 +334,7 @@ void setup() {
     wifiCredentialSetup();
   }
     connectToWifi();
-  if (userID.isEmpty()){
+  if (userId.isEmpty()){
     verifyUser();
   }
 
