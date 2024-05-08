@@ -1,7 +1,8 @@
 const express = require("express");
 const cors = require("cors");
 const app = express();
-const { handleSetDBRequest, handleGetUserRequest, handleAuthRequest, addSchedule, getSchedules} = require("./dbFunctions.js");
+const { compareDatesCB } = require('./serverUtils.js');
+const {removeSchedule ,getSensorValues,getNextSchedule, addSensor,handleSetDBRequest, handleGetUserRequest, handleAuthRequest, addSchedule, getSchedules} = require("./dbFunctions.js");
 
 //temp model
 const port = 3000;
@@ -58,7 +59,7 @@ app.post('/schedule', (req, res) => {
  // Validation done. Add to schedules
   schedules.push({month,day, hour, minute});
   schedules.sort(compareDatesCB);
-  console.log(schedules)
+ 
   res.json({ success: true, message: "Schedule added " });
 });
 
@@ -84,8 +85,6 @@ app.get('/getschedules', (req, res) => {
 app.get('/removeSchedule', (req, res) => {
   let first=schedules.shift()
   usedSchedules.unshift(first)
-  console.log(schedules)
-  console.log(usedSchedules)
   res.json({ message: "Schedule removed" });
 });
 
@@ -94,7 +93,6 @@ app.post('/uploadDistanceSensorValue', (req, res) => {
   const {dist, weight} = req.body;
   distanceSensorValue = dist;
   weightSensorValue = weight;
-  
   console.log(dist); 
   console.log(weight);
   
@@ -121,24 +119,119 @@ app.listen(port, () => {
 
 
 
-function compareDatesCB(d1, d2){
-  if(d1.month - d2.month){
-    return d1.month - d2.month;
+// FIRESTORE FUNCTIONS BELOW
+
+
+app.post('/users/:userId/uploadSensorValues', async (req, res) => {
+  const { userId } = req.params;
+  const { dist, weight } = req.body;
+  // Validation
+  if (dist === undefined || weight === undefined) {
+    return res.status(400).json({ error: "Invalid weight or distance data" });
   }
-  else if (d1.day-d2.day){
-    return d1.day-d2.day
+  try {
+    await addSensor(userId, dist, weight); // upload to firestore
+    res.status(201).json({ message: "Sensor data uploaded successfully." });
+  } catch (error) {
+    console.error(`Error uploading sensor data :`, error);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
-  else if(d1.hour-d2.hour){
-    return d1.hour-d2.hour
+});
+
+app.get('/users/:userId/sensorValues', async (req, res) => {
+  const { userId } = req.params;
+  try {
+    const sensorValues = await getSensorValues(userId);
+    res.json(sensorValues);
+  } catch (error) {
+    console.error('Failed to retrieve sensor values:', error);
+    res.status(500).send({ 'Error': 'Internal Server Error' });
   }
-  else if(d1.minute-d2.minute){
-    return d1.minute-d2.minute
+});
+
+
+// Add schedule endpoint
+app.post('/users/:userId/schedules', async (req, res) => {
+  const { userId } = req.params;
+  const {month, day,hour,minute,amount,pet } = req.body;
+  try {
+  
+    await addSchedule(userId,day,hour,month,minute,pet,amount);
+    res.status(201).send({ message: 'Schedule added successfully', userId: userId });
+  } catch (error) {
+    console.error('Failed to add schedule:', error);
+    res.status(500).send({ 'Error': 'Internal Server Error' });
   }
-  // Same month-day-hour-minute
-  else{
-    return 0
+});
+
+
+app.get('/users/:userId/schedules', async (req, res) => {
+  const { userId } = req.params; 
+  if (!userId) {
+    return res.status(400).send({ error: 'Missing userId parameter' });
   }
-}
+  try {
+    const schedules = await getSchedules(userId);
+  
+    const formattedSchedules = schedules.map(schedule => ({
+      date: `${(schedule.month + 1).toString().padStart(2, '0')}.${schedule.day.toString().padStart(2, '0')}`,
+      time: `${schedule.hour.toString().padStart(2, '0')}:${schedule.minute.toString().padStart(2, '0')}`,
+      pet: schedule.pet, 
+      amount: schedule.amount 
+    }));
+    res.json(formattedSchedules);
+  } catch (error) {
+    console.error('Failed to retrieve schedules:', error);
+    res.status(500).send({ 'Error': 'Internal Server Error' });
+  }
+});
+
+app.delete('/users/:userId/schedules', async (req, res) => {
+  const { userId } = req.params;
+  const { date, time, pet, amount } = req.body;
+
+  console.log("date is", date)
+
+  // Extract date and time to be correctly ormated before interacting with the database
+  let [month, day] = date.split('.');
+  let [hour, minute] = time.split(':');
+  month=month-1
+  day = parseInt(day);
+  hour = parseInt(hour);
+  minute = parseInt(minute);
+
+  try {
+    const result = await removeSchedule(userId, { day, hour, month, minute, pet, amount });
+    if (result) {
+      res.status(200).json({ message: "Schedule removed successfully" });
+    } else {
+      res.status(404).json({ message: "No matching schedule found" });
+    }
+  } catch (error) {
+    console.error('Error removing schedule:', error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+
+app.get('/users/:userId/next-schedule', async (req, res) => {
+  const { userId } = req.params;
+  if (!userId) {
+    return res.status(400).send({ error: 'Missing userId parameter' });
+  }
+
+  try {
+    const nextSchedule = await getNextSchedule(userId);
+    res.json(nextSchedule);
+  } 
+
+     catch (error) {
+    console.error('Failed to retrieve and move next schedule:', error);
+    res.status(500).send({ 'Error': 'Internal Server Error' });
+  }
+});
+
+
 
 // Add pet endpoint
 app.post('/users/:userId/pets', async (req, res) => {
@@ -149,31 +242,6 @@ app.post('/users/:userId/pets', async (req, res) => {
     res.status(201).send('Pet added successfully');
   } catch (error) {
     console.error('Failed to add pet:', error);
-    res.status(500).send({ 'Error': 'Internal Server Error' });
-  }
-});
-
-// Add schedule endpoint
-app.post('/users/:userId/schedules', async (req, res) => {
-  const { userId } = req.params;
-  const { time, amount, isActive } = req.body;
-  try {
-    await addSchedule(userId, time, amount, isActive);
-    res.status(201).send('Schedule added successfully');
-  } catch (error) {
-    console.error('Failed to add schedule:', error);
-    res.status(500).send({ 'Error': 'Internal Server Error' });
-  }
-});
-
-app.get('/users/:userId/schedules', async (req, res) => {
-  const { userId } = req.params;
-  try {
-    const schedules = await getSchedules(userId);
-    (userId);
-    res.json(schedules);
-  } catch (error) {
-    console.error('Failed to retrieve schedules:', error);
     res.status(500).send({ 'Error': 'Internal Server Error' });
   }
 });

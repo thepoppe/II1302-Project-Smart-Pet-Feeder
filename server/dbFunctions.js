@@ -1,3 +1,4 @@
+const { compareDatesCB } = require('./serverUtils.js');
 const { initializeApp, cert } = require("firebase-admin/app");
 const { getFirestore } = require("firebase-admin/firestore");
 const {
@@ -80,12 +81,48 @@ async function addPet(userId, petName, petType) {
   }
 }
 
-async function addSchedule(userId, time, amount, isActive) {
+async function addSensor(userId, dist, weight) {
+  try {
+    await db.collection('Users').doc(userId).collection('Sensor').doc('currentValues').set({
+      dist: dist,
+      weight: weight
+    }, { merge: true });
+
+    console.log('Sensor values successfully updated');
+  } catch (error) {
+    console.error('Failed to update sensor values:', error);
+  }
+}
+async function getSensorValues(userId) {
+  try {
+ 
+    const sensor = db.collection('Users').doc(userId).collection('Sensor').doc('currentValues');
+    const docSnapshot = await sensor.get();
+    
+    if (docSnapshot.exists) {
+      return { id: docSnapshot.id, userId: userId, ...docSnapshot.data() };
+    } else {
+      console.log('No current sensor values found');
+      return null;
+    }
+  } catch (error) {
+    console.error('Error fetching sensor values:', error);
+    throw error; 
+  }
+}
+
+
+
+async function addSchedule(userId,day,hour,month,minute,pet,amount) {
+  
   try {
     await db.collection('Users').doc(userId).collection('Schedules').add({
-      time: time,
-      amount: amount,
-      isActive: isActive
+      month: month,
+      day: day,
+      hour: hour,
+      minute: minute,
+      pet: pet,
+      amount: amount
     });
     console.log('Schedule added successfully');
   } catch (error) {
@@ -93,17 +130,78 @@ async function addSchedule(userId, time, amount, isActive) {
   }
 }
 
+
 async function getSchedules(userId) {
   try {
     const scheduleCollection = db.collection('Users').doc(userId).collection('Schedules');
     const snapshot = await scheduleCollection.get();
-    const schedules = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    const schedules = snapshot.docs.map(doc => ({
+      id: doc.id,
+      userId: userId,
+      ...doc.data()
+    }));
+    schedules.sort(compareDatesCB);
+
     return schedules;
   } catch (error) {
     console.error('Error fetching schedules:', error);
     throw error;
   }
 }
+
+
+async function getNextSchedule(userId) {
+  if (!userId) {
+    throw new Error('Missing userId parameter');
+  }
+  const scheduleCollection = db.collection('Users').doc(userId).collection('Schedules');
+  const snapshot = await scheduleCollection.get();
+  const schedules = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+  const sortedSchedules = schedules.sort(compareDatesCB);
+  const nextSchedule = sortedSchedules[0];
+
+  if (nextSchedule) {
+    await scheduleCollection.doc(nextSchedule.id).delete();
+    await db.collection('Users').doc(userId).collection('usedSchedules').doc(nextSchedule.id).set(nextSchedule);
+
+    return nextSchedule;
+  } else {
+    throw new Error('No upcoming schedules found');
+  }
+}
+
+async function removeSchedule(userId, { day, hour, month, minute, pet, amount }) {
+  const schedulesRef = db.collection('Users').doc(userId).collection('Schedules');
+  const allSchedulesSnapshot = await schedulesRef.get();
+
+  if (allSchedulesSnapshot.empty) {
+    console.log('No schedules found ');
+    return false;
+  }
+
+  const snapshot = await schedulesRef
+      .where('day', '==', day)
+      .where('hour', '==', hour)
+      .where('month', '==', month)
+      .where('minute', '==', minute)
+      .where('pet', '==', pet)
+      .where('amount', '==', amount)
+      .limit(1)
+      .get();
+
+  if (snapshot.empty) {
+    console.log('No matching schedules found.');
+    return false;
+  }
+  const doc = snapshot.docs[0]; 
+  await doc.ref.delete();
+  console.log('Schedule removed successfully.');
+  return true;
+}
+
+
+
 
 async function getPets(userId) {
   try {
@@ -119,7 +217,11 @@ async function getPets(userId) {
 
 
 
+
+
+
 module.exports = {
+  removeSchedule,
   addPet,
   addSchedule,
   handleAuthRequest,
@@ -127,6 +229,9 @@ module.exports = {
   handleGetUserRequest,
   getPets,
   getSchedules,  
+  addSensor,
+  getSensorValues,
+  getNextSchedule,
 };
 
 
