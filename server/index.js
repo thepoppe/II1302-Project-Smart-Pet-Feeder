@@ -3,7 +3,20 @@ const nodemailer = require('nodemailer');
 const cors = require("cors");
 const app = express();
 const { compareDatesCB } = require('./serverUtils.js');
-const {removeSchedule ,getSensorValues,getNextSchedule, addSensor,handleSetDBRequest, handleGetUserRequest, handleAuthRequest, addSchedule, getSchedules, getUserEmail} = require("./dbFunctions.js");
+const {removeSchedule,
+  getSensorValues,
+  getNextSchedule,
+   addSensor,
+   handleSetDBRequest,
+    handleGetUserRequest,
+     handleAuthRequest,
+      addSchedule,
+      getSchedules, 
+      getUserEmail, 
+      addPet,
+      getPets,
+      deletePet,
+    } = require("./dbFunctions.js");
 
 //temp model
 const port = 3000;
@@ -300,10 +313,14 @@ app.get('/users/:userId/next-schedule', async (req, res) => {
 // Add pet endpoint
 app.post('/users/:userId/pets', async (req, res) => {
   const { userId } = req.params;
-  const { name, type } = req.body;
+  const { petName, petType, petAmount} = req.body;
+  console.log("body: ", req.body);
+  console.log("name", petName)
+  console.log("type", petType)
+  console.log("amount", petAmount)
   try {
-    await addPet(userId, name, type);
-    res.status(201).send('Pet added successfully');
+    await addPet(userId, petName, petType, petAmount);
+    res.status(201).send({message : 'Pet added successfully'});
   } catch (error) {
     console.error('Failed to add pet:', error);
     res.status(500).send({ 'Error': 'Internal Server Error' });
@@ -314,11 +331,33 @@ app.get('/users/:userId/pets', async (req, res) => {
   const { userId } = req.params;
   try {
     const pets = await getPets(userId);
+    console.log(pets);
     res.json(pets);
   } catch (error) {
     console.error('Failed to retrieve pets:', error);
     res.status(500).send({ 'Error': 'Internal Server Error' });
   }
+});
+
+
+app.delete('/users/:userId/pets', async(req, res) => {
+  const {userId} = req.params;
+  const {name, type, amount} =  req.body;
+
+  console.log("name", name)
+
+
+  const result = await deletePet(userId, {name, type, amount});
+  try{
+  if (result) {
+    res.status(200).json({ message: "pet removed successfully" });
+  } else {
+    res.status(404).json({ message: "No matching pet found" });
+  }
+} catch (error) {
+  console.error('Error removing pet:', error);
+  res.status(500).json({ error: "Internal Server Error" });
+}
 });
 
 

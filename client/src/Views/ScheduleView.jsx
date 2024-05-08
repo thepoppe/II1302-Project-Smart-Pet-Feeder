@@ -1,5 +1,5 @@
 import React, { useState,useEffect } from 'react';
-import { sendData, getSchedules, toggleMotor } from '../expressFunction';
+import { sendData, getSchedules, toggleMotor, getPets} from '../expressFunction';
 
 
 
@@ -11,6 +11,8 @@ export default function ScheduleView(props) {
   const [amount, setAmount] = useState('');
   const [ManualAmount, setManualAmount] = useState('');
   const [schedules, setSchedules] = useState([]);
+ // const[pets, setPets] = useState([]);
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -88,11 +90,16 @@ export default function ScheduleView(props) {
   }
   
 
-
+const pets = getPets()?.then((data)=> {return data;}) || [];
   
   useEffect(() => {
-    getSchedules().then((data) => setSchedules(data))
+    getSchedules().then((data) => setSchedules(data));
     }, []);
+  
+    console.log("pets", pets)
+  
+    
+  
 
 
 
@@ -114,9 +121,9 @@ export default function ScheduleView(props) {
         <div>Pet:</div>
         <select value={pet} onChange={(e) => setPet(e.target.value)} required>
           <option value="">Select a pet</option>
-          <option value="dog">Dog</option>
-          <option value="cat">Cat</option>
-          <option value="bird">Bird</option>
+          {pets.map((pet, index)=>{
+            <option id={index} >pet.name</option>
+          } )}
         </select>
       </div>
       <div className="form-group">

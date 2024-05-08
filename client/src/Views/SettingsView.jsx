@@ -1,42 +1,73 @@
-import React, { useState } from 'react';
-import { addNewPet, getPets, sendEmail, getUserEmail,  } from '../expressFunction';
+import React, { useState, useEffect } from 'react';
+import {getPets, addPet} from '../expressFunction';
 
 export default function SettingsView() {
   const [pets, setPets] = useState([]); //store the list of pets
-  const [AddPetForm, setAddForm] = useState(false); //shows on requests
-  const [newPet, setNewPet] = useState({
-    name: '',
-    amount:'',    
-  });
   const [petName, setPetName] = useState(''); 
-  const [amount, setAmount] = useState(''); 
+  const [petAmount, setPetAmount] = useState(''); 
+  const [petType, setPetType] = useState('');
   const [changeEmail, setChangeEmail] = useState(false);
-  const [userSettings, setUserSettings] = useState({ name: '', email:'' });
+
 
   const [email, setEmail] = useState('');
 
 
   const handleAddPetSubmit = (event) => {
     event.preventDefault();
-    setNewPet({ name: petName, amount :amount }); 
+    console.log("Form data:", { petName, petType, petAmount });
+    addPet(petName, petType, petAmount).then( ()=> {
+     return getPets()
+    }).then((data) => {
+      
+      setPets(data);
+
+    }).catch((error) => {
  
-    addNewPet(newPet).then(()=>{ })
+      console.error("An error occurred:", error);
+    });
     
   };
 
-  const userEmail = getUserEmail();
-
-  const handleDeletePet = (petIndex) => {
-    const updatedPets = pets.filter((_, index) => index !== petIndex);
-    setPets(updatedPets);
-  };
 
 
+
+  useEffect(() => {
+    getPets().then((data) => setPets(data))
+    }, []);
+
+  function deletePet(index){
+    const pet = pets[index];
+    const userId = localStorage.getItem('userId');
+
+    fetch(`http://localhost:3000/users/${userId}/pets`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ 
+        name: pet.name,
+        type: pet.type,
+        amount: pet.amount,
+       })
+      
+    })
+    .then(response => {
+      if (response.ok) {
+        return getPets(); 
+      } else {
+        throw new Error('Failed to delete the pet');
+      }
+    })
+    .then(data => {
+      setPets(data);
+    })
+    .catch(error => {
+      console.error('Error:', error);
+    });
+  }
 
   const handleSaveSettings = (event) => {
     event.preventDefault();
-
-    sendEmail(email); 
   };
 
   return (
@@ -54,12 +85,23 @@ export default function SettingsView() {
               required
             /> 
             </div>
+            <div>
+            <div className="form-group">
+            <div  htmlFor="pet-type">Pet's type:</div>
+            <input
+              type="text"
+              onChange={(e)=> setPetType(e.target.value)}
+              value={petType}
+              required
+            /> 
+            </div>
+            </div>
             <div className="form-group">
             <div htmlFor="pet-amount">Amount of food (grams):</div>
             <input
               type="number"
-              value={amount}
-              onChange={(e)=> setAmount(e.target.value)}
+              value={petAmount}
+              onChange={(e)=> setPetAmount(e.target.value)}
               required
             />
           </div>           
@@ -75,6 +117,7 @@ export default function SettingsView() {
             <thead>
                 <tr>
                 <th>Pet</th>
+                <th>Type</th>
                 <th>Amount</th>
                 <th className='header-cell'>Action</th> {/* New column for the delete button */}
                 </tr>
@@ -84,10 +127,11 @@ export default function SettingsView() {
                   return(
                   <tr key={index}>
                     <td>{pet.name}</td>
+                    <td>{pet.type}</td>
                     <td>{pet.amount} gram</td>
                     <td>
-          <button className='delete-button' onClick={() => handleDeletePet(index)}>X</button>
-        </td> {/* Delete button */}
+          <button className='delete-button' onClick={() => deletePet(index)}>X</button>
+        </td> 
                 </tr>
                 )}
                 )}
@@ -116,7 +160,7 @@ export default function SettingsView() {
         <button className="submit-btn" onClick={handleSaveSettings}>submit</button>
         </div>
             : (<div>
-              <div >{userEmail}</div>
+              <div >{email}</div>
               <button onClick={setChangeEmail(true)}>Change</button>
                </div>)
           }

@@ -104,18 +104,6 @@ async function handleGetUserRequest(req, res) {
   }
 }
 
-async function addPet(userId, petName, petType) {
-  try {
-    await db.collection('Users').doc(userId).collection('Pets').add({
-      name: petName,
-      type: petType
-    });
-    console.log('Pet added successfully');
-  } catch (error) {
-    console.error('Failed to add pet:', error);
-  }
-}
-
 async function addSensor(userId, dist, weight) {
   try {
     await db.collection('Users').doc(userId).collection('Sensor').doc('currentValues').set({
@@ -250,6 +238,50 @@ async function getPets(userId) {
   }
 }
 
+async function addPet(userId, petName, petType, petAmount) {
+  try {
+    await db.collection('Users').doc(userId).collection('Pets').add({
+      name: petName,
+      type: petType,
+      amount: petAmount
+    });
+    console.log('Pet added successfully');
+  } catch (error) {
+    console.error('Failed to add pet:', error);
+  }
+}
+
+
+async function deletePet(userId, {name, type, amount}){
+  const petsRef = db.collection('Users').doc(userId).collection('Pets');
+  const allPetsSnapshot = await petsRef.get();
+
+ console.log(name, type, amount);
+
+  if (allPetsSnapshot.empty) {
+    console.log('No pets found ');
+    return false;
+  }
+
+  const snapshot = await petsRef
+      .where('name', '==', name)
+      .where('type', '==', type)
+      .where('amount', '==', amount)
+      .limit(1)
+      .get();
+
+   
+
+  if (snapshot.empty) {
+    console.log('No matching pet found.');
+    return false;
+  }
+  const doc = snapshot.docs[0]; 
+  console.log("pet found: ", doc);
+  await doc.ref.delete();
+  console.log('pet removed successfully.');
+  return true;
+}
 
 
 
@@ -268,6 +300,7 @@ module.exports = {
   getSensorValues,
   getNextSchedule,
   getUserEmail,
+  deletePet,
 };
 
 

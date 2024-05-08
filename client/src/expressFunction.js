@@ -87,3 +87,38 @@ export function sendData(datetime, pet, amount){
   .catch(error => console.error('Error:', error));
 };
 
+export function addPet(petName, petType, petAmount){
+  const userId = localStorage.getItem('userId');
+  console.log(userId);
+
+ return fetch(`http://localhost:3000/users/${userId}/pets`, {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ petName, petType, petAmount})  
+  })
+  .then(response => response.json())
+  .then(data => {   
+         console.log(data)  
+  })
+  .catch(error => console.error('Error:', error));
+};
+  
+export async function getPets(){
+  const userId = localStorage.getItem('userId');
+  console.log(userId)
+
+  try {
+    const response = await fetch(`http://localhost:3000/users/${userId}/pets`, {
+      method: 'GET',
+    });
+    const data = await response.json();
+    console.log(data);
+    return data;
+  } catch (error) {
+    return console.error('Error:', error);
+  }
+}
+
+
