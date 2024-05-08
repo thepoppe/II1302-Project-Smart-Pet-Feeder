@@ -151,20 +151,18 @@ async function getSchedules(userId) {
 
 
 async function getNextSchedule(userId) {
+  console.log("inside here")
   if (!userId) {
     throw new Error('Missing userId parameter');
   }
   const scheduleCollection = db.collection('Users').doc(userId).collection('Schedules');
   const snapshot = await scheduleCollection.get();
   const schedules = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-
   const sortedSchedules = schedules.sort(compareDatesCB);
   const nextSchedule = sortedSchedules[0];
-
+  
   if (nextSchedule) {
-    await scheduleCollection.doc(nextSchedule.id).delete();
-    await db.collection('Users').doc(userId).collection('usedSchedules').doc(nextSchedule.id).set(nextSchedule);
-
+    
     return nextSchedule;
   } else {
     throw new Error('No upcoming schedules found');
@@ -174,12 +172,10 @@ async function getNextSchedule(userId) {
 async function removeSchedule(userId, { day, hour, month, minute, pet, amount }) {
   const schedulesRef = db.collection('Users').doc(userId).collection('Schedules');
   const allSchedulesSnapshot = await schedulesRef.get();
-
   if (allSchedulesSnapshot.empty) {
     console.log('No schedules found ');
     return false;
   }
-
   const snapshot = await schedulesRef
       .where('day', '==', day)
       .where('hour', '==', hour)
@@ -199,6 +195,24 @@ async function removeSchedule(userId, { day, hour, month, minute, pet, amount })
   console.log('Schedule removed successfully.');
   return true;
 }
+
+async function removeScheduleWithId(userId, { id }) {
+  const docRef = db.collection('Users').doc(userId).collection('Schedules').doc(id);
+  try {
+    const doc = await docRef.get();
+    if (!doc.exists) {
+      console.log('No matching schedules found.');
+      return false;
+    }
+    await docRef.delete();
+    console.log('Schedule removed successfully.');
+    return true;
+  } catch (error) {
+    console.error('Failed to remove schedule:', error);
+    return false;
+  }
+}
+
 
 
 
@@ -232,6 +246,7 @@ module.exports = {
   addSensor,
   getSensorValues,
   getNextSchedule,
+  removeScheduleWithId
 };
 
 

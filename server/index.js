@@ -2,7 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const app = express();
 const { compareDatesCB } = require('./serverUtils.js');
-const {removeSchedule ,getSensorValues,getNextSchedule, addSensor,handleSetDBRequest, handleGetUserRequest, handleAuthRequest, addSchedule, getSchedules} = require("./dbFunctions.js");
+const {removeScheduleWithId,removeSchedule ,getSensorValues,getNextSchedule, addSensor,handleSetDBRequest, handleGetUserRequest, handleAuthRequest, addSchedule, getSchedules} = require("./dbFunctions.js");
 
 //temp model
 const port = 3000;
@@ -93,9 +93,6 @@ app.post('/uploadDistanceSensorValue', (req, res) => {
   const {dist, weight} = req.body;
   distanceSensorValue = dist;
   weightSensorValue = weight;
-  console.log(dist); 
-  console.log(weight);
-  
   res.json({ distance: distanceSensorValue, weight: weightSensorValue });
 });
 
@@ -125,6 +122,7 @@ app.listen(port, () => {
 app.post('/users/:userId/uploadSensorValues', async (req, res) => {
   const { userId } = req.params;
   const { dist, weight } = req.body;
+  console.log(userId)
   // Validation
   if (dist === undefined || weight === undefined) {
     return res.status(400).json({ error: "Invalid weight or distance data" });
@@ -189,9 +187,6 @@ app.get('/users/:userId/schedules', async (req, res) => {
 app.delete('/users/:userId/schedules', async (req, res) => {
   const { userId } = req.params;
   const { date, time, pet, amount } = req.body;
-
-  console.log("date is", date)
-
   // Extract date and time to be correctly ormated before interacting with the database
   let [month, day] = date.split('.');
   let [hour, minute] = time.split(':');
@@ -199,7 +194,6 @@ app.delete('/users/:userId/schedules', async (req, res) => {
   day = parseInt(day);
   hour = parseInt(hour);
   minute = parseInt(minute);
-
   try {
     const result = await removeSchedule(userId, { day, hour, month, minute, pet, amount });
     if (result) {
@@ -213,18 +207,35 @@ app.delete('/users/:userId/schedules', async (req, res) => {
   }
 });
 
+app.post('/users/:userId/removeSchedule', async (req, res) => {
+  const { userId } = req.params;
+  const {id} = req.body;
+  console.log(userId)
+  console.log(id)
+  try {
+    const result = await removeScheduleWithId(userId, { id });
+    if (result) {
+      res.status(200).json({ message: "Schedule removed successfully" });
+    } else {
+      res.status(404).json({ message: "No matching schedule found" });
+    }
+  } catch (error) {
+    console.error('Error removing schedule:', error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
 
 app.get('/users/:userId/next-schedule', async (req, res) => {
   const { userId } = req.params;
+  
   if (!userId) {
     return res.status(400).send({ error: 'Missing userId parameter' });
   }
-
   try {
     const nextSchedule = await getNextSchedule(userId);
+    //console.log(nextSchedule)
     res.json(nextSchedule);
   } 
-
      catch (error) {
     console.error('Failed to retrieve and move next schedule:', error);
     res.status(500).send({ 'Error': 'Internal Server Error' });

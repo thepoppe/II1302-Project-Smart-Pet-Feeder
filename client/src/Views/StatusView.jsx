@@ -14,7 +14,8 @@ export default function StatusView() {
     const weightPercentage = Math.min(Math.round((weight / maxWeight) * 100), 100);
 
     function getSensorValues() {
-        fetch('http://localhost:3000/sensor-values', {
+        const userId = localStorage.getItem('userId');
+        fetch(`http://localhost:3000/users/${userId}/sensorValues`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -22,8 +23,8 @@ export default function StatusView() {
         })
         .then(response => response.json())
         .then(data => {
-            console.log(data)
-            setDistance(data.distance);
+            
+            setDistance(data.dist);
             setWeight(data.weight);
         }).catch(error => console.error('Error:', error));
     }
