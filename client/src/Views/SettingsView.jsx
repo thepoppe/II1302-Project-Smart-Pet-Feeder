@@ -6,7 +6,6 @@ export default function SettingsView() {
   const [petName, setPetName] = useState(''); 
   const [petAmount, setPetAmount] = useState(''); 
   const [petType, setPetType] = useState('');
-  const [changeEmail, setChangeEmail] = useState(false);
 
 
   const [email, setEmail] = useState('exampe@example.com');

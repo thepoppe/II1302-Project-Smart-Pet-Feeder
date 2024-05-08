@@ -1,5 +1,5 @@
 const express = require("express");
-const nodemailer = require('nodemailer');
+
 const cors = require("cors");
 const app = express();
 const { compareDatesCB } = require('./serverUtils.js');
@@ -19,6 +19,8 @@ const {removeScheduleWithId,removeSchedule,
       updateMail
     } = require("./dbFunctions.js");
 
+const {transporter} = require('./transporter.js');
+
 //temp model
 const port = 3000;
 const defaultMsg = "HelloWorld";
@@ -27,14 +29,7 @@ let schedules = [];
 let usedSchedules= []
 let distanceSensorValue=null
 let weightSensorValue=null
-const transporter = nodemailer.createTransport({
- service:'gmail',
-  auth:{
-    user:'smart.feeder14@gmail.com',
-    pass: 'eohn bvhe cqcj xsup'
-  },
-  secure: true
-})
+
 
 
 
@@ -282,7 +277,7 @@ try{
 
 
 
-app.get('/users/:userId/email', async (res, req) => {
+app.get('/users/:userId/email', async (req, res) => {
   const { userId } = req.params;
 try{
   const email = await getUserEmail(userId);
