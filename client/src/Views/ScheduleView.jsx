@@ -1,7 +1,7 @@
 import React, { useState,useEffect } from 'react';
 import { sendData, getSchedules, toggleMotor } from '../expressFunction';
 
-
+const ip = `http://${process.env.SERVER_IP_ADDRESS}:3000`;
 
 
 export default function ScheduleView(props) {
@@ -37,7 +37,7 @@ export default function ScheduleView(props) {
     const hour = now.getHours();
     const minute = now.getMinutes();
 
-    fetch('http://localhost:3000/schedule', {
+    fetch(`${ip}/schedule`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

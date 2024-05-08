@@ -1,4 +1,4 @@
-
+const ip = `http://${process.env.SERVER_IP_ADDRESS}:3000`;
 
 export default function resolvePromise(promise, promiseState) {
   
@@ -31,7 +31,7 @@ export default function resolvePromise(promise, promiseState) {
 
 
 export function toggleMotor() {
-  fetch("http://localhost:3000/toggle-motor", {
+  fetch(`${ip}/toggle-motor`, {
     method: "POST",
   })
     .then((response) => response.text())
@@ -41,7 +41,7 @@ export function toggleMotor() {
 
 
 export function getSchedules() {
-  return fetch('http://localhost:3000/allSchedules')
+  return fetch(`${ip}/allSchedules`)
     .then(response => {
       if (!response.ok) {
         throw new Error('Network response was not ok');
@@ -67,7 +67,7 @@ export function sendData(datetime, pet, amount){
   const hour = date.getHours();
   const minute = date.getMinutes();
 
-  return  fetch('http://localhost:3000/schedule', {
+  return  fetch(`${ip}/schedule`, {
       method: 'POST',
       headers: {
           'Content-Type': 'application/json'
