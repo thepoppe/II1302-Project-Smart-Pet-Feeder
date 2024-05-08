@@ -27,7 +27,7 @@
 
 String ssid = "iPhone123";
 String password = "12345678";
-String userId = "vxq2MZ9zwfMEvRh1Ao7FTO5hwZL2";
+String userId = "vxq2MZ9zwfMEvRh1Ao7FTO5hwZL2"; // make it not hardcoded. It is Lukas uid rn
 const char* arduinoSSID = "Pet-Feeder-Setup";
 const char* ArduinoPassword = "123456789";
 
@@ -38,6 +38,7 @@ const char* serverAddress = "172.20.10.3";
 const int serverPort = 3000;
 int schedule[5] = {0};
 String scheduleID = "";
+int scheduledWeight = 0;
 
 
 // Motor pins
@@ -127,6 +128,8 @@ void fetchSchedules(WiFiClient& client) {
   
   const char* id = doc["id"];
   scheduleID = String(id);
+  scheduledWeight = doc["amount"];
+  
   
   //Serial.println(scheduleID);
    
@@ -181,11 +184,17 @@ void clearSchedules(WiFiClient& client){
 
 
 void executeScheduledActions() {
+  float currentWeight = scale.get_units() * -1;
   Serial.println("Start MOTOR");
-  for (int i = 0; i < 1; i++) { 
+
+
+
+  while(currentWeight  < scheduledWeight) { 
+    Serial.println(currentWeight);
     moveRotorToOpen(true, 500);
     delay(100);
     moveRotorToOpen(false, 600);
+    currentWeight = scale.get_units() * -1;
   }
 }
 
