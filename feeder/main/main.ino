@@ -18,7 +18,7 @@
 #include <WiFi.h>
 #include <WiFiClient.h>
 #include <WebServer.h>
-//#include <Motor.h>
+#include <Motor.h>
 #include <HX711.h>
 #include <ArduinoJson.h>
 #include <Distance.h>
@@ -26,7 +26,7 @@
 #include <cstring>
 
 String ssid = "Poppes iPhone";
-String password = "";
+String password = "12345678";
 String userID = "";
 const char* arduinoSSID = "Pet-Feeder-Setup";
 const char* ArduinoPassword = "123456789";
@@ -38,53 +38,7 @@ const char* serverAddress = "172.20.10.7";
 const int serverPort = 3000;
 int schedule[4] = {0};
 
-// Motor Code
-class Motor
-{
-    private:
-        int _en;
-        int _in1;
-        int _in2;
-    public:
-        Motor(int en, int in1, int in2);
-        void initMotor();
-        void startMotor(bool rotateLeft);
-        void stopMotor();
-        void speed(int speed);
-};
-Motor::Motor(int en, int in1, int in2){
-  _en = en;
-  _in1 = in1;
-  _in2 = in2;
-}
-void Motor::initMotor(){
-  pinMode(_en, OUTPUT);
-  pinMode(_in1, OUTPUT);
-  pinMode(_in2, OUTPUT);
-  digitalWrite(_in1, LOW);
-	digitalWrite(_in2, LOW);
-}
-// direction bool determines the direction of the motors rotation.
-void Motor::startMotor(bool rotateLeft) {
-  if(rotateLeft){
-    digitalWrite(_in1, HIGH);
-    digitalWrite(_in2, LOW);
-  }
-  if(! rotateLeft){
-    digitalWrite(_in1, LOW);
-    digitalWrite(_in2, HIGH);
-    }
-} 
-void Motor::stopMotor() {
-  digitalWrite(_in1, LOW);
-	digitalWrite(_in2, LOW);
-}
-void Motor::speed(int speed){
-  if (speed >=256){
-    return;
-  }
-  analogWrite(_en,speed);
-}
+
 // Motor pins
 const int enPin = 9;   // Enable pin
 const int in1Pin = 8;  // Input 1
@@ -115,10 +69,10 @@ void connectToWifi() {
 
 
 void moveRotorToOpen(bool open, int time) {
-  motor.startMotor(open); // Use the motor object instead of the class name
-  motor.speed(250); // Use the motor object instead of the class name
+  motor.startMotor(open); 
+  motor.speed(250);
   delay(time);
-  motor.stopMotor(); // Use the motor object instead of the class name
+  motor.stopMotor();
 }
 
 
@@ -185,10 +139,6 @@ bool isScheduledTime() {
   int scheduledHour = schedule[2];
   int scheduledMinute = schedule[3];
   
-  
-  
-  Serial.println("S: " + String(scheduledMonth) + "," + String(scheduledDay) + "," + String(scheduledHour) + "," + String(scheduledMinute));
-  Serial.println("T: " + String(timeinfo.tm_mon) + "," + String(timeinfo.tm_mday) + "," + String(timeinfo.tm_hour) + "," + String(timeinfo.tm_min));
 
   return(scheduledMonth == timeinfo.tm_mon && scheduledDay == timeinfo.tm_mday && scheduledHour == timeinfo.tm_hour && scheduledMinute == timeinfo.tm_min);
 }
@@ -301,7 +251,8 @@ bool readWifiCredentials(WiFiClient& client) {
 
 
 void wifiCredentialSetup() {
-  Serial.println("WebServer started to aquire wifi details");
+  Serial.println("Wifi Credentials missin...");
+  Serial.println("AccessPoint created");
   IPAddress staticIP(192, 168, 1, 1);
   IPAddress gateway(192, 168, 1, 1);
   IPAddress subnet(255, 255, 255, 0);
@@ -323,7 +274,7 @@ void wifiCredentialSetup() {
         if (client.available()) {
           bool success = readWifiCredentials(client);
           if(success){
-            Serial.println("Success, Wifi details collected");
+            Serial.println("Success, Wifi credentials collected");
             Serial.println("ssid: "+ ssid);
             Serial.println("password: "+ password);
             connectToWifi();
@@ -337,8 +288,7 @@ void wifiCredentialSetup() {
       }
       sendWifiHTML(client, false, "");
       client.stop();
-      Serial.println("Client disconnected.");
-      
+      Serial.println("Client disconnected."); 
     }
   }
 }
@@ -373,8 +323,8 @@ void verifyUser() {
 
 
 void setup() {
-  Serial.println("Setup started");
   Serial.begin(115200);
+  Serial.println("Setup started");
   motor.initMotor();
   scale.begin(doutPin, sckPin);
   scale.set_scale(calibrationFactor);
