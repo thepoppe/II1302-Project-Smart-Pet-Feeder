@@ -146,7 +146,6 @@ app.post('/uploadDistanceSensorValue', async (req, res) => {
 
   
  const userEmail = await getUserEmail(uid);
-  
 
   console.log("email", userEmail)
   if(distanceSensorValue < 20){
@@ -198,6 +197,30 @@ app.listen(port, () => {
 app.post('/users/:userId/uploadSensorValues', async (req, res) => {
   const { userId } = req.params;
   const { dist, weight } = req.body;
+
+  const userEmail = await getUserEmail(userId);
+
+  console.log("email", userEmail)
+  if(dist < 20){
+
+    const mailData = {
+      from: 'smart.feeder14@gmail.com',  // sender address
+      to: userEmail,   // list of receivers
+      subject: 'Sending Email using Node.js',
+      text: 'low food level fyll now!!!'
+      }
+
+      transporter.sendMail(mailData, function(error, info){
+        if (error) {
+          console.log(error);
+          res.json({message : error})
+        } else {
+          res.json({message : 'email send'})
+        }
+      });
+
+      
+  }
   console.log(userId)
   // Validation
   if (dist === undefined || weight === undefined) {
