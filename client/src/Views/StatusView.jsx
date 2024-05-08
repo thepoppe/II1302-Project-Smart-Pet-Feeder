@@ -2,6 +2,7 @@ import React, { useState,useEffect } from 'react';
 import { Line } from '@ant-design/plots';
 import {Progress } from 'antd';
 import './statusPage.css'
+const ip = `http://${process.env.SERVER_IP_ADDRESS}:3000`;
 
 export default function StatusView() {
     const [distance, setDistance] = useState(0);
@@ -14,7 +15,7 @@ export default function StatusView() {
     const weightPercentage = Math.min(Math.round((weight / maxWeight) * 100), 100);
 
     function getSensorValues() {
-        fetch('http://localhost:3000/sensor-values', {
+        fetch(`${ip}/sensor-values`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
