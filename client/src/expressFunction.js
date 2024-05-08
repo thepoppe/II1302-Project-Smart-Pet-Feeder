@@ -1,4 +1,4 @@
-const ip = `http://${import.meta.env.SERVER_IP_ADDRESS}:3000`;
+const ip = `http://${import.meta.env.VITE_SERVER_IP_ADDRESS}:3000`;
 
 export default function resolvePromise(promise, promiseState) {
   promiseState.promise = promise;
