@@ -13,9 +13,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: Generate firebaseConfig.js
         run: |
-          echo '${{ secrets.FIREBASECONFIG }}' > client/firebaseConfig.json
-          echo 'const firebaseConfig = JSON.parse(fs.readFileSync("client/firebaseConfig.json", "utf-8"));' > client/firebaseConfig.js
-          echo 'export default firebaseConfig;' >> firebaseConfig.js
+          echo '${{ secrets.FIREBASECONFIG }}' > client/firebaseConfig.js
       - run: (cd client && npm install && npm run build)
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
