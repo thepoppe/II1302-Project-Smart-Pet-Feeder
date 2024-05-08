@@ -112,11 +112,12 @@ app.get('/users/:userId/sensorValues', async (req, res) => {
 // Add schedule endpoint
 app.post('/users/:userId/schedules', async (req, res) => {
   const { userId } = req.params;
-  const {month, day,hour,minute,amount,pet } = req.body;
+  const {year,month, day,hour,minute,amount,pet } = req.body;
 
    // Validation to check if date is in the past
    const now = new Date(); 
    const scheduleDate = new Date(now); 
+   scheduleDate.setYear(year);
    scheduleDate.setMonth(month);
    scheduleDate.setDate(day);
    scheduleDate.setHours(hour);
