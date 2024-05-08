@@ -135,10 +135,6 @@ app.get('/removeSchedule', (req, res) => {
   res.json({ message: "Schedule removed" });
 });
 
-const uid = 'mxnYVKim7FT3IKdeuertuI2si6r2';
-// Endpoint to update the current value of the distance sensor
-
-
 
 app.post('/uploadDistanceSensorValue', async (req, res) => {
   const {dist, weight} = req.body;

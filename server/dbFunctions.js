@@ -313,7 +313,7 @@ module.exports = {
   addSensor,
   getSensorValues,
   getNextSchedule,
-  removeScheduleWithId
+  removeScheduleWithId,
   getUserEmail,
   deletePet,
 };
