@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { sendData, getSchedules, toggleMotor } from "../expressFunction";
 
-const ip = `http://${import.meta.env.VITE_SERVER_IP_ADDRESS}:3000`;
+const ip = `//${import.meta.env.VITE_SERVER_IP_ADDRESS}:3000`;
 
 export default function ScheduleView(props) {
   const [datetime, setDatetime] = useState("");
