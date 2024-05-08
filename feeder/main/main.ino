@@ -90,7 +90,7 @@ void fetchSchedules(WiFiClient& client) {
   if (!connectToServer(client)){
     return;
   }
-  String request = "GET /users/"+userId+"/schedules HTTP/1.1\r\nHost: " + String(serverAddress) + "\r\nConnection: close\r\n\r\n";
+  String request = "GET /users/"+userId+"/next-schedule HTTP/1.1\r\nHost: " + String(serverAddress) + "\r\nConnection: close\r\n\r\n";
   client.print(request);
   Serial.println("Waiting for response...");
 
