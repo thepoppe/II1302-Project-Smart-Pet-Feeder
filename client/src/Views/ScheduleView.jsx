@@ -1,5 +1,5 @@
 import React, { useState,useEffect } from 'react';
-import { sendData, getSchedules, toggleMotor, getPets} from '../expressFunction';
+import { sendData, getSchedules, getPets} from '../expressFunction';
 import { get } from 'firebase/database';
 
 
