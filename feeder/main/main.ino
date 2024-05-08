@@ -36,7 +36,8 @@ const long gmtOffset_sec = 3600;
 const int daylightOffset_sec = 3600;
 const char* serverAddress = "172.20.10.3";
 const int serverPort = 3000;
-int schedule[4] = {0};
+int schedule[5] = {0};
+String scheduleID = "";
 
 
 // Motor pins
@@ -55,6 +56,8 @@ const int doutPin = 4;
 const int sckPin = 5;
 const float calibrationFactor = -1100;
 HX711 scale;
+
+
 
 
 
@@ -120,6 +123,15 @@ void fetchSchedules(WiFiClient& client) {
   schedule[1] = doc["day"];
   schedule[2] = doc["hour"];
   schedule[3] = doc["minute"];
+
+  
+  const char* id = doc["id"];
+  scheduleID = String(id);
+  
+  //Serial.println(scheduleID);
+   
+  //serializeJson(doc,Serial); // Debug code  remove after when not needed
+  // Serial.println();
   return;
 }
 
@@ -139,6 +151,7 @@ bool isScheduledTime() {
   int scheduledHour = schedule[2];
   int scheduledMinute = schedule[3];
   
+  
 
   return(scheduledMonth == timeinfo.tm_mon && scheduledDay == timeinfo.tm_mday && scheduledHour == timeinfo.tm_hour && scheduledMinute == timeinfo.tm_min);
 }
@@ -150,7 +163,15 @@ void clearSchedules(WiFiClient& client){
   if (!connectToServer(client)){
     return;
   }
-  String request = "POST /removeSchedule HTTP/1.1\r\nHost: " + String(serverAddress) + "\r\nConnection: close\r\n\r\n";
+
+  
+  String data = "{\"id\":\""+scheduleID+ "\"}";
+  String request = "POST /users/"+userId+"/removeSchedule HTTP/1.1\r\nHost: " + String(serverAddress) + ":" + String(serverPort) 
+  + "\r\nContent-Type: application/json\r\nContent-Length: " + String(data.length()) + "\r\nConnection: close\r\n\r\n" + data;
+
+
+
+
   client.print(request);
   for(int i = 0; i < sizeof(schedule) / sizeof(int); i++){
     schedule[i] = 0;
@@ -161,7 +182,7 @@ void clearSchedules(WiFiClient& client){
 
 void executeScheduledActions() {
   Serial.println("Start MOTOR");
-  for (int i = 0; i < 5; i++) {
+  for (int i = 0; i < 1; i++) { 
     moveRotorToOpen(true, 500);
     delay(100);
     moveRotorToOpen(false, 600);
@@ -177,7 +198,11 @@ void sendSensorData(WiFiClient& client) {
     return;
   }
   String data = "{\"dist\": " + String(distanceValue) + ",\"weight\": " + String(weight) + "}";
-  String request = "POST /uploadDistanceSensorValue HTTP/1.1\r\nHost: " + String(serverAddress) + ":" + String(serverPort) + "\r\nContent-Type: application/json\r\nContent-Length: " + String(data.length()) + "\r\nConnection: close\r\n\r\n" + data;
+  
+  String request = "POST /users/"+userId+"/uploadSensorValues HTTP/1.1\r\nHost: " + String(serverAddress) + ":" + String(serverPort) 
+  + "\r\nContent-Type: application/json\r\nContent-Length: " + String(data.length()) + "\r\nConnection: close\r\n\r\n" + data;
+
+  
   client.print(request);
 }
 
