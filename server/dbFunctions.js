@@ -283,6 +283,20 @@ async function deletePet(userId, {name, type, amount}){
   return true;
 }
 
+async function updateMail(userId, {email}){
+  const userDoc = await db.collection('Users').doc(userId).get();
+
+  if(userDoc.exists){
+    const userData = userDoc.data;
+    userData.email = email;
+    console.log(userData.email);
+    return true;
+  } else {
+    console.log("no such docment")
+    return false;
+  }
+
+}
 
 
 
