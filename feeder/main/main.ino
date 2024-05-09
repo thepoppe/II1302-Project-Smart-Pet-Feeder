@@ -200,7 +200,7 @@ void executeScheduledActions() {
 
 void sendSensorData(WiFiClient& client) {
   int distanceValue = distance.getDistance();
-  float weight = scale.get_units();
+  float weight = scale.get_units()*-1;
 
   // if data is changed send update
   if (!connectToServer(client)){
@@ -216,6 +216,22 @@ void sendSensorData(WiFiClient& client) {
 }
 
 
+void sendStats(WiFiClient& client){
+  int distanceValue = distance.getDistance();
+  float weight = scale.get_units()*-1;
+
+  // if data is changed send update
+  if (!connectToServer(client)){
+    return;
+  }
+  String data = "{\"distance\": " + String(distanceValue) + ",\"weight\": " + String(weight) + "}";
+  
+  String request = "POST /users/"+userId+"/stats HTTP/1.1\r\nHost: " + String(serverAddress) + ":" + String(serverPort) 
+  + "\r\nContent-Type: application/json\r\nContent-Length: " + String(data.length()) + "\r\nConnection: close\r\n\r\n" + data;
+
+  
+  client.print(request);
+}
 
 
 /**********************************************
@@ -376,6 +392,8 @@ void setup() {
 }
 
 
+int loopCount = 0;
+
 void loop() {
   WiFiClient client;
   fetchSchedules(client);
@@ -385,6 +403,14 @@ void loop() {
     executeScheduledActions();
   }
   sendSensorData(client);
+
+  if(loopCount % 200 == 0){
+    sendStats(client);
+    loopCount = 0;
+  }
+  loopCount++;
+
+
   client.stop();
 
   delay(1000);
