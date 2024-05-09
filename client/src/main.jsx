@@ -5,7 +5,7 @@ import "./index.css";
 import { BrowserRouter } from "react-router-dom";
 import ErrorBoundary from "./ErrorBoundary";
 import { initializeApp } from "firebase/app";
-import firebaseConfig from "./firebaseConfig.js";
+import firebaseConfig from "../firebaseConfig.js";
 
 initializeApp(firebaseConfig);
 ReactDOM.createRoot(document.getElementById("root")).render(

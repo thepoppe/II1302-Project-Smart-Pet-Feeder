@@ -112,4 +112,18 @@ export async function getPets(){
   }
 }
 
+export async function getUserEmail(){
+  const userId = localStorage.getItem('userId');
+  try {
+    const response = await fetch(`http://localhost:3000/users/${userId}/email`, {
+      method: 'GET',
+    });
+    const email = await response.json();
+    console.log(email);
+    return email;
+  } catch (error) {
+    return console.error('Error:', error);
+  }
+}
+
 

@@ -298,17 +298,18 @@ async function deletePet(userId, {name, type, amount}){
 }
 
 async function updateMail(userId, {email}){
-  const userDoc = await db.collection('Users').doc(userId).get();
-
-  if(userDoc.exists){
-    const userData = userDoc.data;
-    userData.email = email;
-    console.log(userData.email);
+  
+  try{
+    await db.collection('Users').doc(userId).update({
+      email: email
+    })
+    console.log('User email updated successfully');
     return true;
-  } else {
-    console.log("no such docment")
+  } catch(error) {
+    console.error('Error updating user email: ', error);
+
     return false;
-  }
+  };
 
 }
 
@@ -330,6 +331,7 @@ module.exports = {
   removeScheduleWithId,
   getUserEmail,
   deletePet,
+  updateMail,
 };
 
 

@@ -16,7 +16,7 @@ const {removeScheduleWithId,removeSchedule,
       addPet,
       getPets,
       deletePet,
-      updateMail
+      updateMail,
     } = require("./dbFunctions.js");
 
 const {transporter} = require('./transporter.js');

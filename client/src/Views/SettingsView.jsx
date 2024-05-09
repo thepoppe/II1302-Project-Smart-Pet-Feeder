@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {getPets, addPet} from '../expressFunction';
+import {getPets, addPet, getUserEmail} from '../expressFunction';
 
 export default function SettingsView() {
   const [pets, setPets] = useState([]); //store the list of pets
@@ -8,7 +8,7 @@ export default function SettingsView() {
   const [petType, setPetType] = useState('');
 
 
-  const [email, setEmail] = useState('exampe@example.com');
+  const [email, setEmail] = useState('');
 
 
   const handleAddPetSubmit = (event) => {
@@ -29,6 +29,8 @@ export default function SettingsView() {
 
   useEffect(() => {
     getPets().then((data) => setPets(data))
+
+    getUserEmail().then((data) => setEmail(data))
     }, []);
 
   function deletePet(index){
@@ -62,9 +64,25 @@ export default function SettingsView() {
     });
   }
 
-  const handleSaveSettings = (event) => {
-    event.preventDefault();
-  };
+ const handleSaveSettings = (event) => {
+      event.preventDefault();
+      const userId = localStorage.getItem('userId');
+      console.log(userId);
+  
+      return fetch(`http://localhost:3000/users/${userId}/updatemail`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ email })  
+      })
+      .then(response => response.json())
+      .then(data => {   
+           console.log(data)  
+      })
+      .catch(error => console.error('Error:', error));
+    };
+
 
   return (
     <div className="SettingPageContainer">
