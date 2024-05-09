@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {getPets, addPet, getUserEmail} from '../expressFunction';
+import {message} from "antd";
+
 
 export default function SettingsView() {
   const [pets, setPets] = useState([]); //store the list of pets
@@ -7,13 +9,23 @@ export default function SettingsView() {
   const [petAmount, setPetAmount] = useState(''); 
   const [petType, setPetType] = useState('');
 
+  const [updateEmail, setUpdateEmail] = useState(true);
+
 
   const [email, setEmail] = useState('');
 
+  const [messageApi, contextHolder] = message.useMessage();
+ 
+  const success = () => {
+    messageApi.open({
+      type: 'success',
+      content: 'Email is Updated',
+      duration: 5,
+    });
+  };
 
   const handleAddPetSubmit = (event) => {
     event.preventDefault();
-    console.log("Form data:", { petName, petType, petAmount });
     addPet(petName, petType, petAmount).then( ()=> {
      return getPets()
     }).then((data) => {     
@@ -30,7 +42,8 @@ export default function SettingsView() {
   useEffect(() => {
     getPets().then((data) => setPets(data))
 
-    getUserEmail().then((data) => setEmail(data))
+    getUserEmail().then((data) => {setEmail(data)
+       setUpdateEmail(false)})
     }, []);
 
   function deletePet(index){
@@ -78,7 +91,8 @@ export default function SettingsView() {
       })
       .then(response => response.json())
       .then(data => {   
-           console.log(data)  
+        setUpdateEmail(false);
+        success();
       })
       .catch(error => console.error('Error:', error));
     };
@@ -86,6 +100,7 @@ export default function SettingsView() {
 
   return (
     <div className="SettingPageContainer">
+       
       <div className='settingPageItems'>
       <h2>Add a new Pet:</h2>
         <div className="add-pet-form">
@@ -159,23 +174,35 @@ export default function SettingsView() {
         <div >
          Add your e-mail for notification:  
         </div>
-       <div className='setting-gridItem'>
-          <div>
-          <label >Email:</label>
-          <input
-            type="text"
-            id="email"
-            name="email"
-            value={email}
-            onChange={(e)=> setEmail(e.target.value)}
-          />
-          </div>
-        <button className="submit-btn" onClick={handleSaveSettings}>submit</button>
-        </div> 
-          
+      {contextHolder}
+        {
+  updateEmail ? (
+    <div className='setting-gridItem'>
+      <div>
+        <label>Email:</label>
+        <input
+          type="text"
+          id="email"
+          name="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
       </div>
- 
-
+      <button className="submit-btn" onClick={handleSaveSettings}>Update</button>
+    </div>   
+  ) : (
+    <div style={{ display: "flex", alignItems: "center", gap :"30px", paddingLeft: "20px", paddingTop: "30px"}}>
+      <div>
+    {email}
+    </div>
+    <div>
+    <button style={{ paddingLeft: "10px" }} onClick={() => setUpdateEmail(true)}>Change</button>
+    </div>
+  </div>
+  )
+}
+      </div>
+      
       </div>
     </div>
   );

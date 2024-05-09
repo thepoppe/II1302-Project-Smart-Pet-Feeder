@@ -48,7 +48,6 @@ export default function ScheduleView(props) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Form submitted:", { datetime, pet, amount });
     sendData(datetime, pet, amount).then((data) => {
       if (data.status === 400) {
         error();
@@ -228,7 +227,6 @@ export default function ScheduleView(props) {
         />
         </div>
         <button className='feedButton' onClick={sendCurrentDate}>Feed now!</button>
-        {contextHolder}
       </div>
       
           </div>

@@ -259,7 +259,6 @@ async function addPet(userId, petName, petType, petAmount) {
       type: petType,
       amount: petAmount
     });
-    console.log('Pet added successfully');
   } catch (error) {
     console.error('Failed to add pet:', error);
   }
@@ -269,8 +268,6 @@ async function addPet(userId, petName, petType, petAmount) {
 async function deletePet(userId, {name, type, amount}){
   const petsRef = db.collection('Users').doc(userId).collection('Pets');
   const allPetsSnapshot = await petsRef.get();
-
- console.log(name, type, amount);
 
   if (allPetsSnapshot.empty) {
     console.log('No pets found ');
@@ -283,17 +280,12 @@ async function deletePet(userId, {name, type, amount}){
       .where('amount', '==', amount)
       .limit(1)
       .get();
-
-   
-
   if (snapshot.empty) {
     console.log('No matching pet found.');
     return false;
   }
   const doc = snapshot.docs[0]; 
-  console.log("pet found: ", doc);
   await doc.ref.delete();
-  console.log('pet removed successfully.');
   return true;
 }
 
@@ -303,7 +295,6 @@ async function updateMail(userId, {email}){
     await db.collection('Users').doc(userId).update({
       email: email
     })
-    console.log('User email updated successfully');
     return true;
   } catch(error) {
     console.error('Error updating user email: ', error);
