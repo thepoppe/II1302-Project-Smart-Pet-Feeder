@@ -29,7 +29,7 @@ export default function WeightGraph() {
     
 
     const chartData = timestamps.map((timestamp, index) => ({
-        time: timestamp.toLocaleDateString('sv-SE', { year: 'numeric', month: 'long', day: 'numeric',hour:'numeric' ,minute:'numeric'}),
+        time: timestamp,
         weight: weights[index]
     }));
 
@@ -37,21 +37,9 @@ export default function WeightGraph() {
         data: chartData,
         xField: 'time',
         yField: 'weight',
-        yAxis: {
-            label: {
-                formatter: v => `${v} grams`
-            }
-        },
-     
         width: 800,
         height: 240,
-        point: {
-            size: 5,
-            shape: 'circle',
-        },
-        interactions: [
-            { type: 'marker-active' },
-        ],
+        
     };
 
 
