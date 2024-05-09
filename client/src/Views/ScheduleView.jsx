@@ -155,16 +155,16 @@ export default function ScheduleView(props) {
       </div>
       <div className="form-group">
         <div>Pet:</div>
-        <select value={pet}  onChange={(e) => {
+    <select value={pet}  onChange={(e) => {
       const selectedPet = pets.find((p) => p.name === e.target.value);
       setPet(selectedPet.name);
       setAmount(selectedPet.amount);
     }}>
-          <option value="">Select a pet</option>
-          {pets.map((pet, index) => (
-            <option key={index} value={pet.name}>{pet.name}</option>
-          ))}
-</select>
+    <option value="">Select a pet</option>
+      {pets.map((pet, index) => (
+        <option key={index} value={pet.name}>{pet.name}</option>
+      ))}
+    </select>
       </div>
       <div className="form-group">
         <div>Amount:</div>
