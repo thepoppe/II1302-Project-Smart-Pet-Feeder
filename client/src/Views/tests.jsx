@@ -1,6 +1,30 @@
 export default function Tests() {
   return (
     <>
+
+<button
+  onClick={() => {
+    const requestBody = {
+      distance: 55,
+      weight: 55
+    };
+    const userId = localStorage.getItem('userId');  
+    return fetch(`http://localhost:3000/users/${userId}/stats`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(requestBody),
+    })
+    .then(response => response.text())
+    .then(text => console.log('Response:', text))
+    .catch(error => console.error("Error:", error));
+  }}
+>
+  Test upload distance and weight
+</button>
+
+
       <button
         onClick={() => {
           const requestBody = {
