@@ -49,12 +49,12 @@ app.get("/testGetDB", handleGetUserRequest);
 
 app.post("/login", handleAuthRequest);
 app.get("/", (req, res) => {
-  res.send(message);
+  res.send("hello and welcome to my server");
 });
-
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
+
 
 // FIRESTORE FUNCTIONS BELOW
 
