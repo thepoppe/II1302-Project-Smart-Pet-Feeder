@@ -2,6 +2,7 @@ import React, { useState,useEffect } from 'react';
 import { Line } from '@ant-design/plots';
 import {Progress } from 'antd';
 import './statusPage.css'
+import WeightGraph from './WeightGraph';
 
 export default function StatusView() {
     const [distance, setDistance] = useState(0);
@@ -37,40 +38,6 @@ export default function StatusView() {
         return () => clearInterval(interval); // Cleanup on component unmount
     }, []);
 
-//GRaf dummy
-    const data = [
-        { day: '1991', amount: 80 },
-        { day: '1992', amount: 80 },
-        { day: '1993', amount: 70 },
-        { day: '1994', amount: 75 },
-        { day: '1995', amount: 69 },
-        { day: '1996', amount: 68 },
-        { day: '1997', amount: 70 },
-        { day: '1998', amount: 65 },
-      ];
-      const config = {
-        data,
-        xField: 'day',
-        yField: 'amount',
-        yAxis:{
-            min: 50,
-            max: 80,
-        },
-        width: 600, // Adjust the width of the plot area
-        height: 300, // Adjust the height of the plot area
-        point: {
-          shapeField: 'circle',
-          sizeField: 2,
-        },
-        interaction: {
-          tooltip: {
-            marker: true,
-          },
-        },
-        style: {
-          lineWidth: 2,
-        },
-      };
 
     return (
         <>
@@ -94,14 +61,7 @@ export default function StatusView() {
                 <Progress type="circle" percent={weightPercentage} format={(percent) => `${weight} gram`}  size={200} />
                 </div>
             </div>
-            <div className="statusItems history">
-                <div >
-            <h2>Eat pattern</h2>
-            <div className='chart' >
-            <Line  {...config}/>
-            </div>
-            </div>
-            </div>
+            <WeightGraph></WeightGraph>
         </div>
         
     </>
