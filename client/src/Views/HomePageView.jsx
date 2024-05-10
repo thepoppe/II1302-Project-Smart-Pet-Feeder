@@ -19,6 +19,7 @@ function Model(props){
 */
 
 function HomePageView(props) {
+
   return (
     <>
       <div
@@ -53,7 +54,7 @@ function HomePageView(props) {
       <PerspectiveCamera makeDefault fov={45} position={[1,1,4]} />
       
         <pointLight position={[10, 10, 10]} />
-            <Stage environment={"sunset"}>
+            <Stage environment={"night"}>
               <Model scale={0.0101} />
           </Stage>
         </Canvas>
@@ -66,22 +67,16 @@ function HomePageView(props) {
       <div>
         <ul className="homeUL">
           <Link to="/schedule">
-            <button
-              className="LISchedule homeBTN"
-              title="View your schedule"
-            ></button>
+            <button className="LISchedule homeBTN" title="View your schedule"></button>
+            <div>Schedule</div>
           </Link>
           <Link to="/status">
-            <button
-              className="LIStatus homeBTN"
-              title="View Feeder status"
-            ></button>
+            <button className="LIStatus homeBTN" title="View Feeder status"></button>
+            <div style={{ textAlign: "center" }}>Status</div>
           </Link>
           <Link to="/settings">
-            <button
-              className="LISetting homeBTN"
-              title="View your settings"
-            ></button>
+            <button className="LISetting homeBTN" title="View your settings"></button>
+            <div style={{ textAlign: "center" }}>Settings</div>
           </Link>
         </ul>
       </div>

@@ -5,7 +5,7 @@
   color: black;
 
   color: rgba(0, 0, 0, 0.87);
-  background-color: white;
+  background-color: #F4F7FE;
 
 
   font-synthesis: none;
@@ -15,23 +15,23 @@
 }
 
 
-a {
+a{
   font-weight: 500;
-  color: #646cff;
+  color: #000000;
 }
 a:hover {
   text-decoration: underline;
 }
 
 h1 {
-  font-size: 3.2em;
+  font-size: 2.5em;
+  font-family: inter;
   line-height: 1.1;
-  position: absolute;
-  left: 400px;
-  top: 150px;
 }
 
-
+.aboutPage{
+  padding-left: 5%;
+}
 
 
 
@@ -58,23 +58,37 @@ ul {
   text-decoration: underline;
 }
 
-/* setting page css */
+/***************** setting page css *******************/
 
 .SettingPageContainer{
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  grid-gap: 20px;
+  grid-gap: 10px;
+  
 }
 
 .settingPageItems{
   max-width: 100%;
   padding: 20px;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 5px 5px 5px 0px #D2DCED;
+  background-color: white;
 }
 
 .setting-grid{
   grid-column: span 2;
+  height: 160%;
+  box-shadow: 0px 0px 5px 5px #D2DCED;
+  background-color: white;
+}
+
+.setting-gridItem{
+  display: flex;
+  flex-direction: raw;
+  padding-left: 10%;
+  gap: 100px;
+  height: 100%;  
+  padding-top: 3%;
 }
 
 .pet-item {
@@ -92,15 +106,9 @@ ul {
   color: var(--lighter-color);
 }
 
-.centered-button {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  flex-direction: column;
-}
 
-/* schedule page */
+
+/* ********************* Schedule page ****************** */
 .scheduleContainer {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -112,7 +120,8 @@ ul {
   max-width: 100%;
   padding: 20px;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 5px 5px 5px 0px #D2DCED;
+  background-color: white;
 }
 
 .form {
@@ -144,9 +153,10 @@ input[type="number"],input[type="text"] {
   cursor: pointer;
   transition: background-color 0.3s ease;
   width: fit-content; /* Set width based on content */
-  margin: 0 auto; /* Center horizontally */
- 
+  justify-self: center;
+
 }
+
 
 .submit-btn:hover {
   background-color: #0056b3;
@@ -194,8 +204,10 @@ input[type="number"],input[type="text"] {
   max-width: 100%;
   padding: 20px;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 0px 5px 5px #D2DCED;
+  background-color: white;
   grid-column: span 2; 
+  height: 160%;
   
 }
 
@@ -204,6 +216,7 @@ input[type="number"],input[type="text"] {
   flex-direction: raw;
   justify-content: space-evenly;
   row-gap: 30px;
+  padding-top: 3%;
 }
 .Amount{
   max-width: 100%;

@@ -28,24 +28,20 @@ export default function resolvePromise(promise, promiseState) {
   }
 }
 
-export function toggleMotor() {
-  fetch(`${ip}/toggle-motor`, {
-    method: "POST",
-  })
-    .then((response) => response.text())
-    .then((data) => setContent(data))
-    .catch((error) => console.error("Error:", error));
-}
+
 
 export function getSchedules() {
-  return fetch(`${ip}/allSchedules`)
-    .then((response) => {
+  const userId = localStorage.getItem('userId');
+  return fetch(`http://localhost:3000/users/${userId}/schedules`, {
+    method: 'GET',
+  })
+    .then(response => {
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
       return response.json();
     })
-    .then((data) => {
+    .then(data => {
       console.log("getschedules");
       console.log(data);
       return data;
@@ -55,24 +51,78 @@ export function getSchedules() {
       throw error; // Rethrow the error to propagate it further
     });
 }
-export function sendData(datetime, pet, amount) {
+
+export function sendData(datetime, pet, amount){
+  const userId = localStorage.getItem('userId');
+
   const date = new Date(datetime);
   const year = date.getFullYear();
-  const month = date.getMonth();
-  const day = date.getDate();
+  const month= date.getMonth();
+  const day=date.getDate();
   const hour = date.getHours();
   const minute = date.getMinutes();
 
-  return fetch(`${ip}/schedule`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ month, day, hour, pet, amount, minute }),
+
+return  fetch(`http://localhost:3000/users/${userId}/schedules`, {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({year,month, day, hour, pet, amount, minute })  
   })
-    .then((response) => response.json())
-    .then((data) => {
-      console.log(data);
-    })
-    .catch((error) => console.error("Error:", error));
+  .then(response => response.json())
+  .then(data => {
+    return data;       
+  })
+  .catch(error => console.error('Error:', error));
+};
+
+export function addPet(petName, petType, petAmount){
+  const userId = localStorage.getItem('userId');
+  console.log(userId);
+
+ return fetch(`http://localhost:3000/users/${userId}/pets`, {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ petName, petType, petAmount})  
+  })
+  .then(response => response.json())
+  .then(data => {   
+         console.log(data)  
+  })
+  .catch(error => console.error('Error:', error));
+};
+  
+export async function getPets(){
+  const userId = localStorage.getItem('userId');
+  console.log(userId)
+
+  try {
+    const response = await fetch(`http://localhost:3000/users/${userId}/pets`, {
+      method: 'GET',
+    });
+    const data = await response.json();
+    console.log(data);
+    return data;
+  } catch (error) {
+    return console.error('Error:', error);
+  }
 }
+
+export async function getUserEmail(){
+  const userId = localStorage.getItem('userId');
+  try {
+    const response = await fetch(`http://localhost:3000/users/${userId}/email`, {
+      method: 'GET',
+    });
+    const email = await response.json();
+    console.log(email);
+    return email;
+  } catch (error) {
+    return console.error('Error:', error);
+  }
+}
+
+
