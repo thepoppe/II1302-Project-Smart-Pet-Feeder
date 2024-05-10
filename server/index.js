@@ -3,7 +3,7 @@ const express = require("express");
 const cors = require("cors");
 const app = express();
 const { compareDatesCB } = require('./serverUtils.js');
-const {removeScheduleWithId,removeSchedule,
+const {addStats,removeScheduleWithId,removeSchedule,
   getSensorValues,
   getNextSchedule,
    addSensor,
@@ -16,6 +16,7 @@ const {removeScheduleWithId,removeSchedule,
       addPet,
       getPets,
       deletePet,
+      getStats,
       updateMail,
     } = require("./dbFunctions.js");
 
@@ -44,12 +45,12 @@ app.get("/testGetDB", handleGetUserRequest);
 
 app.post("/login", handleAuthRequest);
 app.get("/", (req, res) => {
-  res.send(message);
+  res.send("hello and welcome to my server");
 });
-
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
+
 
 // FIRESTORE FUNCTIONS BELOW
 
@@ -75,9 +76,7 @@ app.post('/users/:userId/uploadSensorValues', async (req, res) => {
         } else {
           res.json({message : 'email send'})
         }
-      });
-
-      
+      });  
   }
 
   // Validation
@@ -254,6 +253,56 @@ app.delete('/users/:userId/pets', async(req, res) => {
   console.error('Error removing pet:', error);
   res.status(500).json({ error: "Internal Server Error" });
 }
+});
+
+app.post('/users/:userId/stats', async (req, res) => {
+  const { userId } = req.params;
+  const { distance, weight } = req.body;
+
+  try {
+    await addStats(userId, distance, weight);
+    res.status(201).send({ message: 'Stats added successfully' });
+  } catch (error) {
+    console.error('Failed to add stats:', error);
+    res.status(500).send({ error: 'Internal Server Error' });
+  }
+});
+
+app.get('/users/:userId/stats', async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    const stats = await getStats(userId);
+    res.json(stats);
+  } catch (error) {
+    console.error('Failed to retrieve statuses:', error);
+    res.status(500).send({ error: 'Internal Server Error' });
+  }
+});
+
+app.post('/users/:userId/stats', async (req, res) => {
+  const { userId } = req.params;
+  const { distance, weight } = req.body;
+
+  try {
+    await addStats(userId, distance, weight);
+    res.status(201).send({ message: 'Stats added successfully' });
+  } catch (error) {
+    console.error('Failed to add stats:', error);
+    res.status(500).send({ error: 'Internal Server Error' });
+  }
+});
+
+app.get('/users/:userId/stats', async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    const stats = await getStats(userId);
+    res.json(stats);
+  } catch (error) {
+    console.error('Failed to retrieve statuses:', error);
+    res.status(500).send({ error: 'Internal Server Error' });
+  }
 });
 
 

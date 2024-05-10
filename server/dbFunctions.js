@@ -304,7 +304,34 @@ async function updateMail(userId, {email}){
 
 }
 
+async function addStats(userId, distance, weight) {
+  const timestamp = new Date(); 
+  try {
+   
+    await db.collection('Users').doc(userId).collection('Stats').add({
+      distance: distance, 
+      weight: weight,    
+      timestamp: timestamp 
+    });
+    console.log('Status added successfully');
+  } catch (error) {
+    console.error('Failed to add status:', error);
+  }
+}
 
+async function getStats(userId) {
+  const statusRef = db.collection('Users').doc(userId).collection('Stats');
+  const snapshot = await statusRef.orderBy('timestamp', 'asc').get();
+  if (snapshot.empty) {
+    console.log('No statuses found');
+    return [];
+  }
+  const statuses = [];
+  snapshot.forEach(doc => {
+    statuses.push({ id: doc.id, ...doc.data() });
+  });
+  return statuses;
+}
 
 
 module.exports = {
@@ -322,6 +349,8 @@ module.exports = {
   removeScheduleWithId,
   getUserEmail,
   deletePet,
+  addStats,
+  getStats,
   updateMail,
 };
 
