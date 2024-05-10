@@ -20,7 +20,15 @@ export default function SettingsView() {
     messageApi.open({
       type: 'success',
       content: 'Email is Updated',
-      duration: 5,
+      duration: 3,
+    });
+  };
+
+  const error = () => {
+    messageApi.open({
+      type: 'error',
+      content: 'Error update email',
+      duration: 3,
     });
   };
 
@@ -94,7 +102,10 @@ export default function SettingsView() {
         setUpdateEmail(false);
         success();
       })
-      .catch(error => console.error('Error:', error));
+      .catch(error => {
+        console.error('Error:', error)
+        error();
+      });
     };
 
 

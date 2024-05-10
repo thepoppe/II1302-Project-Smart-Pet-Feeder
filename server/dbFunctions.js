@@ -299,7 +299,7 @@ async function updateMail(userId, {email}){
   } catch(error) {
     console.error('Error updating user email: ', error);
 
-    return false;
+    return error;
   };
 
 }

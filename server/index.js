@@ -265,14 +265,11 @@ app.post('/users/:userId/updatemail', async (req, res) =>{
   const {email} = req.body;
 try{
   const result = await updateMail(userId, {email});
-  if (result) {
-    res.status(200).json({ message: " email add successfully" });
-  } else {
-    res.status(404).json({ message: "No matching found" });
-  }
+  
+  res.status(200).json({ message: " email add successfully", status : 200 });
 } catch (error) {
   console.error('Error update mail: ', error);
-  res.status(500).json({ error: "Internal Server Error" });
+  res.status(500).json({ error: "Internal Server Error", status : 500 });
 }
 })
 
