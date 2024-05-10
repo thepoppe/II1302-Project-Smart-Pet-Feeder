@@ -7,11 +7,11 @@ import WeightGraph from './WeightGraph';
 export default function StatusView() {
     const [distance, setDistance] = useState(0);
     const [weight,setWeight]=useState(0);
-    const maxDistance=100;
+    const maxDistance=10;
     const maxWeight=30;
 
     // Removes decimals and makes sure its under 100
-    const distancePercentage = Math.min(Math.round((distance / maxDistance) * 100), 100); 
+    const distancePercentage = Math.min(100-Math.round((distance / maxDistance) * 100), 100); 
     const weightPercentage = Math.min(Math.round((weight / maxWeight) * 100), 100);
 
     function getSensorValues() {
