@@ -43,7 +43,7 @@ function HomePageView(props) {
       <PerspectiveCamera makeDefault fov={45} position={[1,1,4]} />
       
         <pointLight position={[10, 10, 10]} />
-            <Stage environment={"night"}>
+            <Stage environment={"park"}>
               <Model scale={0.0101} />
           </Stage>
         </Canvas>
