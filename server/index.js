@@ -82,10 +82,12 @@ app.post('/users/:userId/uploadSensorValues', async (req, res) => {
       });  
 
       lastEmailSend = new Date(); 
+      console.log(lastEmailSend);
   } else {
     const now = new Date();
-
-    if((lastEmailSend.getMinutes - now.getMinutes) > 5){
+    console.log("now minute:", now.getMinutes())
+    console.log(  "now - last = ",now.getMinutes() - lastEmailSend.getMinutes());
+    if((now.getMinutes() - lastEmailSend.getMinutes()) > 5){
 
     const mailData = {
       from: 'smart.feeder14@gmail.com',  // sender address
