@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Line } from "@ant-design/plots";
 import { Progress } from "antd";
 import "./statusPage.css";
-const ip = `http://${import.meta.env.VITE_SERVER_IP_ADDRESS}:3000`;
+const ip = `${import.meta.env.VITE_SERVER_IP_ADDRESS}`;
 
 export default function StatusView() {
   const [distance, setDistance] = useState(0);
