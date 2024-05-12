@@ -37,11 +37,6 @@ export default function StatusView() {
   }
   useEffect(() => {
     getSensorValues(); // Run initially
-    const interval = setInterval(() => {
-      getSensorValues(); // Run every 1000ms (1 second)
-    }, 1000);
-
-    return () => clearInterval(interval); // Cleanup on component unmount
   }, []);
 
   //GRaf dummy
