@@ -11,12 +11,10 @@ import {
 import { Suspense } from "react";
 import "./homePage.css";
 
-/*
-function Model(props){
-  const {scene} = useGLTF("../../feeder.glb");
-  return <primitive  object={scene} {...props}/>
+function Model(props) {
+  const { scene } = useGLTF("/feeder.glb");
+  return <primitive object={scene} {...props} />;
 }
-*/
 
 function HomePageView(props) {
   return (
@@ -30,37 +28,38 @@ function HomePageView(props) {
           width: "100vw", // This will make the parent div take the full width of the viewport
         }}
       >
-        <p>Picture here CAD removed to deploy</p>
-
-        {/*
-      <div
-        className="threeDstyle"
-        style={{
-          marginTop: "1rem",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-           // Increase the width
-          alignContent: "center",
-        }}>
+        <div
+          className="threeDstyle"
+          style={{
+            marginTop: "1rem",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            // Increase the width
+            alignContent: "center",
+          }}
+        >
           <Suspense>
-        <Canvas shadows className="threeDstyle" dpr={[1,2]}    style={{
-          width: '100%', // Canvas fills the container div
-                  height: '100%', // Canvas fills the container div
-                  }} >
-                 <ambientLight intensity={0.5} />
-     <OrbitControls range={[0, 0.35, 0]} maxPolarAngle={1.45}/>
-      <PerspectiveCamera makeDefault fov={45} position={[1,1,4]} />
-      
-        <pointLight position={[10, 10, 10]} />
-            <Stage environment={"sunset"}>
-              <Model scale={0.0101} />
-          </Stage>
-        </Canvas>
-        </Suspense>
-        
+            <Canvas
+              shadows
+              className="threeDstyle"
+              dpr={[1, 2]}
+              style={{
+                width: "100%", // Canvas fills the container div
+                height: "100%", // Canvas fills the container div
+              }}
+            >
+              <ambientLight intensity={0.5} />
+              <OrbitControls range={[0, 0.35, 0]} maxPolarAngle={1.45} />
+              <PerspectiveCamera makeDefault fov={45} position={[1, 1, 4]} />
+
+              <pointLight position={[10, 10, 10]} />
+              <Stage environment={"sunset"}>
+                <Model scale={0.0101} />
+              </Stage>
+            </Canvas>
+          </Suspense>
         </div>
-*/}
       </div>
 
       <div>
