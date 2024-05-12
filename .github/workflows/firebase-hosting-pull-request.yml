@@ -27,7 +27,7 @@ jobs:
         run: cp -r client/src/icons client/dist
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
-          entryPoint: ./client/dist
+          entryPoint: ./client
           repoToken: ${{ secrets.GITHUB_TOKEN }}
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_SMART_PET_FEEDER_C7FD2 }}
           projectId: smart-pet-feeder-c7fd2
