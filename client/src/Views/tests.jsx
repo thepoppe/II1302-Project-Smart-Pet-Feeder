@@ -1,4 +1,9 @@
+const ip = `${import.meta.env.VITE_SERVER_IP_ADDRESS}`;
+import { useState } from "react";
+
 export default function Tests() {
+  const [helloResp, setHelloResp] = useState("");
+
   return (
     <>
       <button
@@ -35,6 +40,19 @@ export default function Tests() {
       >
         Test GET database
       </button>
+      <button
+        onClick={() => {
+          fetch(ip, {
+            method: "GET",
+          })
+            .then((response) => response.text())
+            .then((text) => setHelloResp(text))
+            .catch((error) => console.error("Error:", error));
+        }}
+      >
+        Test hello world from server
+      </button>
+      <p>Resp: {helloResp}</p>
     </>
   );
 }
