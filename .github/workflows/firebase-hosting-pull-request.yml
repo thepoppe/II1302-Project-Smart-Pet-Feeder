@@ -23,8 +23,6 @@ jobs:
         run: |
           echo '${{ secrets.IP_ADDRESS }}' > client/.env
       - run: (cd client && npm install && npm run build)
-      - name: Copy Icons to Build Directory
-        run: cp -r client/src/icons client/dist
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           entryPoint: ./client

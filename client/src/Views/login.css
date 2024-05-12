@@ -69,7 +69,7 @@ top: 50%;
     background-color: #222324;
     align-self: center;
     
-    background-image: url('src/icons/google.svg');
+    background-image: url('/google.svg');
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center left;
