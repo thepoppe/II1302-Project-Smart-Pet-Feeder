@@ -171,8 +171,8 @@ export default function ScheduleView(props) {
           type="number"
           value={amount}
           onChange={(e) => setAmount(e.target.value)}
-          step={10} /* increas value by 10*/ 
-          min={10}
+          step={1} /* increas value by 10*/ 
+          min={1}
           max={200}
           required
         />
@@ -221,8 +221,8 @@ export default function ScheduleView(props) {
           type="number"
           value={ManualAmount}
           onChange={(e) => setManualAmount(e.target.value)}
-          step={10}
-          min={10}
+          step={1}
+          min={1}
           max={200}
         />
         </div>

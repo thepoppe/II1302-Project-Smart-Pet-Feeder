@@ -11,7 +11,7 @@ export default function StatusView() {
     const maxWeight=30;
 
     // Removes decimals and makes sure its under 100
-    const distancePercentage = Math.min(100-Math.round((distance / maxDistance) * 100), 100); 
+    const distancePercentage = Math.min(100 - Math.round((distance / maxDistance) * 100), 100); 
     const weightPercentage = Math.min(Math.round((weight / maxWeight) * 100), 100);
 
     function getSensorValues() {

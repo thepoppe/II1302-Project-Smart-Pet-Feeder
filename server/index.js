@@ -60,10 +60,11 @@ app.listen(port, () => {
 app.post('/users/:userId/uploadSensorValues', async (req, res) => {
   const { userId } = req.params;
   const { dist, weight } = req.body;
-
-
+  console.log("dist: ", dist);
+  console.log("lastsent: ", lastEmailSend);
+  const now = new Date();
   const userEmail = await getUserEmail(userId);
-  if(dist < 20 && lastEmailSend === null){
+  if(dist => 8 && lastEmailSend === null){
 
     const mailData = {
       from: 'smart.feeder14@gmail.com',  // sender address
@@ -82,13 +83,10 @@ app.post('/users/:userId/uploadSensorValues', async (req, res) => {
       });  
 
       lastEmailSend = new Date(); 
-      console.log(lastEmailSend);
-  } else {
-    const now = new Date();
-    console.log("now minute:", now.getMinutes())
-    console.log(  "now - last = ",now.getMinutes() - lastEmailSend.getMinutes());
-    if((now.getMinutes() - lastEmailSend.getMinutes()) > 5){
-
+      
+  } else if (dist => 8 && (now.getHours() - lastEmailSend.getHours()) > 1) {
+   
+    console.log(" last :  ",now.getHours() - lastEmailSend.getHours());
     const mailData = {
       from: 'smart.feeder14@gmail.com',  // sender address
       to: userEmail,   // list of receivers
@@ -106,8 +104,6 @@ app.post('/users/:userId/uploadSensorValues', async (req, res) => {
       });  
 
       lastEmailSend = new Date(); 
-
-    } 
   }
 
   // Validation
