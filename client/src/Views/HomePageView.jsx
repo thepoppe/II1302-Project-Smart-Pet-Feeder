@@ -17,6 +17,7 @@ function Model(props) {
 }
 
 function HomePageView(props) {
+
   return (
     <>
       <div
@@ -40,47 +41,39 @@ function HomePageView(props) {
           }}
         >
           <Suspense>
-            <Canvas
-              shadows
-              className="threeDstyle"
-              dpr={[1, 2]}
-              style={{
-                width: "100%", // Canvas fills the container div
-                height: "100%", // Canvas fills the container div
-              }}
-            >
-              <ambientLight intensity={0.5} />
-              <OrbitControls range={[0, 0.35, 0]} maxPolarAngle={1.45} />
-              <PerspectiveCamera makeDefault fov={45} position={[1, 1, 4]} />
-
-              <pointLight position={[10, 10, 10]} />
-              <Stage environment={"sunset"}>
-                <Model scale={0.0101} />
-              </Stage>
-            </Canvas>
-          </Suspense>
+        <Canvas shadows className="threeDstyle" dpr={[1,2]}    style={{
+                  width: '100%', // Canvas fills the container div
+                  height: '100%', // Canvas fills the container div
+                  }} >
+                 <ambientLight intensity={0.5} />
+     <OrbitControls range={[0, 0.35, 0]} maxPolarAngle={1.45}/>
+      <PerspectiveCamera makeDefault fov={45} position={[1,1,4]} />
+      
+        <pointLight position={[10, 10, 10]} />
+            <Stage environment={"park"}>
+              <Model scale={0.0101} />
+          </Stage>
+        </Canvas>
+        </Suspense>
+        
         </div>
       </div>
 
       <div>
         <ul className="homeUL">
           <Link to="/schedule">
-            <button
-              className="LISchedule homeBTN"
-              title="View your schedule"
-            ></button>
+
+            <button className="LISchedule homeBTN" title="View your schedule"></button>
+            <div>Schedule</div>
           </Link>
           <Link to="/status">
-            <button
-              className="LIStatus homeBTN"
-              title="View Feeder status"
-            ></button>
+            <button className="LIStatus homeBTN" title="View Feeder status"></button>
+            <div style={{ textAlign: "center" }}>Status</div>
           </Link>
           <Link to="/settings">
-            <button
-              className="LISetting homeBTN"
-              title="View your settings"
-            ></button>
+            <button className="LISetting homeBTN" title="View your settings"></button>
+            <div style={{ textAlign: "center" }}>Settings</div>
+
           </Link>
         </ul>
       </div>
