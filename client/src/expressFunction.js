@@ -1,4 +1,6 @@
+
 const ip = `http://localhost:3000`;
+
 
 export default function resolvePromise(promise, promiseState) {
   promiseState.promise = promise;

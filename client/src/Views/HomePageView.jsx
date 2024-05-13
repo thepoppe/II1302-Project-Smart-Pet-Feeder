@@ -11,15 +11,19 @@ import {
 import { Suspense } from "react";
 import "./homePage.css";
 
+
 function Model(props) {
   const { scene } = useGLTF("/feeder.glb");
   return <primitive object={scene} {...props} />;
 }
+*/
 
 function HomePageView(props) {
 
   return (
     <>
+
+
       <div
         style={{
           display: "flex",
@@ -42,7 +46,7 @@ function HomePageView(props) {
         >
           <Suspense>
         <Canvas shadows className="threeDstyle" dpr={[1,2]}    style={{
-                  width: '100%', // Canvas fills the container div
+          width: '100%', // Canvas fills the container div
                   height: '100%', // Canvas fills the container div
                   }} >
                  <ambientLight intensity={0.5} />
@@ -57,6 +61,7 @@ function HomePageView(props) {
         </Suspense>
         
         </div>
+*/}
       </div>
 
       <div>

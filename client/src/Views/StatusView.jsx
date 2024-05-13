@@ -37,6 +37,8 @@ export default function StatusView() {
 
 
 
+    return () => clearInterval(interval); // Cleanup on component unmount
+  }, []);
 
 
     return (<>
@@ -63,5 +65,6 @@ export default function StatusView() {
             <WeightGraph></WeightGraph>
         </div>
     </>);
+
 }
 
