@@ -16,7 +16,6 @@ function Model(props) {
   const { scene } = useGLTF("/feeder.glb");
   return <primitive object={scene} {...props} />;
 }
-*/
 
 function HomePageView(props) {
 
@@ -61,7 +60,6 @@ function HomePageView(props) {
         </Suspense>
         
         </div>
-*/}
       </div>
 
       <div>

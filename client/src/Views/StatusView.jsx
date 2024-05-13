@@ -37,10 +37,6 @@ export default function StatusView() {
 
 
 
-    return () => clearInterval(interval); // Cleanup on component unmount
-  }, []);
-
-
     return (<>
         <div className="statusContainer">
             <div className="statusItems">
