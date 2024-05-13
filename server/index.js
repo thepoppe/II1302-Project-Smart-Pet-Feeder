@@ -2,6 +2,7 @@ const express = require("express");
 
 const cors = require("cors");
 const app = express();
+
 const { compareDatesCB } = require('./serverUtils.js');
 const {addStats,removeScheduleWithId,removeSchedule,
   getSensorValues,
@@ -22,18 +23,18 @@ const {addStats,removeScheduleWithId,removeSchedule,
 
 const {transporter} = require('./transporter.js');
 
+
 //temp model
 const port = 3000;
 const defaultMsg = "HelloWorld";
-let motorStatus=false
+let motorStatus = false;
 let schedules = [];
+
 let usedSchedules= []
 let distanceSensorValue=null
 let weightSensorValue=null
 
 let lastEmailSend = null;
-
-
 
 
 app.use(cors());
@@ -204,11 +205,13 @@ app.delete('/users/:userId/schedules', async (req, res) => {
     console.error('Error removing schedule:', error);
     res.status(500).json({ error: "Internal Server Error" });
   }
+
 });
 
 app.post('/users/:userId/removeSchedule', async (req, res) => {
   const { userId } = req.params;
   const {id} = req.body;
+
 
   try {
     const result = await removeScheduleWithId(userId, { id });
@@ -279,6 +282,7 @@ app.delete('/users/:userId/pets', async(req, res) => {
     res.status(200).json({ message: "pet removed successfully" });
   } else {
     res.status(404).json({ message: "No matching pet found" });
+
   }
 } catch (error) {
   console.error('Error removing pet:', error);
@@ -286,11 +290,14 @@ app.delete('/users/:userId/pets', async(req, res) => {
 }
 });
 
+
 app.post('/users/:userId/stats', async (req, res) => {
+
   const { userId } = req.params;
   const { distance, weight } = req.body;
 
   try {
+
     await addStats(userId, distance, weight);
     res.status(201).send({ message: 'Stats added successfully' });
   } catch (error) {
@@ -300,6 +307,7 @@ app.post('/users/:userId/stats', async (req, res) => {
 });
 
 app.get('/users/:userId/stats', async (req, res) => {
+
   const { userId } = req.params;
 
   try {
@@ -312,6 +320,7 @@ app.get('/users/:userId/stats', async (req, res) => {
 });
 
 app.post('/users/:userId/stats', async (req, res) => {
+
   const { userId } = req.params;
   const { distance, weight } = req.body;
 
@@ -325,6 +334,7 @@ app.post('/users/:userId/stats', async (req, res) => {
 });
 
 app.get('/users/:userId/stats', async (req, res) => {
+
   const { userId } = req.params;
 
   try {
@@ -339,7 +349,6 @@ app.get('/users/:userId/stats', async (req, res) => {
 
 
 // endpoint for update email and get email.
-
 app.post('/users/:userId/updatemail', async (req, res) =>{
   const { userId } = req.params;
   const {email} = req.body;
@@ -354,7 +363,6 @@ try{
 })
 
 
-
 app.get('/users/:userId/email', async (req, res) => {
   const { userId } = req.params;
 try{
@@ -365,6 +373,4 @@ try{
   res.status(500).send({ 'Error': 'Internal Server Error' });
 }
 });
-
-
 

@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { getAuth, signOut } from "firebase/auth";
 import "./TopBar.css";
-import logo from '../icons/logo.png';
+import logo from '/logo.png';
 
 
 import { UserOutlined } from '@ant-design/icons';

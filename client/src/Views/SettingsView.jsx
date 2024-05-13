@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import {getPets, addPet, getUserEmail} from '../expressFunction';
 import {message} from "antd";
@@ -41,9 +42,7 @@ export default function SettingsView() {
     }).catch((error) => {
       console.error("An error occurred:", error);
     });
-    
   };
-
 
 
 
@@ -114,16 +113,17 @@ export default function SettingsView() {
        
       <div className='settingPageItems'>
       <h2>Add a new Pet:</h2>
+
         <div className="add-pet-form">
-          <form  className="form" onSubmit={handleAddPetSubmit}>
+          <form className="form" onSubmit={handleAddPetSubmit}>
             <div className="form-group">
-            <div  htmlFor="pet-name">Pet's Name:</div>
-            <input
-              type="text"
-              onChange={(e)=> setPetName(e.target.value)}
-              value={petName}
-              required
-            /> 
+              <div htmlFor="pet-name">Pet's Name:</div>
+              <input
+                type="text"
+                onChange={(e) => setPetName(e.target.value)}
+                value={petName}
+                required
+              />
             </div>
             <div>
             <div className="form-group">
@@ -137,6 +137,7 @@ export default function SettingsView() {
             </div>
             </div>
             <div className="form-group">
+
             <div htmlFor="pet-amount">Amount of food (grams):</div>
             <input
               type="number"
@@ -214,6 +215,7 @@ export default function SettingsView() {
 }
       </div>
       
+
       </div>
     </div>
   );

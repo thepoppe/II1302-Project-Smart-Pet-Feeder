@@ -1,8 +1,10 @@
+
 import React, { useState,useEffect } from 'react';
 import { Line } from '@ant-design/plots';
 import {Progress } from 'antd';
 import './statusPage.css'
 import WeightGraph from './WeightGraph';
+const ip = `${import.meta.env.VITE_SERVER_IP_ADDRESS}`;
 
 export default function StatusView() {
     const [distance, setDistance] = useState(0);
@@ -16,7 +18,7 @@ export default function StatusView() {
 
     function getSensorValues() {
         const userId = localStorage.getItem('userId');
-        fetch(`http://localhost:3000/users/${userId}/sensorValues`, {
+        fetch(`${ip}/users/${userId}/sensorValues`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -35,8 +37,8 @@ export default function StatusView() {
             getSensorValues(); // Run every 1000ms (1 second)
         }, 1000);
 
-        return () => clearInterval(interval); // Cleanup on component unmount
-    }, []);
+
+
 
 
     return (
@@ -63,8 +65,8 @@ export default function StatusView() {
             </div>
             <WeightGraph></WeightGraph>
         </div>
-        
+      </div>
     </>
-    )
+  );
 }
 
