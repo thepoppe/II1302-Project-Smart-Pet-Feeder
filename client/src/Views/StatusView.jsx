@@ -1,28 +1,24 @@
+
 import React, { useState,useEffect } from 'react';
 import { Line } from '@ant-design/plots';
 import {Progress } from 'antd';
 import './statusPage.css'
 import WeightGraph from './WeightGraph';
+const ip = `http://localhost:3000`;
 
 export default function StatusView() {
-  const [distance, setDistance] = useState(0);
-  const [weight, setWeight] = useState(0);
-  const maxDistance = 100;
-  const maxWeight = 30;
+    const [distance, setDistance] = useState(0);
+    const [weight,setWeight]=useState(0);
+    const maxDistance=10;
+    const maxWeight=30;
 
-  // Removes decimals and makes sure its under 100
-  const distancePercentage = Math.min(
-    Math.round((distance / maxDistance) * 100),
-    100
-  );
-  const weightPercentage = Math.min(
-    Math.round((weight / maxWeight) * 100),
-    100
-  );
+    // Removes decimals and makes sure its under 100
+    const distancePercentage = Math.min(100 - Math.round((distance / maxDistance) * 100), 100); 
+    const weightPercentage = Math.min(Math.round((weight / maxWeight) * 100), 100);
 
     function getSensorValues() {
         const userId = localStorage.getItem('userId');
-        fetch(`http://localhost:3000/users/${userId}/sensorValues`, {
+        fetch(`${ip}/users/${userId}/sensorValues`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -37,16 +33,15 @@ export default function StatusView() {
     }
     useEffect(() => {
         getSensorValues(); // Run initially
-        const interval = setInterval(() => {
-            getSensorValues(); // Run every 1000ms (1 second)
-        }, 1000);
+        }, []);
+
+
 
     return () => clearInterval(interval); // Cleanup on component unmount
   }, []);
 
 
-    return (
-        <>
+    return (<>
         <div className="statusContainer">
             <div className="statusItems">
             <h2>Food-level in container</h2>
@@ -69,8 +64,7 @@ export default function StatusView() {
             </div>
             <WeightGraph></WeightGraph>
         </div>
-        
-    </>
-  );
+    </>);
+
 }
 

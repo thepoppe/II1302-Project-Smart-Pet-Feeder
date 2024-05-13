@@ -3,6 +3,8 @@ import { sendData, getSchedules, getPets} from '../expressFunction';
 import {message} from "antd";
 
 
+const ip = `http://localhost:3000`;
+
 export default function ScheduleView(props) {
   const [datetime, setDatetime] = useState("");
   const [pet, setPet] = useState("");
@@ -79,7 +81,7 @@ export default function ScheduleView(props) {
       }
       const amount= ManualAmount;
   
-      fetch(`http://localhost:3000/users/${userId}/schedules`, {
+      fetch(`${ip}/users/${userId}/schedules`, {
       method: 'POST',
       headers: {
         "Content-Type": "application/json",
@@ -136,7 +138,7 @@ export default function ScheduleView(props) {
             console.error('Error fetching pets:', error);
         });
 }, []);
-   
+
   return (
     <div className="scheduleContainer">
       <div className="form-container">
@@ -149,6 +151,7 @@ export default function ScheduleView(props) {
               value={datetime}
               onChange={(e) => setDatetime(e.target.value)}
               required
+
           />
       </div>
       <div className="form-group">
@@ -170,8 +173,8 @@ export default function ScheduleView(props) {
           type="number"
           value={amount}
           onChange={(e) => setAmount(e.target.value)}
-          step={10} /* increas value by 10*/ 
-          min={10}
+          step={1} /* increas value by 10*/ 
+          min={1}
           max={200}
           required
         />
@@ -184,6 +187,7 @@ export default function ScheduleView(props) {
          <h2>Your Schedule:</h2>
          <div class="schedule-table-container">
          <table className="schedule-table">
+
             <thead>
               <tr>
                 <th>Date</th>
@@ -227,15 +231,14 @@ export default function ScheduleView(props) {
           type="number"
           value={ManualAmount}
           onChange={(e) => setManualAmount(e.target.value)}
-          step={10}
-          min={10}
+          step={1}
+          min={1}
           max={200}
         />
         </div>
         <button className='feedButton' onClick={sendCurrentDate}>Feed now!</button>
       </div>
-      
-          </div>
       </div>
+    </div>
   );
 }

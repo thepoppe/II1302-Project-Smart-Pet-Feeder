@@ -1,4 +1,6 @@
-const ip = `http://${import.meta.env.VITE_SERVER_IP_ADDRESS}:3000`;
+
+const ip = `http://localhost:3000`;
+
 
 export default function resolvePromise(promise, promiseState) {
   promiseState.promise = promise;
@@ -29,10 +31,9 @@ export default function resolvePromise(promise, promiseState) {
 }
 
 
-
 export function getSchedules() {
   const userId = localStorage.getItem('userId');
-  return fetch(`http://localhost:3000/users/${userId}/schedules`, {
+  return fetch(`${ip}/users/${userId}/schedules`, {
     method: 'GET',
   })
     .then(response => {
@@ -52,6 +53,7 @@ export function getSchedules() {
     });
 }
 
+
 export function sendData(datetime, pet, amount){
   const userId = localStorage.getItem('userId');
 
@@ -63,7 +65,7 @@ export function sendData(datetime, pet, amount){
   const minute = date.getMinutes();
 
 
-return  fetch(`http://localhost:3000/users/${userId}/schedules`, {
+return  fetch(`${ip}/users/${userId}/schedules`, {
       method: 'POST',
       headers: {
           'Content-Type': 'application/json'
@@ -81,7 +83,7 @@ export function addPet(petName, petType, petAmount){
   const userId = localStorage.getItem('userId');
   console.log(userId);
 
- return fetch(`http://localhost:3000/users/${userId}/pets`, {
+ return fetch(`${ip}/users/${userId}/pets`, {
       method: 'POST',
       headers: {
           'Content-Type': 'application/json'
@@ -100,7 +102,7 @@ export async function getPets(){
   console.log(userId)
 
   try {
-    const response = await fetch(`http://localhost:3000/users/${userId}/pets`, {
+    const response = await fetch(`${ip}/users/${userId}/pets`, {
       method: 'GET',
     });
     const data = await response.json();
@@ -114,7 +116,7 @@ export async function getPets(){
 export async function getUserEmail(){
   const userId = localStorage.getItem('userId');
   try {
-    const response = await fetch(`http://localhost:3000/users/${userId}/email`, {
+    const response = await fetch(`${ip}/users/${userId}/email`, {
       method: 'GET',
     });
     const email = await response.json();
@@ -124,5 +126,4 @@ export async function getUserEmail(){
     return console.error('Error:', error);
   }
 }
-
 

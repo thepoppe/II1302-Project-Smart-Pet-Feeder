@@ -1,7 +1,9 @@
 import { useEffect } from "react";
 import { GoogleAuthProvider, signInWithPopup, getAuth } from "firebase/auth";
 import "./login.css";
-const ip = `http://${import.meta.env.VITE_SERVER_IP_ADDRESS}:3000`;
+
+const ip = `http://localhost:3000`;
+
 
 export default function LoginView(props) {
   const provider = new GoogleAuthProvider();

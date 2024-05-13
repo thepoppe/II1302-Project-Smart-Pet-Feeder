@@ -2,6 +2,7 @@ const express = require("express");
 
 const cors = require("cors");
 const app = express();
+
 const { compareDatesCB } = require('./serverUtils.js');
 const {addStats,removeScheduleWithId,removeSchedule,
   getSensorValues,
@@ -22,16 +23,18 @@ const {addStats,removeScheduleWithId,removeSchedule,
 
 const {transporter} = require('./transporter.js');
 
+
 //temp model
 const port = 3000;
 const defaultMsg = "HelloWorld";
-let motorStatus=false
+let motorStatus = false;
 let schedules = [];
+
 let usedSchedules= []
 let distanceSensorValue=null
 let weightSensorValue=null
 
-
+let lastEmailSend = null;
 
 
 app.use(cors());
@@ -58,9 +61,11 @@ app.listen(port, () => {
 app.post('/users/:userId/uploadSensorValues', async (req, res) => {
   const { userId } = req.params;
   const { dist, weight } = req.body;
-
+  console.log("dist: ", dist);
+  console.log("lastsent: ", lastEmailSend);
+  const now = new Date();
   const userEmail = await getUserEmail(userId);
-  if(dist < 20){
+  if(dist => 8 && lastEmailSend === null){
 
     const mailData = {
       from: 'smart.feeder14@gmail.com',  // sender address
@@ -77,6 +82,29 @@ app.post('/users/:userId/uploadSensorValues', async (req, res) => {
           res.json({message : 'email send'})
         }
       });  
+
+      lastEmailSend = new Date(); 
+      
+  } else if (dist => 8 && (now.getHours() - lastEmailSend.getHours()) > 1) {
+   
+    console.log(" last :  ",now.getHours() - lastEmailSend.getHours());
+    const mailData = {
+      from: 'smart.feeder14@gmail.com',  // sender address
+      to: userEmail,   // list of receivers
+      subject: 'Sending Email using Node.js',
+      text: 'low food level fyll now!!!'
+      }
+
+      transporter.sendMail(mailData, function(error, info){
+        if (error) {
+          console.log(error);
+          res.json({message : error})
+        } else {
+          res.json({message : 'email send'})
+        }
+      });  
+
+      lastEmailSend = new Date(); 
   }
 
   // Validation
@@ -173,11 +201,13 @@ app.delete('/users/:userId/schedules', async (req, res) => {
     console.error('Error removing schedule:', error);
     res.status(500).json({ error: "Internal Server Error" });
   }
+
 });
 
 app.post('/users/:userId/removeSchedule', async (req, res) => {
   const { userId } = req.params;
   const {id} = req.body;
+
 
   try {
     const result = await removeScheduleWithId(userId, { id });
@@ -248,6 +278,7 @@ app.delete('/users/:userId/pets', async(req, res) => {
     res.status(200).json({ message: "pet removed successfully" });
   } else {
     res.status(404).json({ message: "No matching pet found" });
+
   }
 } catch (error) {
   console.error('Error removing pet:', error);
@@ -255,11 +286,14 @@ app.delete('/users/:userId/pets', async(req, res) => {
 }
 });
 
+
 app.post('/users/:userId/stats', async (req, res) => {
+
   const { userId } = req.params;
   const { distance, weight } = req.body;
 
   try {
+
     await addStats(userId, distance, weight);
     res.status(201).send({ message: 'Stats added successfully' });
   } catch (error) {
@@ -269,6 +303,7 @@ app.post('/users/:userId/stats', async (req, res) => {
 });
 
 app.get('/users/:userId/stats', async (req, res) => {
+
   const { userId } = req.params;
 
   try {
@@ -281,6 +316,7 @@ app.get('/users/:userId/stats', async (req, res) => {
 });
 
 app.post('/users/:userId/stats', async (req, res) => {
+
   const { userId } = req.params;
   const { distance, weight } = req.body;
 
@@ -294,6 +330,7 @@ app.post('/users/:userId/stats', async (req, res) => {
 });
 
 app.get('/users/:userId/stats', async (req, res) => {
+
   const { userId } = req.params;
 
   try {
@@ -308,7 +345,6 @@ app.get('/users/:userId/stats', async (req, res) => {
 
 
 // endpoint for update email and get email.
-
 app.post('/users/:userId/updatemail', async (req, res) =>{
   const { userId } = req.params;
   const {email} = req.body;
@@ -323,7 +359,6 @@ try{
 })
 
 
-
 app.get('/users/:userId/email', async (req, res) => {
   const { userId } = req.params;
 try{
@@ -334,6 +369,4 @@ try{
   res.status(500).send({ 'Error': 'Internal Server Error' });
 }
 });
-
-
 

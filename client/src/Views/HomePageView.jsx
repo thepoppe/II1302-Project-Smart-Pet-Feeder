@@ -11,10 +11,10 @@ import {
 import { Suspense } from "react";
 import "./homePage.css";
 
-/*
-function Model(props){
-  const {scene} = useGLTF("../../feeder.glb");
-  return <primitive  object={scene} {...props}/>
+
+function Model(props) {
+  const { scene } = useGLTF("/feeder.glb");
+  return <primitive object={scene} {...props} />;
 }
 */
 
@@ -22,6 +22,8 @@ function HomePageView(props) {
 
   return (
     <>
+
+
       <div
         style={{
           display: "flex",
@@ -31,19 +33,17 @@ function HomePageView(props) {
           width: "100vw", // This will make the parent div take the full width of the viewport
         }}
       >
-        <p>Picture here CAD removed to deploy</p>
-
-        {/*
-      <div
-        className="threeDstyle"
-        style={{
-          marginTop: "1rem",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-           // Increase the width
-          alignContent: "center",
-        }}>
+        <div
+          className="threeDstyle"
+          style={{
+            marginTop: "1rem",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            // Increase the width
+            alignContent: "center",
+          }}
+        >
           <Suspense>
         <Canvas shadows className="threeDstyle" dpr={[1,2]}    style={{
           width: '100%', // Canvas fills the container div
@@ -54,7 +54,7 @@ function HomePageView(props) {
       <PerspectiveCamera makeDefault fov={45} position={[1,1,4]} />
       
         <pointLight position={[10, 10, 10]} />
-            <Stage environment={"night"}>
+            <Stage environment={"park"}>
               <Model scale={0.0101} />
           </Stage>
         </Canvas>
@@ -67,6 +67,7 @@ function HomePageView(props) {
       <div>
         <ul className="homeUL">
           <Link to="/schedule">
+
             <button className="LISchedule homeBTN" title="View your schedule"></button>
             <div>Schedule</div>
           </Link>
@@ -77,6 +78,7 @@ function HomePageView(props) {
           <Link to="/settings">
             <button className="LISetting homeBTN" title="View your settings"></button>
             <div style={{ textAlign: "center" }}>Settings</div>
+
           </Link>
         </ul>
       </div>

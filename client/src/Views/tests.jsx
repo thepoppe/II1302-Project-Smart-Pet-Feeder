@@ -1,4 +1,9 @@
+const ip = `${import.meta.env.VITE_SERVER_IP_ADDRESS}`;
+import { useState } from "react";
+
 export default function Tests() {
+  const [helloResp, setHelloResp] = useState("");
+
   return (
     <>
 
@@ -59,6 +64,7 @@ export default function Tests() {
       >
         Test GET database
       </button>
+
       <form
         onSubmit={(event) => {
           event.preventDefault();
