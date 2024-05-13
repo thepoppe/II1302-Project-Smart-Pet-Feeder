@@ -2,7 +2,10 @@
 # https://github.com/firebase/firebase-tools
 
 name: Deploy to Firebase Hosting on PR
-on: pull_request
+on:
+  pull_request:
+    branches:
+      - main
 permissions:
   checks: write
   contents: read
@@ -13,6 +16,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Generate firebaseConfig.js
+        run: |
+          echo '${{ secrets.FIREBASECONFIG }}' > client/firebaseConfig.js
+      - name: Generate env file
+        run: |
+          echo '${{ secrets.IP_ADDRESS }}' > client/.env
       - run: (cd client && npm install && npm run build)
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:

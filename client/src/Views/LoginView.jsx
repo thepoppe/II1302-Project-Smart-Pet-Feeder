@@ -1,18 +1,16 @@
 import { useEffect } from "react";
 import { GoogleAuthProvider, signInWithPopup, getAuth } from "firebase/auth";
-
-import "./login.css"
+import "./login.css";
+const ip = `${import.meta.env.VITE_SERVER_IP_ADDRESS}`;
 
 export default function LoginView(props) {
-
-
   const provider = new GoogleAuthProvider();
   const auth = getAuth();
 
   async function confirmLoginWithServer(token) {
     console.log("Validating against server");
     try {
-      const response = await fetch("http://localhost:3000/login", {
+      const response = await fetch(`${ip}/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -64,7 +62,10 @@ export default function LoginView(props) {
   return (
     <div className="logincontainer">
       <div className="login"> Welcome to our app. </div>
-      <div className="h2"> Log in with your Google account to customize your Pet Feeder.</div>
+      <div className="h2">
+        {" "}
+        Log in with your Google account to customize your Pet Feeder.
+      </div>
       <div className="loginBTN">
         <button className="icon-button" onClick={handleLogin}>
           log in
@@ -73,4 +74,3 @@ export default function LoginView(props) {
     </div>
   );
 }
-
