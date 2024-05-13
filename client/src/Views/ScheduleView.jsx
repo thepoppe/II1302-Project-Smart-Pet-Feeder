@@ -260,5 +260,6 @@ export default function ScheduleView(props) {
         </div>
       </div>
     </div>
+    </div>
   );
 }

@@ -35,15 +35,13 @@ export default function StatusView() {
         getSensorValues(); // Run initially
         const interval = setInterval(() => {
             getSensorValues(); // Run every 1000ms (1 second)
-        }, 1000);
+        }, 1000)});
 
 
 
 
 
-    return (
-        <>
-        <div className="statusContainer">
+    return (<div className="statusContainer">
             <div className="statusItems">
             <h2>Food-level in container</h2>
                <div className='foodContainer' >
@@ -64,9 +62,6 @@ export default function StatusView() {
                 </div>
             </div>
             <WeightGraph></WeightGraph>
-        </div>
-      </div>
-    </>
-  );
+        </div>)
 }
 
