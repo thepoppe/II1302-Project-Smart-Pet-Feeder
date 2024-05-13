@@ -4,7 +4,7 @@ import { Line } from '@ant-design/plots';
 import {Progress } from 'antd';
 import './statusPage.css'
 import WeightGraph from './WeightGraph';
-const ip = `localhost:3000`;
+const ip = `http://localhost:3000`;
 
 export default function StatusView() {
     const [distance, setDistance] = useState(0);
