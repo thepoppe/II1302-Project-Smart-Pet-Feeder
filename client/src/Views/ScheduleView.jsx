@@ -238,26 +238,6 @@ export default function ScheduleView(props) {
         </div>
         <button className='feedButton' onClick={sendCurrentDate}>Feed now!</button>
       </div>
-      <div className="manual">
-        <h2> Manual feeding</h2>
-        <div className="manualItem">
-          <div>
-            <label>Amount:</label>
-            <input
-              type="number"
-              value={ManualAmount}
-              onChange={(e) => setManualAmount(e.target.value)}
-              step={10}
-              min={10}
-              max={200}
-              required
-            />
-          </div>
-          <button className="feedButton" onClick={sendCurrentDate}>
-            Feed now!
-          </button>
-          <span>Food has been dispensed successfully</span>
-        </div>
       </div>
     </div>
   );
