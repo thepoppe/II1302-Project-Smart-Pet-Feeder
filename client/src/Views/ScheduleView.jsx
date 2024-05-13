@@ -3,7 +3,7 @@ import { sendData, getSchedules, getPets} from '../expressFunction';
 import {message} from "antd";
 
 
-const ip = `${import.meta.env.VITE_SERVER_IP_ADDRESS}`;
+const ip = `localhost:3000`;
 
 export default function ScheduleView(props) {
   const [datetime, setDatetime] = useState("");
