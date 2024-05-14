@@ -62,7 +62,7 @@ app.post('/users/:userId/uploadSensorValues', async (req, res) => {
   const { userId } = req.params;
   const { dist, weight } = req.body;
   console.log("dist: ", dist);
-  console.log("lastsent: ", lastEmailSend);
+  console.log("weight:  ", weight);
   const now = new Date();
   const userEmail = await getUserEmail(userId);
   if(dist => 8 && lastEmailSend === null){
