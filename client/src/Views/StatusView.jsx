@@ -9,7 +9,9 @@ const ip = `http://localhost:3000`;
 export default function StatusView() {
     const [distance, setDistance] = useState(0);
     const [weight,setWeight]=useState(0);
-    const maxDistance=10;
+
+    const midlevel=3;
+    const maxDistance=8;
     const maxWeight=30;
 
     // Removes decimals and makes sure its under 100
@@ -32,7 +34,7 @@ export default function StatusView() {
         }).catch(error => console.error('Error:', error));
     }
     useEffect(() => {
-        getSensorValues(); // Run initially
+        getSensorValues();
         }, []);
 
 
@@ -41,22 +43,42 @@ export default function StatusView() {
         <div className="statusContainer">
             <div className="statusItems">
             <h2>Food-level in container</h2>
-               <div className='foodContainer' >
-                
-                {50 < distancePercentage && distancePercentage <= 100 ? (
-                    <Progress type="circle" percent={distancePercentage} strokeColor="green"  strokeWidth={8} circleIconFontSize='2em' size={200} />
-                ) : 20 < distancePercentage && distancePercentage <= 50 ? (
-                    <Progress type="circle" percent={distancePercentage} strokeColor=" yellow"  strokeWidth={8} circleIconFontSize='2em' size={200} />
-                ) : (
-                    <Progress type="circle" percent={distancePercentage} strokeColor="red"  strokeWidth={8} circleIconFontSize='2em' size={200} />
-                )}
+                <div className='foodContainer' >
+                    {distance > midlevel + 2 ? (
+                    <Progress
+                        type="circle"
+                        percent={100}
+                        strokeColor="green"
+                        strokeWidth={8}
+                        circleIconFontSize="2em"
+                        size={200}
+                        format={() => <span style={{ color: 'green' }}>Full</span>}
+                    />) : distance < midlevel - 1 ? (
+                    <Progress
+                        type="circle"
+                        percent={33}
+                        strokeColor="red"
+                        strokeWidth={8}
+                        circleIconFontSize="2em"
+                        size={200}
+                        format={() => <span style={{ color: 'red' }}>Low</span>}
+                    />) : (
+                    <Progress
+                        type="circle"
+                        percent={66}
+                        strokeColor="yellow"
+                        strokeWidth={8}
+                        circleIconFontSize="2em"
+                        size={200}
+                        format={() => <span style={{ color: 'yellow' }}>Medium</span>}
+                    />)}
                 </div>
             </div>
             <div className="statusItems">
                 <h2>Food-level in Bowl</h2>
-                <div className='bowl'>
-                <Progress type="circle" percent={weightPercentage} format={(percent) => `${weight} gram`}  size={200} />
-                </div>
+                    <div className='bowl'>
+                        <Progress type="circle" percent={weightPercentage} format={(percent) => `${weight} gram`}  size={200} />
+                    </div>
             </div>
             <WeightGraph></WeightGraph>
         </div>
