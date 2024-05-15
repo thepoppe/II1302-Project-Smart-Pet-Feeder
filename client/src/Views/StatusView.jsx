@@ -44,7 +44,6 @@ export default function StatusView() {
             <div className="statusItems">
             <h2>Food-level in container</h2>
                 <div className='foodContainer' >
-                    {distance}
                     {distance >= midlevel + 3 ? (
                     <Progress
                         type="circle"
