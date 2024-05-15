@@ -30,7 +30,8 @@ export default function StatusView() {
         .then(data => {
             
             setDistance(data.dist);
-            setWeight(data.weight);
+
+            setWeight(Math.floor(Math.abs(data.weight)));
         }).catch(error => console.error('Error:', error));
     }
     useEffect(() => {
