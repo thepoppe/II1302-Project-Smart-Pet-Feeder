@@ -178,7 +178,6 @@ async function getSchedules(userId) {
 
 
 async function getNextSchedule(userId) {
-  console.log("inside here")
   if (!userId) {
     throw new Error('Missing userId parameter');
   }
