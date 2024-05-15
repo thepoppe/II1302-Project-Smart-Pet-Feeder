@@ -65,13 +65,15 @@ app.post('/users/:userId/uploadSensorValues', async (req, res) => {
   console.log("weight:  ", weight);
   const now = new Date();
   const userEmail = await getUserEmail(userId);
-  if(dist => 8 && lastEmailSend === null){
+
+
+  if(dist >= 7 && lastEmailSend === null){
 
     const mailData = {
       from: 'smart.feeder14@gmail.com',  // sender address
       to: userEmail,   // list of receivers
       subject: 'Sending Email using Node.js',
-      text: 'low food level fyll now!!!'
+      text: 'low food level in Conatainer!!'
       }
 
       transporter.sendMail(mailData, function(error, info){
@@ -85,7 +87,7 @@ app.post('/users/:userId/uploadSensorValues', async (req, res) => {
 
       lastEmailSend = new Date(); 
       
-  } else if (dist => 8 && (now.getHours() - lastEmailSend.getHours()) > 1) {
+  } else if (dist >= 7 && (now.getHours() - lastEmailSend.getHours()) > 1) {
    
     console.log(" last :  ",now.getHours() - lastEmailSend.getHours());
     const mailData = {

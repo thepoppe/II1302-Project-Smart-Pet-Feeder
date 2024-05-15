@@ -10,7 +10,7 @@ export default function StatusView() {
     const [distance, setDistance] = useState(0);
     const [weight,setWeight]=useState(0);
 
-    const midlevel=3;
+    const midlevel=4;
     const maxDistance=8;
     const maxWeight=30;
 
@@ -44,16 +44,8 @@ export default function StatusView() {
             <div className="statusItems">
             <h2>Food-level in container</h2>
                 <div className='foodContainer' >
-                    {distance > midlevel + 2 ? (
-                    <Progress
-                        type="circle"
-                        percent={100}
-                        strokeColor="green"
-                        strokeWidth={8}
-                        circleIconFontSize="2em"
-                        size={200}
-                        format={() => <span style={{ color: 'green' }}>Full</span>}
-                    />) : distance < midlevel - 1 ? (
+                    {distance}
+                    {distance >= midlevel + 3 ? (
                     <Progress
                         type="circle"
                         percent={33}
@@ -62,7 +54,7 @@ export default function StatusView() {
                         circleIconFontSize="2em"
                         size={200}
                         format={() => <span style={{ color: 'red' }}>Low</span>}
-                    />) : (
+                    />) : distance >= midlevel  ? (
                     <Progress
                         type="circle"
                         percent={66}
@@ -71,6 +63,15 @@ export default function StatusView() {
                         circleIconFontSize="2em"
                         size={200}
                         format={() => <span style={{ color: 'yellow' }}>Medium</span>}
+                    />) : (
+                    <Progress
+                        type="circle"
+                        percent={100}
+                        strokeColor="green"
+                        strokeWidth={8}
+                        circleIconFontSize="2em"
+                        size={200}
+                        format={() => <span style={{ color: 'green' }}>High</span>}
                     />)}
                 </div>
             </div>
