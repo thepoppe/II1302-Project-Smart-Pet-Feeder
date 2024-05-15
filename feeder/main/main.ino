@@ -25,16 +25,16 @@
 #include "time.h"
 #include <cstring>
 
-String ssid = "iPhone123";
-String password = "12345678";
-String userId = "vxq2MZ9zwfMEvRh1Ao7FTO5hwZL2"; // make it not hardcoded. It is Lukas uid rn
+String ssid = "Iphone";
+String password = "123456789";
+String userId = "SU1maTm0X3axSnuQqli3pcjPQH32"; // make it not hardcoded. It is Batu's uid rn
 const char* arduinoSSID = "Pet-Feeder-Setup";
 const char* ArduinoPassword = "123456789";
 
 const char* ntpServer = "pool.ntp.org";
 const long gmtOffset_sec = 3600;
 const int daylightOffset_sec = 3600;
-const char* serverAddress = "172.20.10.3";
+const char* serverAddress = "172.20.10.14";
 const int serverPort = 3000;
 int schedule[5] = {0};
 String scheduleID = "";
