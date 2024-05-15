@@ -115,7 +115,7 @@ async function addSensor(userId, dist, weight) {
       weight: weight
     }, { merge: true });
 
-    console.log('Sensor values successfully updated');
+    
   } catch (error) {
     console.error('Failed to update sensor values:', error);
   }
