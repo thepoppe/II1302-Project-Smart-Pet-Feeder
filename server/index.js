@@ -73,7 +73,7 @@ app.post('/users/:userId/uploadSensorValues', async (req, res) => {
       from: 'smart.feeder14@gmail.com',  // sender address
       to: userEmail,   // list of receivers
       subject: 'Sending Email using Node.js',
-      text: 'low food level in Conatainer!!'
+      text: 'Low food level in container!'
       }
 
       transporter.sendMail(mailData, function(error, info){
@@ -94,7 +94,7 @@ app.post('/users/:userId/uploadSensorValues', async (req, res) => {
       from: 'smart.feeder14@gmail.com',  // sender address
       to: userEmail,   // list of receivers
       subject: 'Sending Email using Node.js',
-      text: 'low food level fyll now!!!'
+      text: 'Low food level in container!'
       }
 
       transporter.sendMail(mailData, function(error, info){
