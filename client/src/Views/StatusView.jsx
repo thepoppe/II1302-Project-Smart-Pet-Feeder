@@ -32,12 +32,8 @@ export default function StatusView() {
         }).catch(error => console.error('Error:', error));
     }
     useEffect(() => {
-        getSensorValues(); // Run initially
-        const interval = setInterval(() => {
-            getSensorValues(); // Run every 1000ms (1 second)
-        }, 1000)});
-
-
+        getSensorValues();
+    }, []);
 
 
 
