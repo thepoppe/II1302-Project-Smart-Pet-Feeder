@@ -1,6 +1,6 @@
 const { compareDatesCB } = require('./serverUtils.js');
 const { initializeApp, cert } = require("firebase-admin/app");
-const { getFirestore } = require("firebase-admin/firestore");
+const { getFirestore,  doc, getDoc, setDoc} = require("firebase-admin/firestore");
 const {
 
   getAuth,
@@ -28,20 +28,27 @@ async function handleAuthRequest(req, res) {
     console.log(uid + " has logged in");
     console.log("user email: ", decodedToken.email);
     const userEmail = decodedToken.email;
+    const docRef = db.collection('Users').doc(uid);
 
     try {
-     const email =  await db.collection('Users').doc(uid).get("email");
-     if(email === null){
-      await db.collection('Users').doc(uid).set({ email: userEmail });
-      console.log('user email added successfully');
-     }
-      
+      const docSnap = await docRef.get();
+
+      if (docSnap.exists) {
+        const data = docSnap.data();
+        if ('email' in data) {
+          console.log("Email field exists:", data.email);
+        } else {
+          await docRef.set({ email: userEmail }, { merge: true });
+          console.log('User email added successfully');
+        }
+      } else {
+        // If the document does not exist, create it
+        await docRef.set({ email: userEmail });
+        console.log('User document created with email');
+      }
     } catch (error) {
-      console.error('Failed to add email:', error);
+      console.error('Failed to read or write email field:', error);
     }
-   // const email = await getEmailFromFirestore(uid);
-
-
     res.json({ valid: true, message: "Received token successfully" });
   } catch (error) {
     console.error("Authentication failed:", error);
@@ -336,6 +343,42 @@ async function getStats(userId) {
   return statuses;
 }
 
+async function addDevice(userId, ipAddress) {
+  try {
+    await db.collection('Users').doc(userId).set({
+      device: ipAddress
+    }, { merge: true });
+    return true;
+  } catch (error) {
+    console.error('Failed to add device:', error);
+    return false;
+  }
+}
+
+// Function to get devices for a user
+async function getDevice(userId) {
+  try {
+    const userData = await db.collection('Users').doc(userId).get();
+    
+    if (userData.exists) {
+      const data = userData.data();
+      if('device' in data){
+        console.log("device exist:", data.device);
+        return true;
+      }
+      console.log('No devices found');
+      return false;
+    }
+
+    console.log('No data found');
+    return false;
+  } catch (error) {
+    console.error('Failed to get devices:', error);
+    return false;
+  }
+}
+
+
 
 module.exports = {
   removeSchedule,
@@ -355,6 +398,8 @@ module.exports = {
   addStats,
   getStats,
   updateMail,
+  addDevice,
+  getDevice,
 };
 
 
