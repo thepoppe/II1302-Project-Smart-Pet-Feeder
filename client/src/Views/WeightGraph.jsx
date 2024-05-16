@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Line } from '@ant-design/plots';
 import { Progress } from 'antd';
 import './statusPage.css';
+const ip = `${import.meta.env.VITE_SERVER_IP_ADDRESS}`;
 
 export default function WeightGraph() {
     const [weights, setWeights] = useState([]);
@@ -9,7 +10,7 @@ export default function WeightGraph() {
 
     function getStatusValues() {
         const userId = localStorage.getItem('userId');
-        fetch(`http://localhost:3000/users/${userId}/stats`, {
+        fetch(`${ip}/users/${userId}/stats`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'

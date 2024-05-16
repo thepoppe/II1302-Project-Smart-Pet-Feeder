@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import {getPets, addPet, getUserEmail} from '../expressFunction';
 import {message} from "antd";
 
+const ip = `${import.meta.env.VITE_SERVER_IP_ADDRESS}`;
 
 export default function SettingsView() {
   const [pets, setPets] = useState([]); //store the list of pets
@@ -57,7 +58,7 @@ export default function SettingsView() {
     const pet = pets[index];
     const userId = localStorage.getItem('userId');
 
-    fetch(`http://localhost:3000/users/${userId}/pets`, {
+    fetch(`${ip}/users/${userId}/pets`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
@@ -87,9 +88,8 @@ export default function SettingsView() {
  const handleSaveSettings = (event) => {
       event.preventDefault();
       const userId = localStorage.getItem('userId');
-      console.log(userId);
   
-      return fetch(`http://localhost:3000/users/${userId}/updatemail`, {
+      return fetch(`${ip}/users/${userId}/updatemail`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
