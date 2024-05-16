@@ -248,17 +248,13 @@ export default function SettingsView() {
           })
           .then((response) => response.text())
           .then((text) => {
-            console.log("text:", text);
-
             if(text === "connected" ){
               addDevice(ipAddress).then((data)=> { 
-                console.log("data.status: ", data.status);
                 if(data.status === 201){
                   setDeviceState(true);
                 }else
                 setDeviceState(false);
               } ).catch(error => {
-                console.error('Error:', error)
                 error();
               });
             }

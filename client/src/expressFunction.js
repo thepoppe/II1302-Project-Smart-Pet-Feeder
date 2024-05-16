@@ -43,8 +43,6 @@ export function getSchedules() {
       return response.json();
     })
     .then(data => {
-      console.log("getschedules");
-      console.log(data);
       return data;
     })
     .catch((error) => {
@@ -81,7 +79,6 @@ return  fetch(`${ip}/users/${userId}/schedules`, {
 
 export function addPet(petName, petType, petAmount){
   const userId = localStorage.getItem('userId');
-  console.log(userId);
 
  return fetch(`${ip}/users/${userId}/pets`, {
       method: 'POST',
@@ -99,14 +96,12 @@ export function addPet(petName, petType, petAmount){
   
 export async function getPets(){
   const userId = localStorage.getItem('userId');
-  console.log(userId)
 
   try {
     const response = await fetch(`${ip}/users/${userId}/pets`, {
       method: 'GET',
     });
     const data = await response.json();
-    console.log(data);
     return data;
   } catch (error) {
     return console.error('Error:', error);
@@ -120,7 +115,6 @@ export async function getUserEmail(){
       method: 'GET',
     });
     const email = await response.json();
-    console.log(email);
     return email;
   } catch (error) {
     return console.error('Error:', error);
@@ -129,7 +123,6 @@ export async function getUserEmail(){
 
 export function addDevice(ipAddress){
   const userId = localStorage.getItem('userId');
-  console.log(userId);
 
  return fetch(`${ip}/users/${userId}/devices`, {
       method: 'POST', 
@@ -147,13 +140,11 @@ export function addDevice(ipAddress){
 
 export async function getDevice(){
   const userId = localStorage.getItem('userId');
-  console.log(userId);
 try{
   const response = await fetch(`${ip}/users/${userId}/devices`, {
     method: 'GET',
   });
   const deviceExist = await response.json();
-      console.log("device exist",deviceExist);
     return deviceExist;
 } catch (error) {
     return console.error('Error:', error);
