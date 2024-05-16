@@ -100,8 +100,6 @@ export default function SettingsView() {
  const handleSaveSettings = (event) => {
       event.preventDefault();
       const userId = localStorage.getItem('userId');
-      console.log(userId);
-  
       return fetch(`http://localhost:3000/users/${userId}/updatemail`, {
           method: 'POST',
           headers: {
@@ -247,17 +245,13 @@ export default function SettingsView() {
           })
           .then((response) => response.text())
           .then((text) => {
-            console.log("text:", text);
-
             if(text === "connected" ){
               addDevice(ipAddress).then((data)=> { 
-                console.log("data.status: ", data.status);
                 if(data.status === 201){
                   setDeviceState(true);
                 }else
                 setDeviceState(false);
               } ).catch(error => {
-                console.error('Error:', error)
                 error();
               });
             }

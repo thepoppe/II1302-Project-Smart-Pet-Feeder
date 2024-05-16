@@ -50,7 +50,6 @@ export default function LoginView(props) {
         console.log(userId)
         localStorage.setItem('userId', userId);  
         localStorage.setItem(props.storageKey, idToken);
-        console.log("Logging in");
         props.login();
       } else {
         window.alert("Failed to log in");
