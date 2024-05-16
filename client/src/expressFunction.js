@@ -127,17 +127,19 @@ export async function getUserEmail(){
   }
 }
 
-export async function addDevice(ipAddress){
+export function addDevice(ipAddress){
   const userId = localStorage.getItem('userId');
   console.log(userId);
 
  return fetch(`${ip}/users/${userId}/devices`, {
       method: 'POST', 
+      headers: {
+        'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ ipAddress }) 
   })
   .then(response => response.json())
-  .then(data => {   
-         console.log(data)  
-  })
+  .then(data => {console.log(data)})
   .catch(error => console.error('Error:', error));
 }
 

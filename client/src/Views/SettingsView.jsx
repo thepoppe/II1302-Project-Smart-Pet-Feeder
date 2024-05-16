@@ -235,7 +235,6 @@ export default function SettingsView() {
       {deviceState}
    { deviceState ? ( <div>
         <div> Device added successfully </div>
-        
       </div> ) : ( <div className='setting-gridItem'>
       <form
         onSubmit={(event) => {
@@ -248,10 +247,9 @@ export default function SettingsView() {
             },
             body: localStorage.getItem("userId"),
           })
-            .then((response) => response.text())
-            .then( async (text) => {console.log("text: ", text);
+          .then((response) => response.text())
+          .then((text) => {
             if(text === "connected" ){
-
               addDevice(ipAddress).then((data)=> { 
                 if(data.status === 201){
                   setDeviceState(true);
