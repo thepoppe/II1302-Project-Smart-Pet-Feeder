@@ -27,14 +27,9 @@ const {transporter} = require('./transporter.js');
 //temp model
 const port = 3000;
 const defaultMsg = "HelloWorld";
-let motorStatus = false;
-let schedules = [];
-
-let usedSchedules= []
-let distanceSensorValue=null
-let weightSensorValue=null
-
 let lastEmailSend = null;
+let lastWeight = null;
+let lastWeightTime = null;
 
 
 app.use(cors());
@@ -57,73 +52,63 @@ app.listen(port, () => {
 
 // FIRESTORE FUNCTIONS BELOW
 
-
 app.post('/users/:userId/uploadSensorValues', async (req, res) => {
   const { userId } = req.params;
   const { dist, weight } = req.body;
-
-
+  const now = new Date();
   const userEmail = await getUserEmail(userId);
-  if(dist < 20 && lastEmailSend === null){
 
-    const mailData = {
-      from: 'smart.feeder14@gmail.com',  // sender address
-      to: userEmail,   // list of receivers
-      subject: 'Sending Email using Node.js',
-      text: 'low food level fyll now!!!'
-      }
-
-      transporter.sendMail(mailData, function(error, info){
-        if (error) {
-          console.log(error);
-          res.json({message : error})
-        } else {
-          res.json({message : 'email send'})
-        }
-      });  
-
-      lastEmailSend = new Date(); 
-      console.log(lastEmailSend);
-  } else {
-    const now = new Date();
-    console.log("now minute:", now.getMinutes())
-    console.log(  "now - last = ",now.getMinutes() - lastEmailSend.getMinutes());
-    if((now.getMinutes() - lastEmailSend.getMinutes()) > 5){
-
-    const mailData = {
-      from: 'smart.feeder14@gmail.com',  // sender address
-      to: userEmail,   // list of receivers
-      subject: 'Sending Email using Node.js',
-      text: 'low food level fyll now!!!'
-      }
-
-      transporter.sendMail(mailData, function(error, info){
-        if (error) {
-          console.log(error);
-          res.json({message : error})
-        } else {
-          res.json({message : 'email send'})
-        }
-      });  
-
-      lastEmailSend = new Date(); 
-
-    } 
+  // Check 
+  if (dist >= 6 && (lastEmailSend === null || now - lastEmailSend > 3600000)) {  // every 3600000 ms aka once every hour
+    sendEmail(userEmail, 'Low food level in container! Please refill !', res);
+    lastEmailSend = now; 
   }
 
-  // Validation
+ 
+  if (Math.floor(weight) === lastWeight) {
+    if (lastWeightTime && now - lastWeightTime >= 40000) {   // Once every 30 seconds
+      sendEmail(userEmail, 'Weight has not changed for 1 minute', res);
+      lastWeightTime = now; 
+    }
+  } else {
+    lastWeight = Math.floor(weight);
+    lastWeightTime = now;  
+  }
+  //Validation
   if (dist === undefined || weight === undefined) {
     return res.status(400).json({ error: "Invalid weight or distance data" });
   }
+
+  // Upload sensor data to Firestore
   try {
-    await addSensor(userId, dist, weight); // upload to firestore
+    await addSensor(userId, dist, weight);
     res.status(201).json({ message: "Sensor data uploaded successfully." });
   } catch (error) {
-    console.error(`Error uploading sensor data :`, error);
+    console.error(`Error uploading sensor data: `, error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
 
+function sendEmail(userEmail, message, res) {
+  const mailData = {
+    from: 'smart.feeder14@gmail.com',
+    to: userEmail,
+    subject: 'Alert from Smart Feeder',
+    text: message
+  };
+
+  transporter.sendMail(mailData, function(error, info){
+    if (error) {
+      console.log(error);
+      res.json({ message: error });
+    } else {
+      console.log('Email sent: ' + info.response);
+      res.json({ message: 'Email sent' });
+    }
+  });
+
+  lastEmailSend = new Date();
+}
 app.get('/users/:userId/sensorValues', async (req, res) => {
   const { userId } = req.params;
   try {
@@ -238,7 +223,7 @@ app.get('/users/:userId/next-schedule', async (req, res) => {
     res.json(nextSchedule);
   } 
      catch (error) {
-    console.error('Failed to retrieve and move next schedule:', error);
+   
     res.status(500).send({ 'Error': 'Internal Server Error' });
   }
 });

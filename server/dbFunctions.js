@@ -30,8 +30,12 @@ async function handleAuthRequest(req, res) {
     const userEmail = decodedToken.email;
 
     try {
-     await db.collection('Users').doc(uid).set({ email: userEmail });
-      console.log('user added successfully');
+     const email =  await db.collection('Users').doc(uid).get("email");
+     if(email === null){
+      await db.collection('Users').doc(uid).set({ email: userEmail });
+      console.log('user email added successfully');
+     }
+      
     } catch (error) {
       console.error('Failed to add email:', error);
     }
@@ -111,7 +115,7 @@ async function addSensor(userId, dist, weight) {
       weight: weight
     }, { merge: true });
 
-    console.log('Sensor values successfully updated');
+    
   } catch (error) {
     console.error('Failed to update sensor values:', error);
   }
@@ -174,7 +178,6 @@ async function getSchedules(userId) {
 
 
 async function getNextSchedule(userId) {
-  console.log("inside here")
   if (!userId) {
     throw new Error('Missing userId parameter');
   }
