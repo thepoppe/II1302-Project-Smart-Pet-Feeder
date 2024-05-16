@@ -18,7 +18,7 @@ export default function WeightGraph() {
         })
         .then(response => response.json())
         .then(data => {
-            setWeights(data.map(status => parseFloat(status.weight)));
+            setWeights(data.map(status => Math.floor(Math.abs(parseFloat(status.weight)))));
             setTimestamps(data.map(status => new Date(status.timestamp._seconds * 1000)));
         })
         .catch(error => console.error('Error:', error));
