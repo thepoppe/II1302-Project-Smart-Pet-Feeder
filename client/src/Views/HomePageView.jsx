@@ -26,10 +26,8 @@ function HomePageView(props) {
   useEffect(()=>{
     getDevice().then((data)=>{
       if (data.state == 200) {
-        console.log("status:", data.state);
         setDeviceFound(true);
       } else {
-        console.log("status:", data.state);
         setDeviceFound(false);
       }
 

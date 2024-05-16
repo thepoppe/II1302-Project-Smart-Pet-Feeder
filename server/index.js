@@ -381,7 +381,6 @@ app.post('/users/:userId/devices', async (req, res) => {
 
   try {
     const result =  await addDevice(userId, ipAddress);
-    console.log("adding device is", true);
     if(result){
     res.status(201).send({message : 'Device added successfully', status: 201});
   }else{
@@ -396,10 +395,7 @@ app.post('/users/:userId/devices', async (req, res) => {
 app.get('/users/:userId/devices', async (req, res) =>{
   const { userId } = req.params;
   try{
-
   const deviceExist = await getDevice(userId);
-  console.log("device exist:", deviceExist);
-
   if(deviceExist){
     res.status(200).send({message : 'Device found', state: 200});
   }else{

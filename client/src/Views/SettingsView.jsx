@@ -56,10 +56,8 @@ export default function SettingsView() {
        getDevice().then((data)=>{
 
         if (data.state == 200) {
-          console.log("status:", data.state);
           setDeviceState(true);
         } else {
-          console.log("status:", data.state);
           setDeviceState(false);
         }
 

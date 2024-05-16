@@ -68,8 +68,6 @@ export default function ScheduleView(props) {
 
     function sendCurrentDate() {
       const userId = localStorage.getItem('userId');
-      console.log("user")
-      console.log(userId)
       const now = new Date();
       const month = now.getMonth();
       const day = now.getDate();
