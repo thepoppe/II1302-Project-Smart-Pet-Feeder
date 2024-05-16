@@ -25,16 +25,16 @@
 #include "time.h"
 #include <cstring>
 
-String ssid = "Iphone";
-String password = "123456789";
-String userId = "SU1maTm0X3axSnuQqli3pcjPQH32"; // make it not hardcoded. It is Batu's uid rn
+String ssid = "";
+String password = "";
+String userId = ""; // make it not hardcoded. It is Batu's uid rn
 const char* arduinoSSID = "Pet-Feeder-Setup";
 const char* ArduinoPassword = "123456789";
 
 const char* ntpServer = "pool.ntp.org";
 const long gmtOffset_sec = 3600;
 const int daylightOffset_sec = 3600;
-const char* serverAddress = "172.20.10.14";
+const char* serverAddress = "172.20.10.4";
 const int serverPort = 3000;
 int schedule[5] = {0};
 String scheduleID = "";
@@ -348,11 +348,11 @@ void handleAuth(WebServer& server) {
   Serial.println("handle auth");
   if (server.method() == HTTP_POST) {
     Serial.println("Post request");
-    String authToken = server.arg("plain");
-    Serial.println("Received token: " + authToken);
+      String authToken = server.arg("plain");
+      Serial.println("Received token: " + authToken);
     userId = authToken;
-    server.sendHeader("Access-Control-Allow-Origin", "*");
-    server.send(200, "text/plain", "Received POST request to /auth");
+      server.sendHeader("Access-Control-Allow-Origin", "*");
+      server.send(200, "text/plain", "connected");
   } else {
     server.send(405, "text/plain", "Method Not Allowed");
   }

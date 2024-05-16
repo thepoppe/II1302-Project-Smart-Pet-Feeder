@@ -68,8 +68,6 @@ export default function ScheduleView(props) {
 
     function sendCurrentDate() {
       const userId = localStorage.getItem('userId');
-      console.log("user")
-      console.log(userId)
       const now = new Date();
       const month = now.getMonth();
       const day = now.getDate();
@@ -100,7 +98,7 @@ export default function ScheduleView(props) {
     const schedule = schedules[index];
     const userId = localStorage.getItem('userId');
   
-    fetch(`http://localhost:3000/users/${userId}/schedules`, {
+    fetch(`${ip}/users/${userId}/schedules`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
@@ -151,7 +149,6 @@ export default function ScheduleView(props) {
               value={datetime}
               onChange={(e) => setDatetime(e.target.value)}
               required
-
           />
       </div>
       <div className="form-group">

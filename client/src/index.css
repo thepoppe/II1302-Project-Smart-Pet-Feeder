@@ -76,7 +76,6 @@ ul {
 }
 
 .setting-grid{
-  grid-column: span 2;
   height: 160%;
   box-shadow: 0px 0px 5px 5px #D2DCED;
   background-color: white;

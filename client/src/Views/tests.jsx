@@ -1,4 +1,5 @@
-const ip = `${import.meta.env.VITE_SERVER_IP_ADDRESS}`;
+//const ip = `${import.meta.env.VITE_SERVER_IP_ADDRESS}`;
+const ip = `http://localhost:3000`;
 import { useState } from "react";
 
 export default function Tests() {
