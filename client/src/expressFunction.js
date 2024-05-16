@@ -139,7 +139,9 @@ export function addDevice(ipAddress){
     body: JSON.stringify({ ipAddress }) 
   })
   .then(response => response.json())
-  .then(data => {console.log(data)})
+  .then(data => { 
+    console.log(data)
+    })
   .catch(error => console.error('Error:', error));
 }
 
