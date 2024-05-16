@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import {getPets, addPet, getUserEmail, getDevice, addDevice} from '../expressFunction';
 import {message} from "antd";
+const ip = `http://localhost:3000`;
 
 
 export default function SettingsView() {
@@ -70,7 +71,7 @@ export default function SettingsView() {
     const pet = pets[index];
     const userId = localStorage.getItem('userId');
 
-    fetch(`http://localhost:3000/users/${userId}/pets`, {
+    fetch(`${ip}/users/${userId}/pets`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
@@ -102,7 +103,7 @@ export default function SettingsView() {
       const userId = localStorage.getItem('userId');
       console.log(userId);
   
-      return fetch(`http://localhost:3000/users/${userId}/updatemail`, {
+      return fetch(`${ip}/users/${userId}/updatemail`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
