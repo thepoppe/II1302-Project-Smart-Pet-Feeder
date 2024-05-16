@@ -127,3 +127,32 @@ export async function getUserEmail(){
   }
 }
 
+export async function addDevice(ipAddress){
+  const userId = localStorage.getItem('userId');
+  console.log(userId);
+
+ return fetch(`${ip}/users/${userId}/devices`, {
+      method: 'POST', 
+  })
+  .then(response => response.json())
+  .then(data => {   
+         console.log(data)  
+  })
+  .catch(error => console.error('Error:', error));
+}
+
+export async function getDevice(){
+  const userId = localStorage.getItem('userId');
+  console.log(userId);
+try{
+  const response = await fetch(`${ip}/users/${userId}/devices`, {
+    method: 'GET',
+  });
+  const deviceExist = await response.json();
+      console.log("device exist",deviceExist);
+    return deviceExist;
+} catch (error) {
+    return console.error('Error:', error);
+}
+}
+

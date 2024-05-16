@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
-
+import { Alert} from 'antd';
+import Marquee from 'react-fast-marquee';
 import { Canvas } from "@react-three/fiber";
 import {
   useGLTF,
@@ -8,8 +9,9 @@ import {
   OrbitControls,
   PerspectiveCamera,
 } from "@react-three/drei";
-import { Suspense } from "react";
+import { Suspense, useEffect, useState} from "react";
 import "./homePage.css";
+import { getDevice } from "../expressFunction";
 
 
 function Model(props) {
@@ -19,10 +21,23 @@ function Model(props) {
 
 function HomePageView(props) {
 
+  const[deviceFound, setDeviceFound] = useState(false);
+
+  useEffect(()=>{
+    getDevice().then((data)=>{
+      if (data.state == 200) {
+        console.log("status:", data.state);
+        setDeviceFound(true);
+      } else {
+        console.log("status:", data.state);
+        setDeviceFound(false);
+      }
+
+     })
+  },[])
+
   return (
     <>
-
-
       <div
         style={{
           display: "flex",
@@ -76,9 +91,19 @@ function HomePageView(props) {
           <Link to="/settings">
             <button className="LISetting homeBTN" title="View your settings"></button>
             <div style={{ textAlign: "center" }}>Settings</div>
-
           </Link>
         </ul>
+       { deviceFound ? <></>  : <div>
+
+        <Alert
+        banner
+        message={
+          <Marquee pauseOnHover gradient={false}>
+            No device has found. Go to the setting page to connect your device
+          </Marquee>
+        }
+    />
+        </div>}
       </div>
     </>
   );

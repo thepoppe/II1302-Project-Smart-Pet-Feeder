@@ -151,7 +151,6 @@ export default function ScheduleView(props) {
               value={datetime}
               onChange={(e) => setDatetime(e.target.value)}
               required
-
           />
       </div>
       <div className="form-group">

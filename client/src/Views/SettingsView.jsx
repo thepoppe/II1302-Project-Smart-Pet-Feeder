@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import {getPets, addPet, getUserEmail} from '../expressFunction';
+import {getPets, addPet, getUserEmail, getDevice, addDevice} from '../expressFunction';
 import {message} from "antd";
 
 
@@ -11,7 +11,7 @@ export default function SettingsView() {
   const [petType, setPetType] = useState('');
 
   const [updateEmail, setUpdateEmail] = useState(true);
-
+  const [deviceState, setDeviceState] = useState(false);
 
   const [email, setEmail] = useState('');
 
@@ -47,10 +47,25 @@ export default function SettingsView() {
 
 
   useEffect(() => {
+
     getPets().then((data) => setPets(data))
 
     getUserEmail().then((data) => {setEmail(data)
        setUpdateEmail(false)})
+
+       getDevice().then((data)=>{
+
+        if (data.state == 200) {
+          console.log("status:", data.state);
+          setDeviceState(true);
+        } else {
+          console.log("status:", data.state);
+          setDeviceState(false);
+        }
+
+       })
+       
+
     }, []);
 
   function deletePet(index){
@@ -214,8 +229,47 @@ export default function SettingsView() {
   )
 }
       </div>
-      
+      </div>
+      <div  className='settingPageItems setting-grid'>
+      <h2>Connect your device:</h2>
+      {deviceState}
+   { deviceState ? ( <div>
+        <div> Device added successfully </div>
+        
+      </div> ) : ( <div className='setting-gridItem'>
+      <form
+        onSubmit={(event) => {
+          event.preventDefault();
+          const ipAddress = document.getElementById("ipAddress").value;
+          fetch(`http://${ipAddress}:80/auth`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "text/plain",
+            },
+            body: localStorage.getItem("userId"),
+          })
+            .then((response) => response.text())
+            .then( async (text) => {console.log("text: ", text);
+            if(text === "connected" ){
 
+              addDevice(ipAddress).then((data)=> { 
+                if(data.status === 201){
+                  setDeviceState(true);
+                }else
+                setDeviceState(false);
+              } ).catch(error => {
+                console.error('Error:', error)
+                error();
+              });
+            }
+          })
+            .catch((error) => console.error("Error:", error));
+        }}
+      >
+        <input type="text" id="ipAddress" placeholder="Enter the IP address" />
+        <input type="submit" value="Submit" />
+      </form>
+      </div>)}
       </div>
     </div>
   );

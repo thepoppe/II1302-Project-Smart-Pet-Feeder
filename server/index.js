@@ -7,18 +7,20 @@ const { compareDatesCB } = require('./serverUtils.js');
 const {addStats,removeScheduleWithId,removeSchedule,
   getSensorValues,
   getNextSchedule,
-   addSensor,
-   handleSetDBRequest,
-    handleGetUserRequest,
-     handleAuthRequest,
-      addSchedule,
-      getSchedules, 
-      getUserEmail, 
-      addPet,
-      getPets,
-      deletePet,
-      getStats,
-      updateMail,
+  addSensor,
+  handleSetDBRequest,
+  handleGetUserRequest,
+  handleAuthRequest,
+  addSchedule,
+  getSchedules, 
+  getUserEmail, 
+  addPet,
+  getPets,
+  deletePet,
+  getStats,
+  updateMail,
+  addDevice,
+  getDevice,
     } = require("./dbFunctions.js");
 
 const {transporter} = require('./transporter.js');
@@ -45,7 +47,6 @@ app.post("/testSetDB", handleSetDBRequest);
 app.get("/testGetDB", handleGetUserRequest);
 
 //auth
-
 app.post("/login", handleAuthRequest);
 app.get("/", (req, res) => {
   res.send("hello and welcome to my server");
@@ -53,7 +54,6 @@ app.get("/", (req, res) => {
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
-
 
 // FIRESTORE FUNCTIONS BELOW
 
@@ -84,7 +84,6 @@ app.post('/users/:userId/uploadSensorValues', async (req, res) => {
           res.json({message : 'email send'})
         }
       });  
-
       lastEmailSend = new Date(); 
       
   } else if (dist >= 7 && (now.getHours() - lastEmailSend.getHours()) > 1) {
@@ -372,3 +371,40 @@ try{
 }
 });
 
+
+//endpoints to add device 
+
+app.post('/users/:userId/devices', async (req, res) => {
+  const { userId } = req.params;
+  const { ipAddress} = req.body;
+  console.log("adding device:", ipAddress);
+
+  try {
+    const result =  await addDevice(userId, ipAddress);
+    console.log("adding device is", true);
+    if(result){
+    res.status(201).send({message : 'Device added successfully', status: 201});
+  }else{
+    res.status(500).send({ 'Error': 'Internal Server Error', status: 500});
+  }
+} catch (error) {
+    console.error('Failed to add device to db:', error);
+    res.status(500).send({ 'Error': 'Internal Server Error' });
+  }
+});
+
+app.get('/users/:userId/devices', async (req, res) =>{
+  const { userId } = req.params;
+  try{
+
+  const deviceExist = await getDevice(userId);
+  console.log("device exist:", deviceExist);
+
+  if(deviceExist){
+    res.status(200).send({message : 'Device found', state: 200});
+  }else{
+    res.status(500).send({ message: 'No device found', state: 500 });
+  }}catch(error){
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
