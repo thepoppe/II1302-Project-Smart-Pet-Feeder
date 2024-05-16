@@ -100,7 +100,7 @@ export default function ScheduleView(props) {
     const schedule = schedules[index];
     const userId = localStorage.getItem('userId');
   
-    fetch(`http://localhost:3000/users/${userId}/schedules`, {
+    fetch(`${ip}/users/${userId}/schedules`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
