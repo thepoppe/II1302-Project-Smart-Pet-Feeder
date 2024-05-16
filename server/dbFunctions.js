@@ -117,7 +117,7 @@ async function addSensor(userId, dist, weight) {
       weight: weight
     }, { merge: true });
 
-    console.log('Sensor values successfully updated');
+    
   } catch (error) {
     console.error('Failed to update sensor values:', error);
   }
@@ -180,7 +180,6 @@ async function getSchedules(userId) {
 
 
 async function getNextSchedule(userId) {
-  console.log("inside here")
   if (!userId) {
     throw new Error('Missing userId parameter');
   }
