@@ -15,6 +15,7 @@ const HomePage = lazy(() => import("./Views/HomePageView"));
 const Schedule = lazy(() => import("./Views/ScheduleView"));
 const Status = lazy(() => import("./Views/StatusView"));
 const Settings = lazy(() => import("./Views/SettingsView"));
+const About= lazy(() => import("./Views/AboutView"));
 
 function App() {
   const tokenStorageKey = "token";
@@ -56,6 +57,10 @@ function App() {
           <Route
             path="/settings"
             element={loggedIn ? <Settings /> : <Navigate to={"/"} />}
+          />
+          <Route
+            path="/about"
+            element={loggedIn ? <About /> : <Navigate to={"/"} />}
           />
           <Route path="*" element={<ErrorPage />} />
         </Routes>
